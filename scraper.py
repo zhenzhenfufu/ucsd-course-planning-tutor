@@ -1,0 +1,1 @@
+print("Hello UCSD! 选课助手启动！")
