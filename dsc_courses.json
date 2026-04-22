@@ -57,21 +57,16 @@
     {
         "id": "DSC 99",
         "name": "Independent Study in Data Science (2 or 4)",
-        "description": "This course is an introduction to storage and management of large-scale data using classical relational (SQL) systems, with an eye toward applications in data science. The course covers topics including the SQL data model and query language, relational data modeling and schema design, elements of cost-based query optimizations, relational data base architecture, and database-backed applications. Prerequisites: DSC 40B/R and DSC 80/R. Restricted to students with upper-division standing. Restricted to students within the DS25 major. All other students will be allowed as space permits."
+        "description": "Independent study or research in data science under the direction of a faculty member. Prerequisites: Consent of instructor and department approval."
     },
     {
         "id": "DSC 100",
         "name": "Introduction to Data Management (4)",
-        "description": "This course introduces the principles of computing systems and infrastructure for scaling analytics to large datasets. Topics include memory hierarchy, distributed systems, model selection, heterogeneous datasets, and deployment at scale. The course will also discuss the design of systems such as MapReduce/Hadoop and Spark, in conjunction with their implementation. Students will also learn how dataflow operations can be used to perform data preparation, cleaning, and feature engineering. Prerequisites: DSC 100. Restricted to students with upper-division standing. Restricted to students within the DS25 major. All other students will be allowed as space permits."
+        "description": "Introduction to storage and management of large-scale data using SQL. Covers query languages, schema design, and database architecture. Prerequisites: DSC 40B/R and DSC 80/R."
     },
     {
         "id": "DSC 102",
         "name": "Systems for Scalable Analytics (4)",
-        "description": "The course will introduce a variety of No-SQL data formats, data models, high-level query languages, and programming abstractions representative of the needs of modern data analytic tasks. Topics include hierarchical graph database systems, unrestricted graph database systems, array databases, comparison of expressive power of the data models, and parallel programming abstractions, including Map/Reduce and its descendants. Prerequisites: DSC 100. Restricted to students with upper-division standing. Restricted to students within the DS25 major. All other students will be allowed as space permits."
-    },
-    {
-        "id": "DSC 104",
-        "name": "Beyond Relational Data Management (4)",
-        "description": "Data visualization helps explore and interpret data through interaction. This course introduces the principles, techniques, and algorithms for creating effective visualizations. The course draws on the knowledge from several disciplines including computer graphics, human-computer interaction, cognitive psychology, design, and statistical graphics and synthesizes relevant ideas. Students will design visualization systems using D3 or other web-based software and evaluate their effectiveness. Prerequisites: DSC 80/R. Restricted to students with upper-division standing. Restricted to students within the DS25 major. All other students will be allowed as space permits."
+        "description": "Systems and infrastructure for scaling analytics. Topics include MapReduce, Spark, and distributed systems. Prerequisites: DSC 100."
     }
 ]
