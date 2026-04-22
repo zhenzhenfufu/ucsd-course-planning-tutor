@@ -21,7 +21,7 @@ def get_ai_advice(user_question):
 
         # 调用 Gemini 2.0
         response = client.models.generate_content(
-            model="gemini-2.0-flash",
+            model="gemini-1.5-flash",
             config={
                 "system_instruction": "You are a UCSD DSC Academic Advisor. Use the provided JSON to answer in English. Be concise."
             },
