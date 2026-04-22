@@ -22,7 +22,7 @@ def get_ai_advice(user_question):
         # 核心修复：使用 1.5-flash-latest 或 1.5-flash
         # 注意：不要加 models/ 前缀，SDK 会自动处理
         response = client.models.generate_content(
-            model="gemini-1.5-flash-latest", 
+            model="gemini-1.5-flash-8b", 
             config={
                 "system_instruction": (
                     "You are the official UCSD Data Science Academic Advisor. "
