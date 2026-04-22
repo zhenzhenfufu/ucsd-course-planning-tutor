@@ -11,31 +11,33 @@ def get_ai_advice(user_question):
         return "❌ **Missing API Key**."
 
     try:
-        # 初始化客户端时明确指定 API 版本（如果 SDK 支持）
+        # 初始化 2026 标准客户端
         client = genai.Client(api_key=api_key)
         
+        # 加载数据
         with open('dsc_courses.json', 'r', encoding='utf-8') as f:
             courses = json.load(f)
         catalog_context = json.dumps(courses, ensure_ascii=False)
 
-        # 核心修正：尝试使用 2026 年最保守、绝对存在的模型 ID
-        # 强制使用 'gemini-1.5-flash'
+        # 强制切换到 2.0-flash，这是 2026 年新项目权限最高的模型
         response = client.models.generate_content(
-            model="gemini-1.5-flash-latest", # 确保使用这个带 -latest 的后缀
+            model="gemini-2.0-flash", 
             config={
-                "system_instruction": "You are a UCSD DSC Advisor. Use provided JSON to help students. English only."
+                "system_instruction": "You are a UCSD DSC Advisor. Answer concisely based on JSON."
             },
-            contents=f"Context: {catalog_context}\n\nQuestion: {user_question}"
+            contents=f"Data: {catalog_context}\n\nUser Question: {user_question}"
         )
         return response.text
 
     except Exception as e:
-        # 如果还是 404，说明是 Google 的“区域保护”或“项目隔离”
-        if "404" in str(e):
+        err_msg = str(e)
+        # 如果 2.0 还是 Block，说明是 API Key 本身的激活状态问题
+        if "404" in err_msg or "Regional" in err_msg:
             return (
-                "❌ **Regional/Project Block**: Your API Key is valid, but this specific project "
-                "doesn't have access to Gemini 1.5. \n\n"
-                "**Solution**: Please go to [AI Studio](https://aistudio.google.com/), "
-                "click 'Create API Key in NEW project', and update Streamlit Secrets."
+                "❌ **Terminal Error**: Google is still blocking this Project/Key. \n\n"
+                "**FINAL FIX**: Please go to [AI Studio](https://aistudio.google.com/), "
+                "1. Click the **'Settings' (Gear icon)** at the bottom left. \n"
+                "2. Ensure **'Generative Language API'** is toggled ON. \n"
+                "3. Try one last time with a NEW key after this."
             )
-        return f"❌ **Error**: {str(e)}"
+        return f"❌ **Error**: {err_msg}"
