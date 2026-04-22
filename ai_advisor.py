@@ -22,7 +22,7 @@ def get_ai_advice(user_question):
         # 2026 终极兼容名称：使用 "gemini-1.5-flash"
         # 绝不加 "models/" 前缀，绝不加其它后缀
         response = client.models.generate_content(
-            model="gemini-1.5-flash", 
+            model="gemini-1.5-flash-latest", 
             config={
                 "system_instruction": (
                     "You are the official UCSD Data Science Academic Advisor. "
