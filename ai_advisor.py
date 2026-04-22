@@ -21,9 +21,9 @@ def get_ai_advice(user_question):
         # 核心修正：尝试使用 2026 年最保守、绝对存在的模型 ID
         # 强制使用 'gemini-1.5-flash'
         response = client.models.generate_content(
-            model="gemini-1.5-flash", 
+            model="gemini-1.5-flash-latest", # 确保使用这个带 -latest 的后缀
             config={
-                "system_instruction": "You are a UCSD DSC Advisor. Use provided JSON."
+                "system_instruction": "You are a UCSD DSC Advisor. Use provided JSON to help students. English only."
             },
             contents=f"Context: {catalog_context}\n\nQuestion: {user_question}"
         )
