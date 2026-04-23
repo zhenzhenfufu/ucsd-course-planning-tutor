@@ -1,153 +1,149 @@
 import streamlit as st
 import pandas as pd
 import json
+import plotly.graph_objects as go
 from pyvis.network import Network
 import streamlit.components.v1 as components
+from ai_advisor import get_ai_advice
 
-st.set_page_config(layout="wide", page_title="UCSD DSC Planner", page_icon="🎓")
+st.set_page_config(layout="wide", page_title="UCSD DSC Course Planner", page_icon="🔱")
 
-# --- 自定义 CSS 提升“触感” ---
+# --- UI Customization (English Only) ---
 st.markdown("""
     <style>
-    .stButton>button {
-        width: 100%;
-        border-radius: 8px;
-        border: 1px solid #e0e0e0;
-        transition: all 0.2s;
-    }
-    .stButton>button:hover {
-        border-color: #184073;
-        color: #184073;
-        background-color: #f0f4f9;
-    }
-    div[data-testid="stExpander"] {
-        border: none !important;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        margin-bottom: 10px;
-    }
+    .main { background-color: #f9fbfd; }
+    .stButton>button { width: 100%; border-radius: 6px; font-weight: 600; }
+    .course-card { padding: 15px; border-radius: 10px; background: white; border: 1px solid #eee; }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 数据加载 ---
+# --- Data Loading ---
 @st.cache_data
 def load_data():
     with open('dsc_courses.json', 'r', encoding='utf-8') as f:
         return json.load(f)
 
-courses_json = load_data()
-df = pd.DataFrame(courses_json)
+courses_data = load_data()
+df = pd.DataFrame(courses_data)
 
 if "selected_courses" not in st.session_state:
     st.session_state.selected_courses = []
 
-# 扩展关系库：加入一些外部课程关系
+# Hardcoded relationship map (Prerequisites)
 edges_db = [
     ("MATH 20C", "DSC 40A"), ("MATH 18", "DSC 40A"),
     ("DSC 10", "DSC 20"), ("DSC 10", "DSC 40A"), ("DSC 10", "DSC 80"),
     ("DSC 20", "DSC 30"), ("DSC 30", "DSC 40B"), ("DSC 40A", "DSC 40B"),
     ("DSC 40B", "DSC 100"), ("DSC 80", "DSC 100"), ("DSC 100", "DSC 102"),
-    ("DSC 100", "DSC 104"), ("DSC 80", "DSC 148")
+    ("DSC 100", "DSC 104")
 ]
 
-# --- 三栏布局 ---
-col_left, col_mid, col_right = st.columns([0.28, 0.44, 0.28], gap="medium")
+# --- Helper: Radar Chart ---
+def plot_radar(stats, course_id):
+    categories = list(stats.keys())
+    values = list(stats.values())
+    
+    # Normalize GPA and Hours for visualization if needed, but here we show raw
+    fig = go.Figure()
+    fig.add_trace(go.Scatterpolar(
+        r=values,
+        theta=categories,
+        fill='toself',
+        fillcolor='rgba(24, 64, 115, 0.3)',
+        line=dict(color='#184073')
+    ))
+    fig.update_layout(
+        polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+        showlegend=False,
+        title=f"{course_id} Metrics",
+        margin=dict(l=30, r=30, t=30, b=30),
+        height=300
+    )
+    return fig
 
-# --- 左栏：目录 ---
+# --- Layout: Three Columns ---
+col_left, col_mid, col_right = st.columns([0.3, 0.4, 0.3], gap="large")
+
+# --- LEFT: Course Catalog ---
 with col_left:
-    st.markdown("### 📚 课程目录")
-    search = st.text_input("🔍 搜索...", placeholder="编号或关键字")
+    st.subheader("📖 Course Catalog")
+    search = st.text_input("Search Code or Topic", placeholder="e.g. DSC 80")
     
     filtered_df = df[df['id'].str.contains(search, case=False)] if search else df
     
     for _, row in filtered_df.iterrows():
-        with st.expander(f"**{row['id']}** - {row['name']}"):
-            st.write(f"学分: `{row['units']} Units`")
-            st.caption(row['description'][:150] + "...")
-            if st.button(f"➕ 添加至计划", key=f"add_{row['id']}"):
+        with st.expander(f"**{row['id']}** - {row['units']} Units"):
+            st.write(row['name'])
+            if st.button(f"Add {row['id']}", key=f"add_{row['id']}"):
                 if row['id'] not in st.session_state.selected_courses:
                     st.session_state.selected_courses.append(row['id'])
                     st.rerun()
 
-# --- 中栏：计划表与关系树 ---
+# --- MIDDLE: Planner & Visualization ---
 with col_mid:
-    st.markdown("### 📅 我的选课工作台")
+    st.subheader("📅 Academic Workspace")
     
     if st.session_state.selected_courses:
+        # Display selection table
         plan_df = df[df['id'].isin(st.session_state.selected_courses)]
-        total_units = plan_df['units'].sum()
+        st.dataframe(plan_df[['id', 'name', 'units']], hide_index=True, use_container_width=True)
+        st.metric("Total Planned Units", f"{plan_df['units'].sum()} Units")
         
-        # 展示排课表
-        st.dataframe(
-            plan_df[['id', 'name', 'units']], 
-            hide_index=True, 
-            use_container_width=True
-        )
-        st.markdown(f"**总学分统计: `{total_units}` Units**")
+        # 6-Dimension Analysis
+        st.divider()
+        st.subheader("📊 Course Analysis")
+        focus = st.selectbox("Select course to analyze:", st.session_state.selected_courses)
+        course_stats = df[df['id'] == focus]['stats'].values[0]
+        st.plotly_chart(plot_radar(course_stats, focus), use_container_width=True)
         
-        if st.button("🗑️ 清空所有选课"):
+        # Relationship Tree (Static Style)
+        st.subheader("🔗 Dependency Path")
+        net = Network(height="300px", width="100%", directed=True, bgcolor="#ffffff")
+        
+        relevant_edges = [e for e in edges_db if e[0] == focus or e[1] == focus]
+        nodes = {focus}
+        for s, d in relevant_edges: nodes.update([s, d])
+            
+        for n in nodes:
+            is_focus = (n == focus)
+            net.add_node(n, label=n, shape="box", 
+                         color="#184073" if is_focus else "#f0f2f6",
+                         font={'color': 'white' if is_focus else 'black'})
+        for s, d in relevant_edges:
+            net.add_edge(s, d, color="#cbd5e0")
+        
+        # CRITICAL: Disable all interactions for a "Static Image" feel
+        net.set_options("""
+        var options = {
+          "interaction": { "dragNodes": false, "dragView": false, "zoomView": false },
+          "physics": { "enabled": false }
+        }
+        """)
+        net.save_graph("tree.html")
+        components.html(open("tree.html", 'r').read(), height=320)
+        
+        if st.button("Clear Plan"):
             st.session_state.selected_courses = []
             st.rerun()
     else:
-        st.info("左侧搜索并添加课程，开启你的排课之旅。")
+        st.info("Your study plan is empty. Add courses from the left.")
 
-    st.divider()
-    
-    # 关系树部分
-    st.markdown("### 🌲 依赖链路图")
-    # 如果选了课，默认聚焦第一门课
-    focus_list = st.session_state.selected_courses if st.session_state.selected_courses else ["DSC 10"]
-    focus = st.selectbox("聚焦分析：", focus_list)
-    
-    # 构建 Network，关闭缩放和拖拽的物理抖动，让它像静态图标
-    net = Network(height="350px", width="100%", directed=True, bgcolor="#ffffff")
-    
-    # 查找关系 (包含外部课程)
-    relevant_edges = [e for e in edges_db if e[0] == focus or e[1] == focus]
-    nodes = {focus}
-    for s, d in relevant_edges:
-        nodes.add(s); nodes.add(d)
-        
-    for n in nodes:
-        # 配色方案
-        is_external = not n.startswith("DSC")
-        if n == focus:
-            color, font_color = "#184073", "white" # 聚焦色：深蓝
-        elif is_external:
-            color, font_color = "#E6B325", "black" # 外部课程：金色
-        else:
-            color, font_color = "#F0F2F6", "black" # 其他 DSC：浅灰
-            
-        net.add_node(n, label=n, color=color, font={'color': font_color}, 
-                     shape="box", borderWidth=0, margin=10)
-
-    for s, d in relevant_edges:
-        net.add_edge(s, d, color="#D3D3D3", width=2)
-    
-    # 禁用物理模拟和缩放，使其保持静止
-    net.toggle_physics(False)
-    net.save_graph("tree.html")
-    components.html(open("tree.html", 'r').read(), height=360)
-    st.caption("注：🟡 金色代表外部先修课（如 MATH/CSE） | 🔵 深蓝为当前课程")
-
-# --- 右栏：AI Advisor ---
+# --- RIGHT: AI Advisor ---
 with col_right:
-    st.markdown("### 🤖 AI 指导")
-    from ai_advisor import get_ai_advice
+    st.subheader("🤖 AI Degree Advisor")
+    if "messages" not in st.session_state: st.session_state.messages = []
     
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-    
-    chat_box = st.container(height=550)
+    chat_container = st.container(height=600)
     for m in st.session_state.messages:
-        chat_box.chat_message(m["role"]).write(m["content"])
+        chat_container.chat_message(m["role"]).write(m["content"])
         
-    if prompt := st.chat_input("问问 AI 关于这些课的难度..."):
+    if prompt := st.chat_input("Ask about course difficulty..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
-        chat_box.chat_message("user").write(prompt)
+        chat_container.chat_message("user").write(prompt)
         
-        with chat_box.chat_message("assistant"):
-            # 自动注入选课背景
-            context = f"学生当前计划选修: {st.session_state.selected_courses}。问题: {prompt}"
-            res = get_ai_advice(context)
-            st.markdown(res)
-        st.session_state.messages.append({"role": "assistant", "content": res})
+        with chat_container.chat_message("assistant"):
+            # Provide context of selected courses to AI
+            context = f"Current Plan: {st.session_state.selected_courses}. Question: {prompt}"
+            ans = get_ai_advice(context)
+            st.markdown(ans)
+        st.session_state.messages.append({"role": "assistant", "content": ans})

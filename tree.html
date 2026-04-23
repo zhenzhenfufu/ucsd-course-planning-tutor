@@ -33,7 +33,7 @@
 
              #mynetwork {
                  width: 100%;
-                 height: 400px;
+                 height: 300px;
                  background-color: #ffffff;
                  border: 1px solid lightgray;
                  position: relative;
@@ -88,8 +88,8 @@
                   
 
                   // parsing and collecting nodes and edges from the python
-                  nodes = new vis.DataSet([{"color": "#FF4B4B", "id": "DSC 10", "label": "DSC 10", "shape": "box"}, {"color": "#184073", "id": "DSC 40A", "label": "DSC 40A", "shape": "box"}, {"color": "#184073", "id": "DSC 20", "label": "DSC 20", "shape": "box"}, {"color": "#184073", "id": "DSC 80", "label": "DSC 80", "shape": "box"}]);
-                  edges = new vis.DataSet([{"arrows": "to", "from": "DSC 10", "to": "DSC 20"}, {"arrows": "to", "from": "DSC 10", "to": "DSC 40A"}, {"arrows": "to", "from": "DSC 10", "to": "DSC 80"}]);
+                  nodes = new vis.DataSet([{"color": "#184073", "font": {"color": "white"}, "id": "DSC 106", "label": "DSC 106", "shape": "box"}]);
+                  edges = new vis.DataSet([]);
 
                   nodeColors = {};
                   allNodes = nodes.get({ returnType: "Object" });
@@ -100,35 +100,7 @@
                   // adding nodes and edges to the graph
                   data = {nodes: nodes, edges: edges};
 
-                  var options = {
-    "configure": {
-        "enabled": false
-    },
-    "edges": {
-        "color": {
-            "inherit": true
-        },
-        "smooth": {
-            "enabled": true,
-            "type": "dynamic"
-        }
-    },
-    "interaction": {
-        "dragNodes": true,
-        "hideEdgesOnDrag": false,
-        "hideNodesOnDrag": false
-    },
-    "physics": {
-        "enabled": true,
-        "stabilization": {
-            "enabled": true,
-            "fit": true,
-            "iterations": 1000,
-            "onlyDynamicEdges": false,
-            "updateInterval": 50
-        }
-    }
-};
+                  var options = {"interaction": {"dragNodes": false, "dragView": false, "zoomView": false}, "physics": {"enabled": false}};
 
                   
 
