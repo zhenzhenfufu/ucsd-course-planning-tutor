@@ -1,72 +1,250 @@
 [
     {
-        "id": "DSC 10/R",
-        "name": "Principles of Data Science (4)",
-        "description": "This first course in data science introduces students to data exploration, statistical inference, and prediction. It introduces the Python programming language as a tool for tabular data manipulation, visualization, and simulation. Through homework assignments and projects, students are given an opportunity to develop their analytical skills while working with real-world datasets from a variety of domains. Prerequisites: none."
+        "id": "DSC 10",
+        "name": "Principles of Data Science",
+        "units": 4,
+        "description": "This first course in data science introduces students to data exploration, statistical inference, and prediction. It introduces the Python programming language as a tool for tabular data manipulation, visualization, and simulation. Through homework assignments and projects, students are given an opportunity to develop their analytical skills while working with real-world datasets from a variety of domains. Prerequisites: none.",
+        "external_prereqs": []
     },
     {
-        "id": "DSC 20/R",
-        "name": "Programming and Basic Data Structures for Data Science (4)",
-        "description": "Provides an understanding of the structures that underlie the programs, algorithms, and languages used in data science by expanding the repertoire of computational concepts introduced in DSC 10/R and exposing students to techniques of abstraction. Course will be taught in Python and will cover topics including recursion, higher-order functions, function composition, object-oriented programming, interpreters, classes, and simple data structures such as arrays, lists, and linked lists. Prerequisites: DSC 10/R. Restricted to students within the DS25 major. All other students will be allowed as space permits."
+        "id": "DSC 20",
+        "name": "Programming and Basic Data Structures for Data Science",
+        "units": 4,
+        "description": "Provides an understanding of the structures that underlie the programs, algorithms, and languages used in data science by expanding the repertoire of computational concepts introduced in DSC 10/R and exposing students to techniques of abstraction. Course will be taught in Python and will cover topics including recursion, higher-order functions, function composition, object-oriented programming, interpreters, classes, and simple data structures such as arrays, lists, and linked lists. Prerequisites: DSC 10/R. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": []
     },
     {
-        "id": "DSC 30/R",
-        "name": "Data Structures and Algorithms for Data Science (4)",
-        "description": "Builds on topics covered in DSC 20/R and provides practical experience in composing larger computational systems through several significant programming projects using Java. Students will study advanced programming techniques including encapsulation, abstract data types, interfaces, algorithms and complexity, and data structures such as stacks, queues, priority queues, heaps, linked lists, binary trees, binary search trees, and hash tables. Prerequisites: DSC 20/R. Restricted to students within the DS25 major. All other students will be allowed as space permits."
+        "id": "DSC 30",
+        "name": "Data Structures and Algorithms for Data Science",
+        "units": 4,
+        "description": "Builds on topics covered in DSC 20/R and provides practical experience in composing larger computational systems through several significant programming projects using Java. Students will study advanced programming techniques including encapsulation, abstract data types, interfaces, algorithms and complexity, and data structures such as stacks, queues, priority queues, heaps, linked lists, binary trees, binary search trees, and hash tables. Prerequisites: DSC 20/R. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": []
     },
     {
-        "id": "DSC 40A/R",
-        "name": "Theoretical Foundations of Data Science I (4)",
-        "description": "The sequence DSC 40A/R-B/R introduces the theoretical foundations of data science. DSC 40A/R, the first course in the sequence, exposes students to the mathematical theory underlying fundamental topics in machine learning. Topics include empirical risk minimization, optimization, regression, classification, and discrete probability. Students practice creative problem-solving while learning how to rigorously justify and communicate mathematical ideas. Prerequisites: DSC 10/R, (MATH 20C or MATH 31BH) and (MATH 18 or MATH 20F or MATH 31AH). Restricted to students within the DS25 major. All other students will be allowed as space permits."
+        "id": "DSC 40A",
+        "name": "Theoretical Foundations of Data Science I",
+        "units": 4,
+        "description": "The sequence DSC 40A/R-B/R introduces the theoretical foundations of data science. DSC 40A/R, the first course in the sequence, exposes students to the mathematical theory underlying fundamental topics in machine learning. Topics include empirical risk minimization, optimization, regression, classification, and discrete probability. Students practice creative problem-solving while learning how to rigorously justify and communicate mathematical ideas. Prerequisites: DSC 10/R, (MATH 20C or MATH 31BH) and (MATH 18 or MATH 20F or MATH 31AH). Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": [
+            "MATH 31AH",
+            "MATH 20C",
+            "MATH 31BH",
+            "MATH 18",
+            "MATH 20F"
+        ]
     },
     {
-        "id": "DSC 40B/R",
-        "name": "Theoretical Foundations of Data Science II (4)",
-        "description": "The marriage of data, computation, and inferential thinking, or “data science,” is redefining how people and organizations solve challenging problems and understand the world. This course bridges lower- and upper-division data science courses as well as methods courses in other fields. Students master the data science life-cycle and learn many of the fundamental principles and techniques of data science spanning algorithms, statistics, machine learning, visualization, and data systems. Prerequisites: DSC 30/R and DSC 40A/R. Restricted to students within the DS25 major. All other students will be allowed as space permits."
+        "id": "DSC 40B",
+        "name": "Theoretical Foundations of Data Science II",
+        "units": 4,
+        "description": "The marriage of data, computation, and inferential thinking, or “data science,” is redefining how people and organizations solve challenging problems and understand the world. This course bridges lower- and upper-division data science courses as well as methods courses in other fields. Students master the data science life-cycle and learn many of the fundamental principles and techniques of data science spanning algorithms, statistics, machine learning, visualization, and data systems. Prerequisites: DSC 30/R and DSC 40A/R. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": []
     },
     {
-        "id": "DSC 80/R",
-        "name": "The Practice and Application of Data Science (4)",
-        "description": "Students will learn about a variety of topics in data science through interactive presentations from faculty and industry professionals. May be taken for credit up to four times. Prerequisites: DSC 10. Restricted to students within the DS25 major. All other students will be allowed as space permits."
-    },
-    {
-        "id": "DSC 90",
-        "name": "Seminar in Data Science (2)",
-        "description": "Students will receive training in skills and techniques necessary to be effective tutors for data science courses. Students will also gain practical experience in tutoring students on data science topics. Prerequisites: DSC 10. Students must have applied for and been accepted as a tutor for a DSC course for the first time; enrollment in DSC 95 is required for these students."
-    },
-    {
-        "id": "DSC 95",
-        "name": "Tutor Apprenticeship in Data Science (2)",
-        "description": "Students will explore topics and tools relevant to the practice of data science in a workshop format. The instructor works with students on guided projects to help students acquire knowledge and skills to complement their course work in the core data science classes. Topics vary from quarter to quarter. Students are strongly recommended to enroll in either DSC 10 or DSC 20 concurrently. Prerequisites: none. Restricted to students within the DS25 major. All other students will be allowed as space permits."
-    },
-    {
-        "id": "DSC 96",
-        "name": "Workshop in Data Science (2)",
-        "description": "Individual research on a topic related to data science, by special arrangement with and under the direction of a UC San Diego faculty member, in connection with an internship at an organization. It is the students’ responsibility to find an internship related to data science prior to enrolling in this course. Internship work will inform but not necessarily define the research topic. The research topic is expected to promote the study of the principles and techniques involved in the internship work. May be taken for credit up to two times. Prerequisites: (MATH 20C or MATH 31BH), and (MATH 18 or MATH 31AH), and DSC 20 and DSC 40A. Completion of thirty units at UC San Diego with a university GPA of 3.0. Special Studies form, consent of the instructor, and approval of the department required. Priority enrollment is given to data science majors DS25. Restricted to first-year and sophomore level students."
-    },
-    {
-        "id": "DSC 97",
-        "name": "Internship in Data Science (2 or 4)",
-        "description": "Students will investigate a topic in data science through directed reading, discussion, and project work under the supervision of a faculty member. May be taken for credit up to two times. Prerequisites: (MATH 20C or MATH 31BH) and (MATH 18 or MATH 31AH) and DSC 20 and DSC 40A. Completion of thirty units at UC San Diego with a university GPA of 3.0. Special Studies form, consent of the instructor, and approval of the department required. Priority enrollment is given to data science majors DS25. Restricted to first-year and sophomore level students."
-    },
-    {
-        "id": "DSC 98",
-        "name": "Directed Group Study in Data Science (2 or 4)",
-        "description": "Students will participate in independent study or research in data science under the direction of a UC San Diego faculty member. May be taken for credit up to two times. Prerequisites: (MATH 20C or MATH 31BH) and (MATH 18 or MATH 31AH) and DSC 20 and DSC 40A. Completion of thirty units at UC San Diego with a university GPA of 3.0. Special Studies form, consent of the instructor, and approval of the department required. Priority enrollment is given to data science majors DS25. Restricted to first-year and sophomore level students."
-    },
-    {
-        "id": "DSC 99",
-        "name": "Independent Study in Data Science (2 or 4)",
-        "description": "Independent study or research in data science under the direction of a faculty member. Prerequisites: Consent of instructor and department approval."
+        "id": "DSC 80",
+        "name": "The Practice and Application of Data Science",
+        "units": 4,
+        "description": "Students will learn about a variety of topics in data science through interactive presentations from faculty and industry professionals. May be taken for credit up to four times. Prerequisites: DSC 10. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": []
     },
     {
         "id": "DSC 100",
-        "name": "Introduction to Data Management (4)",
-        "description": "Introduction to storage and management of large-scale data using SQL. Covers query languages, schema design, and database architecture. Prerequisites: DSC 40B/R and DSC 80/R."
+        "name": "Introduction to Data Management",
+        "units": 4,
+        "description": "This course introduces the principles of computing systems and infrastructure for scaling analytics to large datasets. Topics include memory hierarchy, distributed systems, model selection, heterogeneous datasets, and deployment at scale. The course will also discuss the design of systems such as MapReduce/Hadoop and Spark, in conjunction with their implementation. Students will also learn how dataflow operations can be used to perform data preparation, cleaning, and feature engineering. Prerequisites: DSC 100. Restricted to students with upper-division standing. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": []
     },
     {
         "id": "DSC 102",
-        "name": "Systems for Scalable Analytics (4)",
-        "description": "Systems and infrastructure for scaling analytics. Topics include MapReduce, Spark, and distributed systems. Prerequisites: DSC 100."
+        "name": "Systems for Scalable Analytics",
+        "units": 4,
+        "description": "The course will introduce a variety of No-SQL data formats, data models, high-level query languages, and programming abstractions representative of the needs of modern data analytic tasks. Topics include hierarchical graph database systems, unrestricted graph database systems, array databases, comparison of expressive power of the data models, and parallel programming abstractions, including Map/Reduce and its descendants. Prerequisites: DSC 100. Restricted to students with upper-division standing. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": []
+    },
+    {
+        "id": "DSC 104",
+        "name": "Beyond Relational Data Management",
+        "units": 4,
+        "description": "Data visualization helps explore and interpret data through interaction. This course introduces the principles, techniques, and algorithms for creating effective visualizations. The course draws on the knowledge from several disciplines including computer graphics, human-computer interaction, cognitive psychology, design, and statistical graphics and synthesizes relevant ideas. Students will design visualization systems using D3 or other web-based software and evaluate their effectiveness. Prerequisites: DSC 80/R. Restricted to students with upper-division standing. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": []
+    },
+    {
+        "id": "DSC 106",
+        "name": "Introduction to Data Visualization",
+        "units": 4,
+        "description": "This course will focus on ideas from classical and modern signal processing, with the main themes of sampling continuous data and building informative representations using orthonormal bases, frames, and data dependent operators. Topics include sampling theory, Fourier analysis, lossy transformations and compression, time and spatial filters, and random Fourier features and connections to kernel methods. Sources of data include time series and streaming signals and various imaging modalities. Prerequisites: (MATH 18 or MATH 31AH) and (MATH 20C or MATH 31BH) and DSC 80/R. Restricted to students with upper-division standing. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": [
+            "MATH 31AH",
+            "MATH 31BH",
+            "MATH 20C",
+            "MATH 18"
+        ]
+    },
+    {
+        "id": "DSC 120",
+        "name": "Signal Processing for Data Analysis",
+        "units": 4,
+        "description": "TIntroduction to convexity: convex sets, convex functions; geometry of hyperplanes; support functions for convex sets; hyperplanes and support vector machines. Linear and quadratic programming: optimality conditions; duality; primal and dual forms of linear support vector machines; active-set methods; interior methods. Prerequisites: (MATH 20C or MATH 31BH) and (MATH 18 or MATH 31 AH). Students may not receive credit for both DSC 123A and MATH 173A. Students who have not completed listed prerequisites may enroll with consent of instructor.",
+        "external_prereqs": [
+            "MATH 31",
+            "MATH 20C",
+            "MATH 173A",
+            "MATH 31BH",
+            "MATH 18"
+        ]
+    },
+    {
+        "id": "DSC 123A",
+        "name": "Optimization Methods for Data Science I",
+        "units": 4,
+        "description": "Unconstrained optimization: linear least squares; randomized linear least squares; method(s) of steepest descent; line-search methods; conjugate-gradient method; comparing the efficiency of methods; randomized/stochastic methods; nonlinear least squares; norm minimization methods. Convex constrained optimization: optimality conditions; convex programming; Lagrangian relaxation; the method of multipliers; the alternating direction method of multipliers; minimizing combinations of norms. Prerequisites: DSC 123A or MATH 173A. Students may not receive credit for both DSC 123B and MATH 173B. Students who have not completed listed prerequisites may enroll with consent of instructor.",
+        "external_prereqs": [
+            "MATH 173B",
+            "MATH 173A"
+        ]
+    },
+    {
+        "id": "DSC 123B",
+        "name": "Optimization Methods for Data Science II",
+        "units": 4,
+        "description": "The course covers learning and using probabilistic models for knowledge representation and decision-making. Topics covered include graphical models, temporal models, and online learning, as well as applications to natural language processing, adversarial learning, computational biology, and robotics. Prior completion of MATH 181A is strongly recommended. Prerequisites: DSC 80/R and (ECE 109 or ECON 120A or MAE 108 or MATH 180A or MATH 183 or MATH 186). Restricted to students with upper-division standing. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": [
+            "MATH 186",
+            "MATH 183",
+            "MATH 181A",
+            "MATH 180A"
+        ]
+    },
+    {
+        "id": "DSC 140A",
+        "name": "Probabilistic Modeling and Machine Learning",
+        "units": 4,
+        "description": "This course is an introduction to machine learning which explores techniques for learning suitable representations from data. Topics include clustering, dimensionality reduction, manifold learning, principal component analysis, spectral embeddings, multilayer perceptrons, autoencoders, convolutional and recurrent neural networks, and other aspects of deep learning. The course focuses on the underlying mathematical principles, but some attention is also given to implementation. Prerequisites: DSC 80/R and (ECE 109 or ECON 120A or MAE 108 or MATH 180A or MATH 183 or MATH 186). Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": [
+            "MATH 186",
+            "MATH 183",
+            "MATH 180A"
+        ]
+    },
+    {
+        "id": "DSC 140B",
+        "name": "Representation Learning",
+        "units": 4,
+        "description": "This course mainly focuses on introducing current methods and models that are useful in analyzing and mining real-world data. It will cover frequent pattern mining, regression and classification, clustering, and representation learning. All participants should be comfortable with programming, and with basic optimization and linear algebra. Prerequisites: (DSC 40B or CSE 12) and (DSC 80 or CSE 15L or CSE 29) and (MATH 180A or MATH 180B or MATH 181A or MATH 183 or MATH 186 or CSE 103 or ECE 109 or ECON 120A or MAE 108). Students may not receive credit for DSC 148 and CSE 158 or CSE 158R. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": [
+            "CSE 103",
+            "CSE 15L",
+            "MATH 181A",
+            "MATH 180A",
+            "MATH 186",
+            "CSE 29",
+            "MATH 180B",
+            "MATH 183",
+            "CSE 158R",
+            "CSE 12",
+            "CSE 158"
+        ]
+    },
+    {
+        "id": "DSC 148",
+        "name": "Introduction to Data Mining",
+        "units": 4,
+        "description": "Rigorous treatment of principal component analysis, one of the most effective methods in finding signals amidst the noise of large data arrays. Topics include singular value decomposition for matrices, maximal likelihood estimation, least squares methods, unbiased estimators, random matrices, Wigner’s semicircle law, Markchenko-Pastur laws, universality of eigenvalue statistics, outliers, the BBP transition, applications to community detection, and stochastic block model. Prerequisites: MATH 180A and (MATH 18 or MATH 31AH). Students will not receive credit for both MATH 182 and DSC 155. Completion of MATH 102 is encouraged but not required.",
+        "external_prereqs": [
+            "MATH 31AH",
+            "MATH 180A",
+            "MATH 18",
+            "MATH 182",
+            "MATH 102"
+        ]
+    },
+    {
+        "id": "DSC 155",
+        "name": "Hidden Data in Random Matrices",
+        "units": 4,
+        "description": "This course addresses the intersection of data science and contemporary arts and culture, exploring four main themes of authorship, representation, visualization, and data provenance. The course is not solely an introduction to data science techniques nor merely an arts practice course, but explores significant new possibilities for both fields arising from their intersection. Students will examine problems from complementary perspectives of artist-researchers and data scientists. Prerequisites: DSC 80. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": []
+    },
+    {
+        "id": "DSC 160",
+        "name": "Data Science and the Arts",
+        "units": 4,
+        "description": "This class explores statistical and computational methods to enable students to use text as a data source in the social sciences. Hands-on examples will equip students to work with text data in final projects. Prerequisites: ECON 5 or POLI 170A or POLI 171 or POLI 30 or POLI 30D or POLI 5 or POLI 5D. Students will not receive credit for both POLI 176 and DSC 161. Restricted to junior and senior level students. Restricted to students with upper-division standing.",
+        "external_prereqs": []
+    },
+    {
+        "id": "DSC 161",
+        "name": "Text as Data",
+        "units": 4,
+        "description": "This course examines the greater context under which the practice of data science exists and explores concrete ways these issues surface in technical work. Students learn frameworks for understanding how individuals relate to social institutions, how to use them to identify how issues of fairness arise in the “life of a data scientist,” and use them to propose and critique potential solutions. Prerequisites: DSC 80. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": []
+    },
+    {
+        "id": "DSC 167",
+        "name": "Fairness and Algorithmic Decision-Making",
+        "units": 4,
+        "description": "Spatial data science is a set of concepts and methods that deal with accessing, managing, visualizing, analyzing, and reasoning about spatial data in applications where location, shape and size of objects, and their mutual arrangement are important. This upper-division course explores advanced data science concepts for spatial data, introducing students to principles and techniques of spatial data analysis, including geographic information systems, spatial big data management, and geostatistics. Prerequisites: DSC 80. Restricted to students within the DS25 major. All other students will be allowed as space permits.",
+        "external_prereqs": []
+    },
+    {
+        "id": "DSC 170",
+        "name": "Spatial Data Science and Applications",
+        "units": 4,
+        "description": "In this two-course sequence students will investigate a topic and design a system to produce statistically informed output. The investigation will span the entire lifecycle, including assessing the problem, learning domain knowledge, collecting/cleaning data, creating a model, addressing ethical issues, designing the system, analyzing the output, and presenting the results. 180A deals with research, methodology, and system design. Students will produce a research summary and a project proposal. Prerequisites: DSC 102 and MATH 189 and DSC 140B or CSE 151A or COGS 188 or CSE 158 or CSE 158R or DSC 148 or DSC 140A or CSE 151A and DSC 106. Restricted to students with upper-division standing. Restricted to students within the DS25 major.",
+        "external_prereqs": [
+            "CSE 151A",
+            "CSE 158R",
+            "MATH 189",
+            "CSE 158"
+        ]
+    },
+    {
+        "id": "DSC 180A",
+        "name": "Data Science Project I",
+        "units": 4,
+        "description": "In this two-course sequence students will investigate a topic and design a system to produce statistically informed output. The investigation will span the entire lifecycle, including assessing the problem, learning domain knowledge, collecting/cleaning data, creating a model, addressing ethical issues, designing the system, analyzing the output, and presenting the results. 180B will consist of implementing the project while studying the best practices for evaluation. Prerequisites: DSC 180A. Students are only cleared to enroll into the discussion section associated with their DSC 180A discussion section. Restricted to students with upper-division standing. Restricted to students within the DS25 major.",
+        "external_prereqs": []
+    },
+    {
+        "id": "DSC 180B",
+        "name": "Data Science Project II",
+        "units": 4,
+        "description": "Topics of special interest in data science. Topics vary from quarter to quarter. May be taken for credit up to four times when topic varies. Prerequisites: department and instructor approval required to monitor enrollment and to ensure that students have the sufficient educational background for a given topic. Restricted to students with upper-division standing.",
+        "external_prereqs": []
+    },
+    {
+        "id": "DSC 190",
+        "name": "Topics in Data Science",
+        "units": 4,
+        "description": "A seminar course on topics of current interest in data science. Topics may vary from quarter to quarter. May be taken for credit three times. Prerequisites: restricted to students with upper-division standing. Department and instructor approval is required to monitor enrollment and to ensure that students have the sufficient educational background for a given topic.",
+        "external_prereqs": []
+    },
+    {
+        "id": "DSC 191",
+        "name": "Seminar in Data Science (1 or 2)",
+        "units": 4,
+        "description": "Individual research on a topic related to data science, by special arrangement with and under the direction of a faculty member, in connection with an internship at an organization. Internship work will inform but not necessarily define the research topic. The research topic is expected to promote the study of the principles and techniques involved in the internship work. Students should independently secure an internship before enrolling in the course. Prerequisites: restricted to students with upper-division standing. Consent of the instructor and approval of the department. An application for Special Studies must be filed with the Registrar’s office after approval from the instructor and the department chair.",
+        "external_prereqs": []
+    },
+    {
+        "id": "DSC 197",
+        "name": "Data Science Internship (1–4)",
+        "units": 4,
+        "description": "Data science topics whose study involves reading and discussion by a small group of students under supervision of a faculty member. May be taken for credit up to two times. Prerequisites: restricted to students with upper-division standing. Consent of the instructor and approval of the department. Department stamp required. An application for Special Studies must be filed with the Registrar’s office after approval from the instructor and the department chair.",
+        "external_prereqs": []
+    },
+    {
+        "id": "DSC 198",
+        "name": "Directed Group Study in Data Science (2 or 4)",
+        "units": 4,
+        "description": "Independent reading or research on a topic related to data science by special arrangement with a faculty member. May be taken for credit up to two times. Prerequisites: restricted to students with upper-division standing. Consent of the instructor and approval of the department. An application for Special Studies must be filed with the Registrar’s Office after approval from the instructor and the department chair.",
+        "external_prereqs": []
+    },
+    {
+        "id": "DSC 199",
+        "name": "Independent Study for Data Science Undergraduates (2 or 4)",
+        "units": 4,
+        "description": "Computing structures and programming concepts such as object orientation, data structures such as queues, heaps, lists, search trees, and hash tables. Laboratory skills include Jupyter notebooks, RESTful interfaces, and various software development kits (SDKs). Prerequisites: none. Restricted to students within the DS75 and DS76 major.",
+        "external_prereqs": []
     }
 ]

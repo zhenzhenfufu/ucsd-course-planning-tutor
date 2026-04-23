@@ -1,49 +1,53 @@
 import requests
 from bs4 import BeautifulSoup
-import json # 引入处理 JSON 数据的工具
+import json
+import re
 
-# 目标网址：UCSD 数据科学 (DSC) 课程目录
 url = "https://catalog.ucsd.edu/courses/DSC.html"
-
-print(f"🚀 正在获取并结构化 UCSD DSC 课程数据...")
-
 headers = {'User-Agent': 'Mozilla/5.0'}
 response = requests.get(url, headers=headers)
 
 if response.status_code == 200:
     soup = BeautifulSoup(response.text, 'html.parser')
-    
-    # 同时获取课程名字和课程描述
     courses = soup.find_all('p', class_='course-name')
     descriptions = soup.find_all('p', class_='course-descriptions')
     
-    # 创建一个空列表，用来装我们整理好的数据
     course_data = []
-    
-    # 抓取前 15 门课作为我们的 MVP 测试数据库
-    for i in range(min(15, len(courses))):
+    for i in range(len(courses)):
         full_title = courses[i].text.strip()
-        # 匹配对应的课程描述
-        desc = descriptions[i].text.strip() if i < len(descriptions) else "无描述"
+        desc = descriptions[i].text.strip() if i < len(descriptions) else ""
         
-        # 将 "DSC 10. Principles of Data Science (4)" 从第一个句号拆开
+        # 1. 提取 ID 和 原始名称
         parts = full_title.split('.', 1)
+        if len(parts) < 2: continue
         
-        if len(parts) == 2:
-            course_id = parts[0].strip()   # 提取出 "DSC 10"
-            course_name = parts[1].strip() # 提取出 "Principles of Data Science (4)"
+        c_id = parts[0].strip().replace('/R', '')
+        remaining = parts[1].strip()
+        
+        # 2. 过滤编号
+        num_match = re.search(r'DSC\s+(\d+)', c_id)
+        if num_match:
+            num = int(num_match.group(1))
+            if 90 <= num <= 99 or num >= 200: continue
+
+        # 3. 提取学分 (Units) - 匹配末尾括号内的数字
+        unit_match = re.search(r'\((\d+)\)', remaining)
+        units = int(unit_match.group(1)) if unit_match else 4
+        # 清理名称中的学分部分
+        c_name = re.sub(r'\(\d+\)', '', remaining).strip()
+
+        # 4. 尝试寻找非 DSC 的前置课 (如 MATH, CSE)
+        # 这是一个简单的正则，匹配描述中出现的特定前置课关键词
+        ext_pre = re.findall(r'(MATH\s+\d+[A-Z]*|CSE\s+\d+[A-Z]*)', desc)
+        
+        course_data.append({
+            "id": c_id,
+            "name": c_name,
+            "units": units,
+            "description": desc,
+            "external_prereqs": list(set(ext_pre))
+        })
             
-            # 以字典结构保存每一门课
-            course_data.append({
-                "id": course_id,
-                "name": course_name,
-                "description": desc
-            })
-            
-    # 将整理好的数据写入 JSON 文件
     with open('dsc_courses.json', 'w', encoding='utf-8') as f:
         json.dump(course_data, f, ensure_ascii=False, indent=4)
-        
-    print("✅ 数据已成功提取，并在左侧文件夹生成了 dsc_courses.json！")
-else:
-    print(f"❌ 访问失败，状态码: {response.status_code}")
+    print(f"✅ 成功抓取 {len(course_data)} 门课，已包含学分和外部前置。")

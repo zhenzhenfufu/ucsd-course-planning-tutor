@@ -33,3 +33,6 @@ def get_ai_advice(user_question):
         # 打印到终端方便排查
         print(f"DEBUG: {str(e)}")
         return f"❌ **AI Error**: {str(e)}"
+    
+# ... 保持之前的逻辑，只需确保读取的是最新的 dsc_courses.json ...
+# AI 现在可以回答“我这学期一共 16 个学分，会不会太累？”这类问题。
