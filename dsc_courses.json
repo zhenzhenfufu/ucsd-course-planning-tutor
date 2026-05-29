@@ -1,392 +1,77 @@
 [
-  {
-    "id": "MATH 18",
-    "name": "Linear Algebra",
-    "units": 4,
-    "division": "prerequisite",
-    "description": "Matrix algebra, Gaussian elimination, determinants, vector spaces and linear transformations, eigenvalues and eigenvectors, orthogonality. Essential foundation for DSC 40A, 120, 123A, 140A/B. Prerequisites: Math placement required.",
-    "stats": {"Popularity": 88, "Content Difficulty": 62, "Exam Difficulty": 68, "Assignment Load": 60, "Average GPA": 3.0, "Hours/Week": 12},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/MATH.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+18"
-    }
-  },
-  {
-    "id": "MATH 20C",
-    "name": "Calculus and Analytic Geometry for Science and Engineering",
-    "units": 4,
-    "division": "prerequisite",
-    "description": "Vector geometry, vector functions and their derivatives, partial differentiation, optimization, multiple integrals, and vector calculus. Required prerequisite for DSC 40A. Prerequisites: MATH 20B.",
-    "stats": {"Popularity": 90, "Content Difficulty": 68, "Exam Difficulty": 72, "Assignment Load": 62, "Average GPA": 2.9, "Hours/Week": 12},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/MATH.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+20C"
-    }
-  },
-  {
-    "id": "MATH 180A",
-    "name": "Introduction to Probability",
-    "units": 4,
-    "division": "prerequisite",
-    "description": "Probability spaces, random variables, discrete and continuous distributions, expectation, variance, joint distributions, conditional probability, law of large numbers, central limit theorem. Required or recommended for DSC 140A, 140B, 148, 155. Prerequisites: MATH 20C.",
-    "stats": {"Popularity": 78, "Content Difficulty": 72, "Exam Difficulty": 76, "Assignment Load": 65, "Average GPA": 2.9, "Hours/Week": 13},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/MATH.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+180A"
-    }
-  },
-  {
-    "id": "MATH 189",
-    "name": "Exploratory Data Analysis and Inference",
-    "units": 4,
-    "division": "prerequisite",
-    "description": "Data analysis, statistical inference, and regression using real datasets. Recommended completion before DSC 180A. Bridges theory and practice. Prerequisites: MATH 18 and MATH 180A.",
-    "stats": {"Popularity": 70, "Content Difficulty": 65, "Exam Difficulty": 65, "Assignment Load": 68, "Average GPA": 3.1, "Hours/Week": 12},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/MATH.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+189"
-    }
-  },
-  {
-    "id": "DSC 10",
-    "name": "Principles of Data Science",
-    "units": 4,
-    "division": "lower",
-    "description": "First course in data science. Introduces data exploration, statistical inference, and prediction using Python (pandas, NumPy, Matplotlib). Students work with real-world datasets through homework and projects. No prerequisites — open to all students.",
-    "stats": {"Popularity": 92, "Content Difficulty": 35, "Exam Difficulty": 40, "Assignment Load": 55, "Average GPA": 3.6, "Hours/Week": 8},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+10",
-      "🌐 Course Site": "https://dsc10.com"
-    }
-  },
-  {
-    "id": "DSC 20",
-    "name": "Programming and Basic Data Structures for Data Science",
-    "units": 4,
-    "division": "lower",
-    "description": "Expands programming skills from DSC 10: recursion, higher-order functions, object-oriented programming, interpreters, and basic data structures (arrays, lists, linked lists). Taught in Python. Prerequisites: DSC 10. Restricted to DS25 majors.",
-    "stats": {"Popularity": 80, "Content Difficulty": 55, "Exam Difficulty": 58, "Assignment Load": 68, "Average GPA": 3.2, "Hours/Week": 12},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+20"
-    }
-  },
-  {
-    "id": "DSC 30",
-    "name": "Data Structures and Algorithms for Data Science",
-    "units": 4,
-    "division": "lower",
-    "description": "Advanced programming in Java: encapsulation, abstract data types, interfaces, algorithm complexity, stacks, queues, priority queues, heaps, linked lists, binary search trees, and hash tables. Several large programming projects. Prerequisites: DSC 20. Restricted to DS25 majors.",
-    "stats": {"Popularity": 85, "Content Difficulty": 78, "Exam Difficulty": 82, "Assignment Load": 88, "Average GPA": 2.9, "Hours/Week": 17},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+30"
-    }
-  },
-  {
-    "id": "DSC 40A",
-    "name": "Theoretical Foundations of Data Science I",
-    "units": 4,
-    "division": "lower",
-    "description": "Mathematical theory underlying machine learning: empirical risk minimization, optimization, regression, classification, and discrete probability. Students practice rigorous mathematical reasoning and justification. Prerequisites: DSC 10, MATH 20C (or 31BH), and MATH 18 (or 20F/31AH). Restricted to DS25 majors.",
-    "stats": {"Popularity": 88, "Content Difficulty": 82, "Exam Difficulty": 86, "Assignment Load": 80, "Average GPA": 2.8, "Hours/Week": 15},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+40A",
-      "🌐 Course Site": "https://dsc40a.com"
-    }
-  },
-  {
-    "id": "DSC 40B",
-    "name": "Theoretical Foundations of Data Science II",
-    "units": 4,
-    "division": "lower",
-    "description": "Algorithms and discrete mathematics for data science: runtime analysis, graph algorithms, dynamic programming, and combinatorics. Bridges lower- and upper-division DSC courses. Prerequisites: DSC 30 and DSC 40A. Restricted to DS25 majors.",
-    "stats": {"Popularity": 82, "Content Difficulty": 80, "Exam Difficulty": 82, "Assignment Load": 80, "Average GPA": 2.9, "Hours/Week": 14},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+40B",
-      "🌐 Course Site": "https://dsc40b.com"
-    }
-  },
-  {
-    "id": "DSC 80",
-    "name": "The Practice and Application of Data Science",
-    "units": 4,
-    "division": "lower",
-    "description": "Hands-on data science with real-world datasets: exploratory data analysis, data cleaning, feature engineering, and predictive modeling using pandas, NumPy, and scikit-learn. Emphasizes the full data science lifecycle and best practices. Prerequisites: DSC 10. Restricted to DS25 majors.",
-    "stats": {"Popularity": 90, "Content Difficulty": 65, "Exam Difficulty": 58, "Assignment Load": 82, "Average GPA": 3.1, "Hours/Week": 14},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+80",
-      "🌐 Course Site": "https://dsc80.com"
-    }
-  },
-  {
-    "id": "DSC 100",
-    "name": "Introduction to Data Management",
-    "units": 4,
-    "division": "upper",
-    "description": "Principles of relational database management: entity-relationship modeling, relational algebra, SQL (queries, joins, aggregation, subqueries), database design and normalization, transactions, and an introduction to NoSQL systems. Hands-on SQL projects with real databases. Prerequisites: DSC 40B and DSC 80. Restricted to DS25 majors.",
-    "stats": {"Popularity": 82, "Content Difficulty": 70, "Exam Difficulty": 65, "Assignment Load": 75, "Average GPA": 3.0, "Hours/Week": 14},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+100"
-    }
-  },
-  {
-    "id": "DSC 102",
-    "name": "Systems for Scalable Analytics",
-    "units": 4,
-    "division": "upper",
-    "description": "Computing infrastructure for large-scale data analytics: memory hierarchy, distributed systems, MapReduce/Hadoop, Apache Spark, and deployment at scale. Students learn how dataflow operations are used for data preparation, cleaning, and feature engineering at scale. Prerequisites: DSC 100. Restricted to DS25 majors.",
-    "stats": {"Popularity": 65, "Content Difficulty": 82, "Exam Difficulty": 78, "Assignment Load": 85, "Average GPA": 2.8, "Hours/Week": 18},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+102"
-    }
-  },
-  {
-    "id": "DSC 104",
-    "name": "Beyond Relational Data Management",
-    "units": 4,
-    "division": "upper",
-    "description": "NoSQL data formats, data models, and high-level query languages for modern analytics. Topics include hierarchical databases, graph database systems (e.g., Neo4j), array databases, comparison of expressive power of data models, and parallel programming abstractions. Prerequisites: DSC 100. Restricted to DS25 majors.",
-    "stats": {"Popularity": 55, "Content Difficulty": 72, "Exam Difficulty": 65, "Assignment Load": 75, "Average GPA": 3.0, "Hours/Week": 13},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+104"
-    }
-  },
-  {
-    "id": "DSC 106",
-    "name": "Introduction to Data Visualization",
-    "units": 4,
-    "division": "upper",
-    "description": "Principles, techniques, and algorithms for creating effective data visualizations. Draws from computer graphics, HCI, cognitive psychology, and statistical graphics. Students design interactive visualization systems using D3.js or web-based tools and evaluate their effectiveness through user studies. Prerequisites: DSC 80. Restricted to DS25 majors.",
-    "stats": {"Popularity": 78, "Content Difficulty": 60, "Exam Difficulty": 55, "Assignment Load": 72, "Average GPA": 3.3, "Hours/Week": 12},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+106"
-    }
-  },
-  {
-    "id": "DSC 120",
-    "name": "Signal Processing for Data Analysis",
-    "units": 4,
-    "division": "upper",
-    "description": "Classical and modern signal processing for data science: sampling theory, Fourier analysis, lossy transformations and compression, time/spatial filters, wavelets, and random Fourier features. Applies to time series, streaming signals, and image data. Prerequisites: (MATH 18 or 31AH), (MATH 20C or 31BH), and DSC 80. Restricted to DS25 majors.",
-    "stats": {"Popularity": 50, "Content Difficulty": 88, "Exam Difficulty": 84, "Assignment Load": 75, "Average GPA": 2.7, "Hours/Week": 17},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+120"
-    }
-  },
-  {
-    "id": "DSC 123A",
-    "name": "Optimization Methods for Data Science I",
-    "units": 4,
-    "division": "upper",
-    "description": "Introduction to convex optimization: convex sets, convex functions, geometry of hyperplanes, support functions. Linear and quadratic programming, optimality conditions, duality, and primal/dual forms of linear support vector machines. Active-set and interior-point methods. Prerequisites: MATH 20C and MATH 18. Cannot receive credit for both DSC 123A and MATH 173A.",
-    "stats": {"Popularity": 45, "Content Difficulty": 92, "Exam Difficulty": 90, "Assignment Load": 78, "Average GPA": 2.6, "Hours/Week": 19},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+123A"
-    }
-  },
-  {
-    "id": "DSC 123B",
-    "name": "Optimization Methods for Data Science II",
-    "units": 4,
-    "division": "upper",
-    "description": "Unconstrained optimization: linear and randomized least squares, steepest descent, line-search methods, conjugate gradient, stochastic gradient methods, and nonlinear least squares. Convex constrained optimization: Lagrangian relaxation, method of multipliers, alternating direction method of multipliers (ADMM). Prerequisites: DSC 123A or MATH 173A.",
-    "stats": {"Popularity": 40, "Content Difficulty": 93, "Exam Difficulty": 92, "Assignment Load": 82, "Average GPA": 2.5, "Hours/Week": 20},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+123B"
-    }
-  },
-  {
-    "id": "DSC 140A",
-    "name": "Probabilistic Modeling and Machine Learning",
-    "units": 4,
-    "division": "upper",
-    "description": "Probabilistic models for knowledge representation and decision-making: Bayesian networks, Markov models, temporal models, hidden Markov models, and online learning. Applications to NLP, adversarial learning, computational biology, and robotics. MATH 181A strongly recommended. Prerequisites: DSC 80 and a probability course. Restricted to DS25 majors.",
-    "stats": {"Popularity": 78, "Content Difficulty": 82, "Exam Difficulty": 78, "Assignment Load": 80, "Average GPA": 2.9, "Hours/Week": 16},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+140A"
-    }
-  },
-  {
-    "id": "DSC 140B",
-    "name": "Representation Learning",
-    "units": 4,
-    "division": "upper",
-    "description": "Machine learning techniques for learning representations from data: clustering, dimensionality reduction, manifold learning, PCA, spectral embeddings, multilayer perceptrons, autoencoders, convolutional networks (CNNs), recurrent networks (RNNs), and deep learning foundations. Prerequisites: DSC 80 and a probability course. Restricted to DS25 majors.",
-    "stats": {"Popularity": 72, "Content Difficulty": 80, "Exam Difficulty": 76, "Assignment Load": 80, "Average GPA": 2.9, "Hours/Week": 15},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+140B"
-    }
-  },
-  {
-    "id": "DSC 148",
-    "name": "Introduction to Data Mining",
-    "units": 4,
-    "division": "upper",
-    "description": "Current methods for analyzing and mining real-world data: frequent pattern mining, association rules, classification, regression, clustering, and representation learning. Requires comfort with programming, basic optimization, and linear algebra. Prerequisites: DSC 40B, DSC 80, and a probability course. Cannot receive credit for both DSC 148 and CSE 158.",
-    "stats": {"Popularity": 82, "Content Difficulty": 75, "Exam Difficulty": 70, "Assignment Load": 82, "Average GPA": 3.0, "Hours/Week": 15},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+148"
-    }
-  },
-  {
-    "id": "DSC 155",
-    "name": "Hidden Data in Random Matrices",
-    "units": 4,
-    "division": "upper",
-    "description": "Rigorous treatment of PCA and random matrix theory: singular value decomposition, maximum likelihood estimation, least squares, Wigner's semicircle law, Marchenko-Pastur laws, universality of eigenvalue statistics, the BBP phase transition, and applications to community detection and stochastic block models. Prerequisites: MATH 180A and MATH 18. Cannot receive credit for both DSC 155 and MATH 182.",
-    "stats": {"Popularity": 42, "Content Difficulty": 92, "Exam Difficulty": 88, "Assignment Load": 68, "Average GPA": 2.6, "Hours/Week": 18},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+155"
-    }
-  },
-  {
-    "id": "DSC 160",
-    "name": "Data Science and the Arts",
-    "units": 4,
-    "division": "upper",
-    "description": "Explores the intersection of data science and contemporary arts: authorship, representation, visualization, and data provenance. Students examine problems from both artist-researcher and data scientist perspectives, working with cultural datasets. Not a pure CS or arts course — it bridges both. Prerequisites: DSC 80. Restricted to DS25 majors.",
-    "stats": {"Popularity": 65, "Content Difficulty": 42, "Exam Difficulty": 38, "Assignment Load": 62, "Average GPA": 3.6, "Hours/Week": 10},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+160"
-    }
-  },
-  {
-    "id": "DSC 161",
-    "name": "Text as Data",
-    "units": 4,
-    "division": "upper",
-    "description": "Statistical and computational methods for using text as a data source in the social sciences. Topics include tokenization, sentiment analysis, topic modeling, text classification, and word embeddings. Hands-on projects with real text data. Prerequisites: DSC 80 or equivalent programming and stats background.",
-    "stats": {"Popularity": 60, "Content Difficulty": 65, "Exam Difficulty": 58, "Assignment Load": 68, "Average GPA": 3.2, "Hours/Week": 12},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+161"
-    }
-  },
-  {
-    "id": "DSC 167",
-    "name": "Fairness and Algorithmic Decision-Making",
-    "units": 4,
-    "division": "upper",
-    "description": "Examines the broader social context of data science: how bias and fairness issues arise in technical work, legal and ethical frameworks, auditing algorithms for discrimination, and proposing solutions. Combines data analysis with policy critique. Light workload compared to technical DSC courses. Prerequisites: DSC 80. Restricted to DS25 majors.",
-    "stats": {"Popularity": 72, "Content Difficulty": 42, "Exam Difficulty": 38, "Assignment Load": 60, "Average GPA": 3.6, "Hours/Week": 10},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+167"
-    }
-  },
-  {
-    "id": "DSC 170",
-    "name": "Spatial Data Science and Applications",
-    "units": 4,
-    "division": "upper",
-    "description": "Concepts and methods for spatial data: geographic information systems (GIS), spatial big data management, geostatistics, and spatial reasoning. Applications where location, shape, and arrangement of objects are important. Introduces students to tools like GeoPandas and QGIS. Prerequisites: DSC 80. Restricted to DS25 majors.",
-    "stats": {"Popularity": 65, "Content Difficulty": 68, "Exam Difficulty": 62, "Assignment Load": 72, "Average GPA": 3.1, "Hours/Week": 13},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+170"
-    }
-  },
-  {
-    "id": "DSC 180A",
-    "name": "Data Science Project I",
-    "units": 4,
-    "division": "upper",
-    "description": "First half of the year-long capstone sequence. Students investigate a faculty-proposed research topic spanning the full data science lifecycle: assessing the problem, learning domain knowledge, collecting/cleaning data, creating a model, and addressing ethical issues. Deliverable: research summary and project proposal. Prerequisites: DSC 102, MATH 189, and a qualifying elective. Restricted to DS25 seniors.",
-    "stats": {"Popularity": 78, "Content Difficulty": 70, "Exam Difficulty": 45, "Assignment Load": 90, "Average GPA": 3.2, "Hours/Week": 20},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+180A",
-      "🌐 Course Site": "https://dsc-capstone.org"
-    }
-  },
-  {
-    "id": "DSC 180B",
-    "name": "Data Science Project II",
-    "units": 4,
-    "division": "upper",
-    "description": "Second half of the capstone sequence. Students implement the project designed in DSC 180A, applying best practices for evaluation, reproducibility, and communication. Culminates in a public poster session and written report. Must enroll in the section tied to your DSC 180A section. Prerequisites: DSC 180A.",
-    "stats": {"Popularity": 75, "Content Difficulty": 72, "Exam Difficulty": 45, "Assignment Load": 92, "Average GPA": 3.2, "Hours/Week": 22},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+180B",
-      "🌐 Course Site": "https://dsc-capstone.org"
-    }
-  },
-  {
-    "id": "DSC 190",
-    "name": "Topics in Data Science",
-    "units": 4,
-    "division": "upper",
-    "description": "Special topics course that changes each quarter based on faculty interest — past offerings have covered LLMs, causal inference, and time series analysis. May be taken up to four times when the topic varies. Department and instructor approval required. Restricted to upper-division students.",
-    "stats": {"Popularity": 58, "Content Difficulty": 65, "Exam Difficulty": 55, "Assignment Load": 70, "Average GPA": 3.3, "Hours/Week": 12},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+190"
-    }
-  },
-  {
-    "id": "DSC 191",
-    "name": "Seminar in Data Science",
-    "units": 2,
-    "division": "upper",
-    "description": "Seminar course on current topics in data science: invited speakers from academia and industry, discussions on emerging research. Topic varies by quarter. Light workload — primarily attendance and short written responses. May be taken three times. Prerequisites: upper-division standing.",
-    "stats": {"Popularity": 48, "Content Difficulty": 38, "Exam Difficulty": 28, "Assignment Load": 52, "Average GPA": 3.8, "Hours/Week": 5},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+191"
-    }
-  },
-  {
-    "id": "DSC 197",
-    "name": "Data Science Internship",
-    "units": 4,
-    "division": "upper",
-    "description": "Earn academic credit for an internship by connecting it to a faculty-supervised research project. Students must secure their internship independently before enrolling. The research topic should promote the principles and techniques involved in the internship work. Prerequisites: upper-division standing, instructor and department approval.",
-    "stats": {"Popularity": 52, "Content Difficulty": 50, "Exam Difficulty": 20, "Assignment Load": 80, "Average GPA": 3.6, "Hours/Week": 15},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+197"
-    }
-  },
-  {
-    "id": "DSC 198",
-    "name": "Directed Group Study in Data Science",
-    "units": 4,
-    "division": "upper",
-    "description": "Reading and discussion-based group study on a data science topic under faculty supervision. Small cohort format. May be taken twice for credit. Requires department stamp and Special Studies application. Prerequisites: upper-division standing and instructor approval.",
-    "stats": {"Popularity": 40, "Content Difficulty": 58, "Exam Difficulty": 30, "Assignment Load": 72, "Average GPA": 3.7, "Hours/Week": 10},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+198"
-    }
-  },
-  {
-    "id": "DSC 199",
-    "name": "Independent Study for Data Science Undergraduates",
-    "units": 4,
-    "division": "upper",
-    "description": "Individual research on a topic related to data science by special arrangement with a faculty member. Ideal for students exploring graduate school or deepening expertise in a research area. Requires a research proposal and regular faculty meetings. Prerequisites: upper-division standing and instructor approval.",
-    "stats": {"Popularity": 38, "Content Difficulty": 60, "Exam Difficulty": 20, "Assignment Load": 80, "Average GPA": 3.8, "Hours/Week": 12},
-    "links": {
-      "📋 Catalog": "https://catalog.ucsd.edu/courses/DSC.html",
-      "📊 CAPE Reviews": "https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+199"
-    }
-  }
+  {"id":"MATH 20A","department":"MATH","name":"Calculus for Science and Engineering I","units":4,"description":"Limits, continuity, derivatives of algebraic, trigonometric, and exponential functions. Mean value theorem, L'Hôpital's rule, curve sketching, optimization, and introduction to integration. First course in the calculus sequence required for DSC, CSE, and most STEM majors.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/MATH.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+20A"}},
+  {"id":"MATH 20B","department":"MATH","name":"Calculus for Science and Engineering II","units":4,"description":"Techniques and applications of integration, infinite series, Taylor series, and polar coordinates. Second course in the standard calculus sequence. Prerequisite for MATH 20C and many upper-division MATH/DSC courses.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/MATH.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+20B"}},
+  {"id":"MATH 20C","department":"MATH","name":"Calculus and Analytic Geometry for Science and Engineering","units":4,"description":"Multivariable calculus: vectors, partial derivatives, gradient, multiple integrals, line integrals, and vector calculus (Green's, Stokes', divergence theorems). Required prerequisite for DSC 40A, DSC 120, and DSC 123A.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/MATH.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+20C"}},
+  {"id":"MATH 18","department":"MATH","name":"Linear Algebra","units":4,"description":"Systems of linear equations, matrix operations, determinants, vector spaces, linear transformations, eigenvalues, and eigenvectors. Core mathematical foundation for nearly all upper-division DSC courses (40A, 120, 123A, 140A/B, 155).","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/MATH.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+18"}},
+  {"id":"MATH 180A","department":"MATH","name":"Introduction to Probability","units":4,"description":"Sample spaces, random variables, probability distributions (discrete and continuous), expectation, variance, joint distributions, conditional probability, law of large numbers, and central limit theorem. Required or recommended for DSC 140A, 140B, 148, and 155. Prerequisite: MATH 20C.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/MATH.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+180A"}},
+  {"id":"MATH 181A","department":"MATH","name":"Introduction to Mathematical Statistics","units":4,"description":"Point and interval estimation, hypothesis testing, regression, and introduction to experimental design. Provides rigorous statistical theory underlying data science methods. Prerequisite: MATH 180A.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/MATH.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+181A"}},
+  {"id":"MATH 181B","department":"MATH","name":"Introduction to Mathematical Statistics II","units":4,"description":"Continuation of 181A: analysis of variance (ANOVA), nonparametric methods, multiple regression, categorical data analysis. Prerequisite: MATH 181A.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/MATH.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+181B"}},
+  {"id":"MATH 183","department":"MATH","name":"Statistical Methods","units":4,"description":"Applied statistics without the mathematical rigor of 181A: descriptive statistics, probability, hypothesis testing, regression, and ANOVA. Alternative probability/stats prerequisite accepted by several DSC upper-division courses. Prerequisite: MATH 20B.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/MATH.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+183"}},
+  {"id":"MATH 189","department":"MATH","name":"Exploratory Data Analysis and Inference","units":4,"description":"Data exploration, visualization, statistical inference, bootstrapping, regression, and classification using real datasets and Python/R. Recommended before DSC 180A (capstone). Prerequisites: MATH 18 and MATH 180A.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/MATH.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+189"}},
+  {"id":"MATH 173A","department":"MATH","name":"Optimization Methods for Data Science I","units":4,"description":"Convexity, linear and quadratic programming, duality, support vector machines. Equivalent to DSC 123A — students may take either course to satisfy the DSC elective. Prerequisites: MATH 18 and MATH 20C.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/MATH.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+173A"}},
+  {"id":"MATH 173B","department":"MATH","name":"Optimization Methods for Data Science II","units":4,"description":"Unconstrained optimization, gradient and conjugate gradient methods, ADMM. Equivalent to DSC 123B. Prerequisite: MATH 173A or DSC 123A.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/MATH.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+173B"}},
+  {"id":"MATH 182","department":"MATH","name":"Principal Component Analysis and Data Visualization","units":4,"description":"Rigorous treatment of PCA via SVD, random matrix theory, and its applications. Equivalent to DSC 155 — students may take either to satisfy the DSC elective. Prerequisites: MATH 18 and MATH 180A.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/MATH.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=MATH+182"}},
+
+  {"id":"DSC 10","department":"DSC","name":"Principles of Data Science","units":4,"description":"First course in data science. Python programming with pandas, visualization, statistical inference, and prediction on real-world datasets. No prerequisites — open to all students.","links":{"🌐 Course Site":"https://dsc10.com","📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+10"}},
+  {"id":"DSC 20","department":"DSC","name":"Programming and Basic Data Structures for Data Science","units":4,"description":"Extends DSC 10: recursion, higher-order functions, OOP, interpreters, arrays, lists, linked lists — all in Python. Prerequisite: DSC 10.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+20"}},
+  {"id":"DSC 30","department":"DSC","name":"Data Structures and Algorithms for Data Science","units":4,"description":"Advanced data structures in Java: stacks, queues, heaps, BSTs, hash tables, and algorithm complexity analysis. Multiple large programming projects. Prerequisite: DSC 20.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+30"}},
+  {"id":"DSC 40A","department":"DSC","name":"Theoretical Foundations of Data Science I","units":4,"description":"Mathematical ML theory: empirical risk minimization, optimization, regression, classification, and probability. Rigorous mathematical reasoning required. Prerequisites: DSC 10, MATH 20C, MATH 18.","links":{"🌐 Course Site":"https://dsc40a.com","📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+40A"}},
+  {"id":"DSC 40B","department":"DSC","name":"Theoretical Foundations of Data Science II","units":4,"description":"Discrete mathematics and algorithms: runtime analysis, graph algorithms, dynamic programming, and combinatorics. Prerequisites: DSC 30 and DSC 40A.","links":{"🌐 Course Site":"https://dsc40b.com","📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+40B"}},
+  {"id":"DSC 80","department":"DSC","name":"The Practice and Application of Data Science","units":4,"description":"Hands-on data science lifecycle: EDA, data cleaning, feature engineering, and predictive modeling with pandas, NumPy, and scikit-learn on real datasets. Prerequisite: DSC 10.","links":{"🌐 Course Site":"https://dsc80.com","📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+80"}},
+  {"id":"DSC 100","department":"DSC","name":"Introduction to Data Management","units":4,"description":"Relational databases: ER modeling, SQL (queries, joins, aggregation, subqueries), normalization, transactions, and intro to NoSQL. Hands-on SQL projects. Prerequisites: DSC 40B and DSC 80.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+100"}},
+  {"id":"DSC 102","department":"DSC","name":"Systems for Scalable Analytics","units":4,"description":"Large-scale data infrastructure: memory hierarchy, distributed systems, MapReduce/Hadoop, and Apache Spark. Covers data preparation and feature engineering at scale. Prerequisite: DSC 100.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+102"}},
+  {"id":"DSC 104","department":"DSC","name":"Beyond Relational Data Management","units":4,"description":"NoSQL systems: graph databases (Neo4j), array databases, and other non-relational models. Compares expressive power of data models and covers parallel programming abstractions. Prerequisite: DSC 100.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+104"}},
+  {"id":"DSC 106","department":"DSC","name":"Introduction to Data Visualization","units":4,"description":"Principles and algorithms for effective visualizations. Covers cognitive psychology, HCI, and statistical graphics; students build interactive systems using D3.js. Prerequisite: DSC 80.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+106"}},
+  {"id":"DSC 120","department":"DSC","name":"Signal Processing for Data Analysis","units":4,"description":"Sampling theory, Fourier analysis, lossy compression, time/spatial filters, and wavelets applied to time series and image data. Prerequisites: MATH 18, MATH 20C, and DSC 80.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+120"}},
+  {"id":"DSC 123A","department":"DSC","name":"Optimization Methods for Data Science I","units":4,"description":"Convex optimization: convex sets, linear/quadratic programming, duality, support vector machines, active-set and interior-point methods. Equivalent to MATH 173A. Prerequisites: MATH 18 and MATH 20C.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+123A"}},
+  {"id":"DSC 123B","department":"DSC","name":"Optimization Methods for Data Science II","units":4,"description":"Unconstrained optimization: gradient descent, conjugate gradient, stochastic gradient, ADMM. Equivalent to MATH 173B. Prerequisite: DSC 123A.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+123B"}},
+  {"id":"DSC 140A","department":"DSC","name":"Probabilistic Modeling and Machine Learning","units":4,"description":"Bayesian networks, Markov models, hidden Markov models, and online learning. Applications to NLP, adversarial learning, and robotics. MATH 181A strongly recommended. Prerequisites: DSC 80 and a probability course.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+140A"}},
+  {"id":"DSC 140B","department":"DSC","name":"Representation Learning","units":4,"description":"Deep learning fundamentals: clustering, PCA, manifold learning, MLPs, autoencoders, CNNs, and RNNs. Prerequisites: DSC 80 and a probability course.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+140B"}},
+  {"id":"DSC 148","department":"DSC","name":"Introduction to Data Mining","units":4,"description":"Frequent pattern mining, classification, regression, clustering, and association rules on real-world data. Cannot receive credit for both DSC 148 and CSE 158. Prerequisites: DSC 40B, DSC 80, and a probability course.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+148"}},
+  {"id":"DSC 155","department":"DSC","name":"Hidden Data in Random Matrices","units":4,"description":"Rigorous PCA theory: SVD, random matrix theory (Wigner, Marchenko-Pastur, BBP transition), and community detection applications. Equivalent to MATH 182. Prerequisites: MATH 180A and MATH 18.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+155"}},
+  {"id":"DSC 160","department":"DSC","name":"Data Science and the Arts","units":4,"description":"Intersection of data science and contemporary arts: authorship, representation, visualization, and data provenance. Light technical workload relative to other upper-division DSC courses. Prerequisite: DSC 80.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+160"}},
+  {"id":"DSC 161","department":"DSC","name":"Text as Data","units":4,"description":"Statistical and computational text analysis for social science: tokenization, sentiment analysis, topic modeling, text classification, and word embeddings. Prerequisite: DSC 80 or equivalent.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+161"}},
+  {"id":"DSC 167","department":"DSC","name":"Fairness and Algorithmic Decision-Making","units":4,"description":"Bias and fairness in algorithms: legal/ethical frameworks, auditing for discrimination, and designing equitable systems. Light workload — more reading/discussion than coding. Prerequisite: DSC 80.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+167"}},
+  {"id":"DSC 170","department":"DSC","name":"Spatial Data Science and Applications","units":4,"description":"GIS, spatial big data management, geostatistics, and reasoning about location-based data. Uses GeoPandas and QGIS. Prerequisite: DSC 80.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+170"}},
+  {"id":"DSC 180A","department":"DSC","name":"Data Science Project I","units":4,"description":"First half of the year-long capstone. Students join faculty-led research sections, define a problem, collect/clean data, and produce a project proposal. Prerequisites: DSC 102, MATH 189, and a qualifying elective. Seniors only.","links":{"🌐 Course Site":"https://dsc-capstone.org","📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+180A"}},
+  {"id":"DSC 180B","department":"DSC","name":"Data Science Project II","units":4,"description":"Second half of the capstone: implement the project from 180A, evaluate, and present at a public poster session. Must enroll in the section matching your 180A section. Prerequisite: DSC 180A.","links":{"🌐 Course Site":"https://dsc-capstone.org","📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+180B"}},
+  {"id":"DSC 190","department":"DSC","name":"Topics in Data Science","units":4,"description":"Special topics course that changes quarterly — past offerings: LLMs, causal inference, time series. May be taken four times when topic varies. Requires instructor approval. Upper-division only.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+190"}},
+  {"id":"DSC 191","department":"DSC","name":"Seminar in Data Science","units":2,"description":"Invited speakers from academia and industry. Light workload — attendance and short written responses. Variable topic; may be taken three times. Prerequisite: upper-division standing.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+191"}},
+  {"id":"DSC 197","department":"DSC","name":"Data Science Internship","units":4,"description":"Academic credit for a faculty-supervised research connection to your internship. Students must secure the internship independently before enrolling. Prerequisite: upper-division standing and instructor approval.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+197"}},
+  {"id":"DSC 198","department":"DSC","name":"Directed Group Study in Data Science","units":4,"description":"Small-group reading and research on a faculty-proposed topic. May be taken twice. Requires department stamp and Special Studies application. Prerequisite: upper-division standing and instructor approval.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+198"}},
+  {"id":"DSC 199","department":"DSC","name":"Independent Study for Data Science Undergraduates","units":4,"description":"Individual faculty-supervised research. Ideal for students considering graduate school or deepening expertise. Requires a proposal and regular faculty meetings. Prerequisite: upper-division standing and instructor approval.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/DSC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=DSC+199"}},
+
+  {"id":"CSE 11","department":"CSE","name":"Introduction to Programming and Computational Problem-Solving: Accelerated Pace","units":4,"description":"Accelerated intro to Python and Java for students with some prior programming experience. Covers OOP, data structures, algorithms, and software design. Equivalent entry to CSE 12.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CSE.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CSE+11"}},
+  {"id":"CSE 12","department":"CSE","name":"Basic Data Structures and Object-Oriented Design","units":4,"description":"Java-based data structures: arrays, linked lists, stacks, queues, trees, hash tables. OOP design patterns. Accepted as an alternative to DSC 30 for some purposes. Prerequisite: CSE 11 or equivalent.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CSE.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CSE+12"}},
+  {"id":"CSE 15L","department":"CSE","name":"Software Tools and Techniques Laboratory","units":2,"description":"Practical Unix/Linux skills: shell scripting, version control (git), debugging tools, Vim, and Markdown. Accepted as an alternative to DSC 80 for some upper-division DSC prerequisites.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CSE.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CSE+15L"}},
+  {"id":"CSE 100","department":"CSE","name":"Advanced Data Structures","units":4,"description":"Balanced BSTs, heaps, tries, union-find, graph algorithms (DFS, BFS, Dijkstra), and algorithm analysis. Upper-division DS&A. Prerequisite: CSE 12.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CSE.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CSE+100"}},
+  {"id":"CSE 101","department":"CSE","name":"Design and Analysis of Algorithms","units":4,"description":"Algorithm design paradigms: divide-and-conquer, dynamic programming, greedy algorithms, network flow, NP-completeness, and approximation algorithms. Prerequisite: CSE 100.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CSE.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CSE+101"}},
+  {"id":"CSE 103","department":"CSE","name":"Theoretical Foundations of Computer Science","units":4,"description":"Probability theory, Markov chains, information theory, and computability. Accepted as a probability alternative for some DSC upper-division prerequisites. Prerequisite: CSE 12.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CSE.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CSE+103"}},
+  {"id":"CSE 151A","department":"CSE","name":"Introduction to Machine Learning: Learning Algorithms","units":4,"description":"Supervised and unsupervised ML: regression, classification, neural networks, SVMs, clustering, and dimensionality reduction. Practical focus. Accepted as alternative to DSC 148/140A/140B for capstone eligibility. Prerequisites: MATH 18, probability course, and programming background.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CSE.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CSE+151A"}},
+  {"id":"CSE 151B","department":"CSE","name":"Deep Learning","units":4,"description":"Deep neural networks in depth: CNNs, RNNs, transformers, attention mechanisms, and modern training techniques. Project-heavy course using PyTorch. Prerequisite: CSE 151A.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CSE.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CSE+151B"}},
+  {"id":"CSE 158","department":"CSE","name":"Recommender Systems and Web Mining","units":4,"description":"Recommendation systems, collaborative filtering, matrix factorization, and web mining. Cannot receive credit for both CSE 158 and DSC 148. Prerequisites: DSC 40B or CSE 12, DSC 80 or CSE 15L, and a probability course.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CSE.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CSE+158"}},
+
+  {"id":"ECE 101","department":"ECE","name":"Linear Systems Fundamentals","units":4,"description":"Continuous and discrete-time signals and systems, convolution, Fourier transform, Laplace transform, z-transform, sampling theorem, and filter design. Prerequisite: MATH 20C.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/ECE.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=ECE+101"}},
+  {"id":"ECE 109","department":"ECE","name":"Engineering Probability and Statistics","units":4,"description":"Probability, random variables, distributions, expectation, and intro to random processes. Widely accepted as an alternative to MATH 180A for DSC upper-division prerequisites. Prerequisite: MATH 20C.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/ECE.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=ECE+109"}},
+
+  {"id":"COGS 108","department":"COGS","name":"Data Science in Practice","units":4,"description":"Applied data science using Python: data collection, wrangling, analysis, visualization, and communication of findings. Team-based project course emphasizing the full data science workflow. Prerequisite: a programming course.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/COGS.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=COGS+108"}},
+  {"id":"COGS 188","department":"COGS","name":"Introduction to Machine Learning","units":4,"description":"Supervised and unsupervised ML methods: regression, classification, neural networks, and evaluation. Accepted as a qualifying ML elective for DSC 180A capstone eligibility. Prerequisites: MATH 18, a probability course, and programming background.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/COGS.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=COGS+188"}},
+
+  {"id":"PHYS 2A","department":"PHYS","name":"Physics — Mechanics","units":4,"description":"Kinematics, Newton's laws, work and energy, momentum, rotational motion, gravitation, and oscillations. First course in the non-calculus physics sequence. Prerequisite: MATH 20B (concurrent OK).","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/PHYS.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=PHYS+2A"}},
+  {"id":"PHYS 2B","department":"PHYS","name":"Physics — Electricity and Magnetism","units":4,"description":"Electrostatics, circuits, magnetism, Maxwell's equations, and electromagnetic waves. Prerequisite: PHYS 2A and MATH 20C (concurrent OK).","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/PHYS.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=PHYS+2B"}},
+  {"id":"PHYS 2C","department":"PHYS","name":"Physics — Waves, Optics, and Modern Physics","units":4,"description":"Waves, optics, special relativity, quantum mechanics intro, and atomic/nuclear physics. Third course in the non-calculus sequence. Prerequisite: PHYS 2B.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/PHYS.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=PHYS+2C"}},
+  {"id":"PHYS 4A","department":"PHYS","name":"Physics for Physics Majors — Mechanics","units":4,"description":"Rigorous mechanics for physics majors: Newton's laws, energy, momentum, rotation, oscillations, and gravitation using calculus throughout. Prerequisite: MATH 20C (concurrent OK).","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/PHYS.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=PHYS+4A"}},
+  {"id":"PHYS 4B","department":"PHYS","name":"Physics for Physics Majors — Electricity and Magnetism","units":4,"description":"Electrostatics, Gauss's law, circuits, magnetic forces, Faraday's law, and Maxwell's equations with calculus. Prerequisite: PHYS 4A.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/PHYS.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=PHYS+4B"}},
+  {"id":"PHYS 4C","department":"PHYS","name":"Physics for Physics Majors — Waves, Optics, and Modern Physics","units":4,"description":"Wave mechanics, optics, special relativity, and intro to quantum mechanics. Prerequisite: PHYS 4B.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/PHYS.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=PHYS+4C"}},
+
+  {"id":"CHEM 6A","department":"CHEM","name":"General Chemistry I","units":4,"description":"Atomic theory, bonding, stoichiometry, thermochemistry, and gas laws. First course in the general chemistry sequence. Prerequisites: high school chemistry or CHEM 4.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CHEM.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CHEM+6A"}},
+  {"id":"CHEM 6B","department":"CHEM","name":"General Chemistry II","units":4,"description":"Chemical equilibrium, acid-base chemistry, electrochemistry, kinetics, and intro to nuclear chemistry. Prerequisite: CHEM 6A.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CHEM.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CHEM+6B"}},
+  {"id":"CHEM 6C","department":"CHEM","name":"General Chemistry III","units":4,"description":"Thermodynamics, coordination chemistry, organic chemistry introduction, and biological molecules. Completes the general chemistry sequence. Prerequisite: CHEM 6B.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CHEM.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CHEM+6C"}},
+  {"id":"CHEM 11","department":"CHEM","name":"The Periodic Table","units":4,"description":"Single-quarter survey of general chemistry: atomic structure, bonding, reactions, stoichiometry, and molecular properties. Alternative to 6A for students who need only one chemistry course. No prerequisites.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/CHEM.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=CHEM+11"}},
+
+  {"id":"BILD 1","department":"BIOL","name":"The Cell","units":4,"description":"Cell structure, biochemistry, metabolism, cell division, genetics, and intro to molecular biology. Foundation course for all BIOL sequences. No prerequisites.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/BILD.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=BILD+1"}},
+  {"id":"BILD 2","department":"BIOL","name":"Multicellular Life","units":4,"description":"Development, physiology, and body systems of multicellular organisms. Second course in the BILD foundation sequence. Prerequisite: BILD 1.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/BILD.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=BILD+2"}},
+  {"id":"BILD 3","department":"BIOL","name":"Organismic and Evolutionary Biology","units":4,"description":"Evolution, ecology, population genetics, and diversity of life. Third course in the BILD sequence. Prerequisite: BILD 1.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/BILD.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=BILD+3"}},
+  {"id":"BIBC 100","department":"BIOL","name":"Structural Biochemistry","units":4,"description":"Protein structure and function, enzymes, membranes, and metabolic pathways. Core biochemistry course. Prerequisites: CHEM 6C or 6BH, and BILD 1.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/BIBC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=BIBC+100"}},
+  {"id":"BIBC 102","department":"BIOL","name":"Metabolic Biochemistry","units":4,"description":"Central metabolic pathways: glycolysis, TCA cycle, oxidative phosphorylation, fatty acid metabolism, and amino acid metabolism. Prerequisite: BIBC 100.","links":{"📋 Catalog":"https://catalog.ucsd.edu/courses/BIBC.html","📊 CAPE":"https://cape.ucsd.edu/responses/Results.aspx?courseNumber=BIBC+102"}}
 ]
