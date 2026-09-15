@@ -1,0 +1,57 @@
+{
+  "_comment": [
+    "The catalog descriptions are the source of truth for prerequisites.",
+    "This file records the few facts the prose omits, and — just as important —",
+    "the edges from the app's old hand-written table that were NOT adopted, with",
+    "the reason. Keeping the rejections visible stops them being silently",
+    "re-added the next time the two lists are compared."
+  ],
+
+  "add_edges": [
+    {
+      "from": "MATH 20A",
+      "to": "MATH 20B",
+      "why": "MATH 20B's description calls itself the second course in the sequence but never names 20A as a prerequisite."
+    },
+    {
+      "from": "MATH 20C",
+      "to": "MATH 189",
+      "why": "MATH 189 lists MATH 18 and MATH 180A; the department also requires MATH 20C, which the text omits."
+    }
+  ],
+
+  "abstract_satisfiers": {
+    "<qualifying elective>": ["DSC 140A", "DSC 140B", "DSC 148"]
+  },
+
+  "rejected_edges": [
+    {
+      "edge": "MATH 20B -> MATH 18",
+      "why": "Linear algebra does not require second-quarter calculus. Present in the old hand-written table; unsupported by the catalog."
+    },
+    {
+      "edge": "CSE 12 -> CSE 151A",
+      "why": "Redundant. CSE 151A requires a programming background, and CSE 12 already satisfies that group."
+    },
+    {
+      "edge": "MATH 180A -> CSE 151A",
+      "why": "Redundant. Covered by the <probability> group, which MATH 180A satisfies."
+    },
+    {
+      "edge": "CSE 12 -> CSE 15L",
+      "why": "CSE 15L lists no prerequisite in the catalog."
+    },
+    {
+      "edge": "DSC 140A -> DSC 180A",
+      "why": "Modelled instead as the <qualifying elective> group, so DSC 140B and DSC 148 count equally rather than all three being required."
+    },
+    {
+      "edge": "DSC 140B -> DSC 180A",
+      "why": "See DSC 140A: folded into <qualifying elective>."
+    },
+    {
+      "edge": "DSC 148 -> DSC 180A",
+      "why": "See DSC 140A: folded into <qualifying elective>."
+    }
+  ]
+}

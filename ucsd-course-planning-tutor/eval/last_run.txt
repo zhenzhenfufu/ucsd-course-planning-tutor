@@ -1,0 +1,68 @@
+==================================================================
+VALIDATOR SELF-TEST  (does the checker get known cases right?)
+==================================================================
+  9/9 fixtures correct
+
+==================================================================
+PLANNING EVAL  (20 cases, retrieval=embedding, max_rounds=3)
+==================================================================
+
+### ARM A — plan all terms at once, repair on failure
+  [ 1/20] FAIL  3r     5.5s  fresh-start
+  [ 2/20] PASS  2r     4.6s  ml-track
+  [ 3/20] FAIL  3r     5.4s  capstone-path
+  [ 4/20] PASS  1st    2.6s  probability-route
+  [ 5/20] PASS  1st    2.7s  transfer-student
+  [ 6/20] FAIL  3r    11.3s  systems-lean
+  [ 7/20] FAIL  3r    16.8s  double-cse
+  [ 8/20] PASS  1st   15.0s  light-load
+  [ 9/20] PASS  1st    3.0s  viz-and-ethics
+  [10/20] PASS  2r     3.9s  math-heavy
+  [11/20] FAIL  3r     4.9s  late-starter
+  [12/20] PASS  1st   29.0s  nlp-goal
+  [13/20] PASS  2r     4.0s  bio-minor
+  [14/20] PASS  2r     7.2s  physics-track
+  [15/20] FAIL  3r    16.7s  stats-depth
+  [16/20] PASS  1st    2.7s  one-term-only
+  [17/20] PASS  2r     3.6s  four-term-long
+  [18/20] PASS  1st    3.3s  already-deep
+  [19/20] PASS  1st    2.1s  chem-requirement
+  [20/20] PASS  2r     3.8s  algorithms-focus
+
+------------------------------------------------------------------
+  A: joint planning + validator repair
+    first-pass legal (model alone) : 8/20  = 40%
+    after repair loop              : 14/20  = 70%
+    mean generation calls          : 1.90
+    violations caught by checker   : 12x PREREQ_MISSING, 3x UNITS_BELOW_FULL_TIME, 1x DUPLICATE_COURSE
+------------------------------------------------------------------
+
+### ARM B — plan term by term against a recomputed eligible set
+  [ 1/20] PASS  1st    3.3s  fresh-start
+  [ 2/20] PASS  1st   15.0s  ml-track
+  [ 3/20] PASS  1st   18.4s  capstone-path
+  [ 4/20] PASS  1st    2.9s  probability-route
+  [ 5/20] PASS  1st    2.6s  transfer-student
+  [ 6/20] PASS  1st    6.1s  systems-lean
+  [ 7/20] PASS  1st    4.6s  double-cse
+  [ 8/20] PASS  1st    3.2s  light-load
+  [ 9/20] PASS  1st    2.8s  viz-and-ethics
+  [10/20] PASS  1st   14.9s  math-heavy
+  [11/20] PASS  1st   27.0s  late-starter
+  [12/20] PASS  1st    5.1s  nlp-goal
+  [13/20] PASS  1st    6.6s  bio-minor
+  [14/20] PASS  1st    6.6s  physics-track
+  [15/20] PASS  1st    4.9s  stats-depth
+  [16/20] PASS  1st   12.7s  one-term-only
+  [17/20] PASS  1st   28.2s  four-term-long
+  [18/20] PASS  1st    4.7s  already-deep
+  [19/20] PASS  1st    3.3s  chem-requirement
+  [20/20] PASS  1st    5.4s  algorithms-focus
+
+------------------------------------------------------------------
+  B: per-term planning + validator repair
+    first-pass legal (model alone) : 20/20  = 100%
+    after repair loop              : 20/20  = 100%
+    mean generation calls          : 2.65
+------------------------------------------------------------------
+  written: /Users/allen/Desktop/ucsd-course-ai/eval/results.json

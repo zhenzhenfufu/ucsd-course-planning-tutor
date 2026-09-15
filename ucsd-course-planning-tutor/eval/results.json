@@ -1,0 +1,354 @@
+{
+  "validator_fixtures": "9/9",
+  "retrieval_backend": "embedding",
+  "arms": [
+    {
+      "label": "A: joint planning + validator repair",
+      "cases": 20,
+      "first_pass_legal": 8,
+      "post_repair_legal": 14,
+      "first_pass_rate": 0.4,
+      "post_repair_rate": 0.7,
+      "mean_rounds": 1.9,
+      "violation_codes": {
+        "PREREQ_MISSING": 12,
+        "UNITS_BELOW_FULL_TIME": 3,
+        "DUPLICATE_COURSE": 1
+      },
+      "rows": [
+        {
+          "id": "fresh-start",
+          "first_pass_legal": false,
+          "legal": false,
+          "rounds": 3,
+          "error": null,
+          "seconds": 5.5
+        },
+        {
+          "id": "ml-track",
+          "first_pass_legal": false,
+          "legal": true,
+          "rounds": 2,
+          "error": null,
+          "seconds": 4.6
+        },
+        {
+          "id": "capstone-path",
+          "first_pass_legal": false,
+          "legal": false,
+          "rounds": 3,
+          "error": null,
+          "seconds": 5.4
+        },
+        {
+          "id": "probability-route",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 1,
+          "error": null,
+          "seconds": 2.6
+        },
+        {
+          "id": "transfer-student",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 1,
+          "error": null,
+          "seconds": 2.7
+        },
+        {
+          "id": "systems-lean",
+          "first_pass_legal": false,
+          "legal": false,
+          "rounds": 3,
+          "error": null,
+          "seconds": 11.3
+        },
+        {
+          "id": "double-cse",
+          "first_pass_legal": false,
+          "legal": false,
+          "rounds": 3,
+          "error": null,
+          "seconds": 16.8
+        },
+        {
+          "id": "light-load",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 1,
+          "error": null,
+          "seconds": 15.0
+        },
+        {
+          "id": "viz-and-ethics",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 1,
+          "error": null,
+          "seconds": 3.0
+        },
+        {
+          "id": "math-heavy",
+          "first_pass_legal": false,
+          "legal": true,
+          "rounds": 2,
+          "error": null,
+          "seconds": 3.9
+        },
+        {
+          "id": "late-starter",
+          "first_pass_legal": false,
+          "legal": false,
+          "rounds": 3,
+          "error": null,
+          "seconds": 4.9
+        },
+        {
+          "id": "nlp-goal",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 1,
+          "error": null,
+          "seconds": 29.0
+        },
+        {
+          "id": "bio-minor",
+          "first_pass_legal": false,
+          "legal": true,
+          "rounds": 2,
+          "error": null,
+          "seconds": 4.0
+        },
+        {
+          "id": "physics-track",
+          "first_pass_legal": false,
+          "legal": true,
+          "rounds": 2,
+          "error": null,
+          "seconds": 7.2
+        },
+        {
+          "id": "stats-depth",
+          "first_pass_legal": false,
+          "legal": false,
+          "rounds": 3,
+          "error": null,
+          "seconds": 16.7
+        },
+        {
+          "id": "one-term-only",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 1,
+          "error": null,
+          "seconds": 2.7
+        },
+        {
+          "id": "four-term-long",
+          "first_pass_legal": false,
+          "legal": true,
+          "rounds": 2,
+          "error": null,
+          "seconds": 3.6
+        },
+        {
+          "id": "already-deep",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 1,
+          "error": null,
+          "seconds": 3.3
+        },
+        {
+          "id": "chem-requirement",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 1,
+          "error": null,
+          "seconds": 2.1
+        },
+        {
+          "id": "algorithms-focus",
+          "first_pass_legal": false,
+          "legal": true,
+          "rounds": 2,
+          "error": null,
+          "seconds": 3.8
+        }
+      ]
+    },
+    {
+      "label": "B: per-term planning + validator repair",
+      "cases": 20,
+      "first_pass_legal": 20,
+      "post_repair_legal": 20,
+      "first_pass_rate": 1.0,
+      "post_repair_rate": 1.0,
+      "mean_rounds": 2.65,
+      "violation_codes": {},
+      "rows": [
+        {
+          "id": "fresh-start",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 3,
+          "error": null,
+          "seconds": 3.3
+        },
+        {
+          "id": "ml-track",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 3,
+          "error": null,
+          "seconds": 15.0
+        },
+        {
+          "id": "capstone-path",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 3,
+          "error": null,
+          "seconds": 18.4
+        },
+        {
+          "id": "probability-route",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 2,
+          "error": null,
+          "seconds": 2.9
+        },
+        {
+          "id": "transfer-student",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 2,
+          "error": null,
+          "seconds": 2.6
+        },
+        {
+          "id": "systems-lean",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 3,
+          "error": null,
+          "seconds": 6.1
+        },
+        {
+          "id": "double-cse",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 3,
+          "error": null,
+          "seconds": 4.6
+        },
+        {
+          "id": "light-load",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 2,
+          "error": null,
+          "seconds": 3.2
+        },
+        {
+          "id": "viz-and-ethics",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 2,
+          "error": null,
+          "seconds": 2.8
+        },
+        {
+          "id": "math-heavy",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 3,
+          "error": null,
+          "seconds": 14.9
+        },
+        {
+          "id": "late-starter",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 3,
+          "error": null,
+          "seconds": 27.0
+        },
+        {
+          "id": "nlp-goal",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 3,
+          "error": null,
+          "seconds": 5.1
+        },
+        {
+          "id": "bio-minor",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 3,
+          "error": null,
+          "seconds": 6.6
+        },
+        {
+          "id": "physics-track",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 3,
+          "error": null,
+          "seconds": 6.6
+        },
+        {
+          "id": "stats-depth",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 3,
+          "error": null,
+          "seconds": 4.9
+        },
+        {
+          "id": "one-term-only",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 1,
+          "error": null,
+          "seconds": 12.7
+        },
+        {
+          "id": "four-term-long",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 4,
+          "error": null,
+          "seconds": 28.2
+        },
+        {
+          "id": "already-deep",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 2,
+          "error": null,
+          "seconds": 4.7
+        },
+        {
+          "id": "chem-requirement",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 2,
+          "error": null,
+          "seconds": 3.3
+        },
+        {
+          "id": "algorithms-focus",
+          "first_pass_legal": true,
+          "legal": true,
+          "rounds": 3,
+          "error": null,
+          "seconds": 5.4
+        }
+      ]
+    }
+  ]
+}

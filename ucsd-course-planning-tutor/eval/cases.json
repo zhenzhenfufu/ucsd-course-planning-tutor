@@ -1,0 +1,210 @@
+[
+  {
+    "id": "fresh-start",
+    "goal": "I am a first-year with no college courses yet. Plan my first three quarters toward the Data Science major.",
+    "completed": [],
+    "terms": 3
+  },
+  {
+    "id": "ml-track",
+    "goal": "I want to specialise in machine learning. Plan three quarters that get me into the ML courses as early as legally possible.",
+    "completed": [
+      "DSC 10",
+      "MATH 20A",
+      "MATH 20B"
+    ],
+    "terms": 3
+  },
+  {
+    "id": "capstone-path",
+    "goal": "Plan three quarters ending with the DSC capstone sequence.",
+    "completed": [
+      "DSC 10",
+      "DSC 20",
+      "DSC 30",
+      "DSC 80",
+      "MATH 18",
+      "MATH 20C"
+    ],
+    "terms": 3
+  },
+  {
+    "id": "probability-route",
+    "goal": "I need to satisfy the probability requirement and then take a course that depends on it. Two quarters.",
+    "completed": [
+      "DSC 10",
+      "DSC 80",
+      "MATH 20C"
+    ],
+    "terms": 2
+  },
+  {
+    "id": "transfer-student",
+    "goal": "I transferred in with lower-division work done. Plan two upper-division quarters in data science.",
+    "completed": [
+      "DSC 10",
+      "DSC 20",
+      "DSC 30",
+      "DSC 40A",
+      "DSC 40B",
+      "DSC 80",
+      "MATH 18",
+      "MATH 20A",
+      "MATH 20B",
+      "MATH 20C"
+    ],
+    "terms": 2
+  },
+  {
+    "id": "systems-lean",
+    "goal": "I care about data systems and engineering more than statistics. Plan three quarters.",
+    "completed": [
+      "DSC 10",
+      "DSC 20",
+      "MATH 20A"
+    ],
+    "terms": 3
+  },
+  {
+    "id": "double-cse",
+    "goal": "I want to take CSE algorithm courses alongside data science. Plan three quarters.",
+    "completed": [
+      "DSC 10",
+      "CSE 11",
+      "MATH 20A"
+    ],
+    "terms": 3
+  },
+  {
+    "id": "light-load",
+    "goal": "Plan two quarters that stay close to the minimum full-time load while still making progress in DSC.",
+    "completed": [
+      "DSC 10",
+      "MATH 20A"
+    ],
+    "terms": 2
+  },
+  {
+    "id": "viz-and-ethics",
+    "goal": "I am interested in data visualisation and the ethics side of data science. Plan two quarters.",
+    "completed": [
+      "DSC 10",
+      "DSC 20",
+      "DSC 80"
+    ],
+    "terms": 2
+  },
+  {
+    "id": "math-heavy",
+    "goal": "I want the most mathematically rigorous path through the major. Plan three quarters.",
+    "completed": [
+      "DSC 10",
+      "MATH 20A",
+      "MATH 20B",
+      "MATH 20C",
+      "MATH 18"
+    ],
+    "terms": 3
+  },
+  {
+    "id": "late-starter",
+    "goal": "I started the major late and only have DSC 10. Plan three quarters that catch me up fastest.",
+    "completed": [
+      "DSC 10"
+    ],
+    "terms": 3
+  },
+  {
+    "id": "nlp-goal",
+    "goal": "I want to work on natural language processing. Plan three quarters that build toward it.",
+    "completed": [
+      "DSC 10",
+      "DSC 20",
+      "MATH 20A",
+      "MATH 20B"
+    ],
+    "terms": 3
+  },
+  {
+    "id": "bio-minor",
+    "goal": "I want to combine data science with biology coursework. Plan three quarters.",
+    "completed": [
+      "DSC 10",
+      "MATH 20A"
+    ],
+    "terms": 3
+  },
+  {
+    "id": "physics-track",
+    "goal": "I need the physics sequence alongside DSC lower division. Plan three quarters.",
+    "completed": [
+      "MATH 20A"
+    ],
+    "terms": 3
+  },
+  {
+    "id": "stats-depth",
+    "goal": "I want the deepest statistics preparation possible. Plan three quarters.",
+    "completed": [
+      "DSC 10",
+      "MATH 20A",
+      "MATH 20B",
+      "MATH 20C"
+    ],
+    "terms": 3
+  },
+  {
+    "id": "one-term-only",
+    "goal": "Plan a single strong quarter for someone who just finished DSC 10.",
+    "completed": [
+      "DSC 10"
+    ],
+    "terms": 1
+  },
+  {
+    "id": "four-term-long",
+    "goal": "Plan four quarters covering as much of the DSC core as legally possible.",
+    "completed": [
+      "DSC 10"
+    ],
+    "terms": 4
+  },
+  {
+    "id": "already-deep",
+    "goal": "I have finished most of the core. Plan two quarters of advanced electives.",
+    "completed": [
+      "DSC 10",
+      "DSC 20",
+      "DSC 30",
+      "DSC 40A",
+      "DSC 40B",
+      "DSC 80",
+      "DSC 100",
+      "MATH 18",
+      "MATH 20A",
+      "MATH 20B",
+      "MATH 20C",
+      "MATH 180A"
+    ],
+    "terms": 2
+  },
+  {
+    "id": "chem-requirement",
+    "goal": "I need to clear a chemistry requirement while continuing data science. Plan two quarters.",
+    "completed": [
+      "DSC 10",
+      "MATH 20A"
+    ],
+    "terms": 2
+  },
+  {
+    "id": "algorithms-focus",
+    "goal": "I want strong algorithms preparation for software interviews plus DSC progress. Plan three quarters.",
+    "completed": [
+      "CSE 11",
+      "MATH 20A",
+      "DSC 10"
+    ],
+    "terms": 3
+  }
+]
