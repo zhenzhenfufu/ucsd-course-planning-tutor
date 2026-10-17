@@ -1,29 +1,34 @@
 {
   "_comment": [
     "The catalog descriptions are the source of truth for prerequisites.",
-    "This file records the few facts the prose omits, and — just as important —",
-    "the edges from the app's old hand-written table that were NOT adopted, with",
-    "the reason. Keeping the rejections visible stops them being silently",
-    "re-added the next time the two lists are compared."
+    "Prerequisite sentences are regenerated from catalog.ucsd.edu; this file records the reviewed",
+    "decisions the catalog text cannot carry — sequence orderings that a placement exam can bypass,",
+    "and the edges deliberately NOT adopted, each with its reason."
   ],
-
   "add_edges": [
     {
       "from": "MATH 20A",
       "to": "MATH 20B",
-      "why": "MATH 20B's description calls itself the second course in the sequence but never names 20A as a prerequisite."
+      "why": "The catalog lets AP credit stand in for MATH 20A, so 20B's requirement is not a hard course prerequisite — but for anyone who does take 20A the ordering still binds, and a planner that allowed 20B first would be wrong for every student who has not tested out."
+    },
+    {
+      "from": "MATH 20B",
+      "to": "MATH 20C",
+      "why": "Same as MATH 20A -> 20B: satisfiable by AP credit, binding for anyone taking the course."
     },
     {
       "from": "MATH 20C",
       "to": "MATH 189",
-      "why": "MATH 189 lists MATH 18 and MATH 180A; the department also requires MATH 20C, which the text omits."
+      "why": "MATH 189 lists MATH 18 and a probability course; the department also requires MATH 20C, which the catalog line omits."
     }
   ],
-
   "abstract_satisfiers": {
-    "<qualifying elective>": ["DSC 140A", "DSC 140B", "DSC 148"]
+    "<qualifying elective>": [
+      "DSC 140A",
+      "DSC 140B",
+      "DSC 148"
+    ]
   },
-
   "rejected_edges": [
     {
       "edge": "MATH 20B -> MATH 18",
@@ -52,6 +57,10 @@
     {
       "edge": "DSC 148 -> DSC 180A",
       "why": "See DSC 140A: folded into <qualifying elective>."
+    },
+    {
+      "edge": "MATH 20A -> MATH 18",
+      "why": "The catalog names MATH 20A as one way to clear MATH 18's placement requirement, not as an ordering. Treating it as an edge would force linear algebra after third-quarter calculus, which is the opposite of how the major is advised."
     }
   ]
 }

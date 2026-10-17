@@ -58,11 +58,18 @@ def test_substitution_is_not_a_prerequisite(cg):
 
 
 def test_advisory_is_not_a_prerequisite(cg):
-    """'MATH 180A required or recommended for DSC 140A' is not a hard gate;
-    DSC 140A's probability requirement has other satisfiers."""
+    """'MATH 180A required or recommended for DSC 140A' is not a hard gate.
+
+    The catalog names six courses that satisfy DSC 140A's probability
+    requirement, so MATH 180A must appear as one option among several rather
+    than as a requirement of its own. (Before the October 2026 catalog rebuild
+    this group was the abstract token <probability>; the dataset now carries the
+    named alternatives, which is the same claim stated more precisely.)
+    """
     groups = cg.requirements["DSC 140A"].groups
     assert ["MATH 180A"] not in groups
-    assert any("<probability>" in g for g in groups)
+    probability = next(g for g in groups if "MATH 180A" in g)
+    assert {"ECE 109", "MATH 183"} <= set(probability)
 
 
 def test_or_group_is_kept_as_alternatives(cg):
@@ -82,7 +89,9 @@ def test_substitute_satisfies_a_group(cg):
 
 def test_out_of_catalog_references_are_reported_not_dropped(cg):
     texts = {a["text"] for a in cg.ambiguities}
-    assert "CHEM 4" in texts        # named in prose, absent from the catalog
+    # MATH 31AH is an honours alternative the catalog names for several courses
+    # and the dataset does not carry. It must be reported, not silently dropped.
+    assert "MATH 31AH" in texts
     assert all(a["kind"] for a in cg.ambiguities)
 
 

@@ -27,6 +27,47 @@ code   ->  is that ordering actually legal
 
 ---
 
+## October 2026: the prerequisite data was wrong, and it was the data
+
+The course descriptions in `dsc_courses.json` were originally hand-written, and
+their `Prerequisites:` sentences did not match the university's catalog. The
+parser was reading them faithfully; the source was wrong. Six examples of what
+that cost:
+
+| Course | Dataset said | Catalog says |
+|---|---|---|
+| DSC 80 | DSC 10 | DSC 30 **and** DSC 40A |
+| DSC 40B | DSC 30, DSC 40A | DSC 20, DSC 40A |
+| MATH 183 | MATH 20B | MATH 20C |
+| MATH 180A | nothing | MATH 20C |
+| DSC 161 | DSC 80 | ECON 5 or one of six POLI courses |
+| DSC 180A | DSC 102, MATH 189 | also DSC 106 and a machine-learning elective |
+
+Every sentence is now regenerated from `catalog.ucsd.edu`, for every department
+the graph touches, which took the graph from **74 edges to 142**. Three habits
+of the catalog had to be handled before the rest fell out:
+
+- the department is carried over rather than repeated — `DSC 20/R and 40A/R`
+- the subject code is not consistently capitalised — `Math 20C or MATH 31BH`
+- a dash means a whole sequence — `MATH 20A-B-C`
+
+Two modelling rules go with it. A requirement a placement exam or AP score can
+satisfy is **not** a hard prerequisite, so it does not become an edge; where the
+ordering still binds for anyone who does take the course (`MATH 20A → 20B →
+20C`), that is recorded in `prereq_overrides.json` with the reason. And a
+sequence offered as one alternative of a disjunction — `PHYS 4A-B or
+PHYS 2A-B-C` — is distributed into conjunctive normal form rather than
+flattened into a false conjunction.
+
+**The evaluation numbers below predate this rebuild.** They were measured on the
+74-edge graph and describe the method, not this graph; re-running `eval/run_eval.py`
+against the corrected data needs a `GEMINI_API_KEY` and has not been done yet.
+
+## Repository layout
+
+The app lives at the repository root. `ucsd-course-planning-tutor/app.py` is a
+shim kept only so an existing deployment pointed at the old path keeps working.
+
 ## Architecture
 
 ```

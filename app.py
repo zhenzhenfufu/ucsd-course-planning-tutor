@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import json
 from ai_advisor import get_ai_advice
+from prereq_graph import build as build_graph
+from validator import validate
 
 st.set_page_config(layout="wide", page_title="UCSD Course Planner", page_icon="🔱")
 
@@ -31,42 +33,12 @@ DEPT_LABELS = {
 all_depts_in_data = df["department"].unique().tolist()
 DEPTS = [d for d in DEPT_ORDER if d in all_depts_in_data]
 
-EDGES = [
-    ("MATH 20A", "MATH 20B"), ("MATH 20B", "MATH 20C"),
-    ("MATH 20B", "MATH 18"),
-    ("MATH 20C", "MATH 180A"), ("MATH 20C", "MATH 189"),
-    ("MATH 20C", "DSC 40A"), ("MATH 18", "DSC 40A"),
-    ("MATH 20C", "DSC 120"), ("MATH 18", "DSC 120"),
-    ("MATH 20C", "DSC 123A"), ("MATH 18", "DSC 123A"),
-    ("MATH 20C", "ECE 101"), ("MATH 20C", "ECE 109"),
-    ("MATH 18", "MATH 173A"), ("MATH 20C", "MATH 173A"),
-    ("MATH 173A", "MATH 173B"), ("MATH 180A", "MATH 181A"),
-    ("MATH 181A", "MATH 181B"), ("MATH 180A", "MATH 182"),
-    ("MATH 180A", "DSC 155"), ("MATH 18", "DSC 155"),
-    ("MATH 180A", "MATH 189"),
-    ("DSC 10", "DSC 20"), ("DSC 10", "DSC 40A"), ("DSC 10", "DSC 80"),
-    ("DSC 20", "DSC 30"),
-    ("DSC 30", "DSC 40B"), ("DSC 40A", "DSC 40B"),
-    ("DSC 40B", "DSC 100"), ("DSC 80", "DSC 100"),
-    ("DSC 80", "DSC 106"), ("DSC 80", "DSC 120"),
-    ("DSC 80", "DSC 140A"), ("DSC 80", "DSC 140B"), ("DSC 80", "DSC 148"),
-    ("DSC 80", "DSC 160"), ("DSC 80", "DSC 167"), ("DSC 80", "DSC 170"),
-    ("DSC 80", "DSC 161"),
-    ("DSC 100", "DSC 102"), ("DSC 100", "DSC 104"),
-    ("DSC 123A", "DSC 123B"),
-    ("DSC 102", "DSC 180A"),
-    ("DSC 140A", "DSC 180A"), ("DSC 140B", "DSC 180A"),
-    ("DSC 148", "DSC 180A"), ("MATH 189", "DSC 180A"),
-    ("DSC 180A", "DSC 180B"),
-    ("CSE 11", "CSE 12"), ("CSE 12", "CSE 100"), ("CSE 100", "CSE 101"),
-    ("CSE 12", "CSE 15L"), ("CSE 12", "CSE 103"),
-    ("CSE 12", "CSE 151A"), ("MATH 18", "CSE 151A"), ("MATH 180A", "CSE 151A"),
-    ("CSE 151A", "CSE 151B"),
-    ("BILD 1", "BILD 2"), ("BILD 1", "BILD 3"),
-    ("CHEM 6A", "CHEM 6B"), ("CHEM 6B", "CHEM 6C"),
-    ("PHYS 2A", "PHYS 2B"), ("PHYS 2B", "PHYS 2C"),
-    ("PHYS 4A", "PHYS 4B"), ("PHYS 4B", "PHYS 4C"),
-]
+# Prerequisites come from prereq_graph, which parses them out of the catalog
+# descriptions and applies the reviewed corrections in prereq_overrides.json.
+# The app used to carry its own hand-written EDGES list; the two had drifted
+# 25 edges apart, so the list was removed rather than maintained twice.
+COURSE_GRAPH = build_graph()
+EDGES = sorted(COURSE_GRAPH.graph.edges())
 
 prereqs_map: dict[str, list[str]] = {}
 for src, dst in EDGES:
@@ -324,7 +296,8 @@ with col_mid:
 
 # ── RIGHT: AI Advisor + My Plan ───────────────────────────────────────────────
 with col_right:
-    tab_ai, tab_plan, tab_res = st.tabs(["🤖 AI Advisor", "📅 My Plan", "🔗 Resources"])
+    tab_ai, tab_auto, tab_plan, tab_res = st.tabs(
+        ["🤖 AI Advisor", "🧭 Auto-Plan", "📅 My Plan", "🔗 Resources"])
 
     with tab_ai:
         chat_container = st.container(height=480)
@@ -348,6 +321,57 @@ with col_right:
             if st.button("Clear Chat", key="clear_chat"):
                 st.session_state.messages = []
                 st.rerun()
+
+    with tab_auto:
+        st.caption(
+            "The model drafts one quarter at a time. After each quarter the "
+            "prerequisite graph recomputes what is legal next, and a "
+            "deterministic checker verifies the result before the next "
+            "quarter is drafted — so the plan you see has been validated, "
+            "not just generated."
+        )
+        goal = st.text_area(
+            "What are you trying to do?",
+            placeholder="e.g. specialise in machine learning as early as possible",
+            height=80, key="auto_goal")
+        c1, c2 = st.columns(2)
+        n_terms = c1.number_input("Quarters to plan", 1, 6, 3, key="auto_terms")
+        done = c2.multiselect("Already completed", sorted(COURSE_GRAPH.courses),
+                              default=all_selected(), key="auto_done")
+
+        if st.button("Generate plan", type="primary", key="auto_go"):
+            if not goal.strip():
+                st.warning("Describe your goal first.")
+            else:
+                with st.spinner("Planning quarter by quarter…"):
+                    from planner import plan_iterative
+                    res = plan_iterative(goal, list(done), int(n_terms),
+                                         cg=COURSE_GRAPH)
+                st.session_state.auto_result = res
+
+        res = st.session_state.get("auto_result")
+        if res is not None:
+            if res.error:
+                st.error(res.error)
+            else:
+                for term in res.plan:
+                    units = sum(COURSE_GRAPH.units(c) for c in term["courses"])
+                    st.markdown(f"**{term['term']}** — {units:g} units")
+                    for cid in term["courses"]:
+                        st.markdown(
+                            f"- `{cid}` {COURSE_GRAPH.courses.get(cid, {}).get('name', '')}")
+                errs = [v for v in res.violations if v.severity == "error"]
+                if res.legal:
+                    st.success(f"Validated: no prerequisite, ordering or unit "
+                               f"violations ({res.rounds} model calls).")
+                else:
+                    st.error("Could not reach a legal plan:\n"
+                             + "\n".join(f"- `{v.code}` {v.message}" for v in errs))
+                if st.button("Load into My Plan", key="auto_load"):
+                    for i, term in enumerate(res.plan):
+                        if i < len(QUARTERS):
+                            st.session_state.plan[QUARTERS[i]] = list(term["courses"])
+                    st.rerun()
 
     with tab_plan:
         q_tabs = st.tabs(QUARTERS + ["Overview"])
@@ -378,15 +402,22 @@ with col_right:
                         st.markdown(f"**{q}**: {', '.join(st.session_state.plan[q])} — {q_df['units'].sum()} units")
                 st.divider()
                 st.metric("Total Units", df[df["id"].isin(all_c)]["units"].sum())
-                issues = [
-                    f"**{c}** needs {', '.join(m)}"
-                    for c in all_c
-                    if (m := [p for p in prereqs_map.get(c, []) if p.startswith("DSC") and p not in all_c])
-                ]
-                if issues:
-                    st.warning("DSC prereq gaps:\n" + "\n".join(f"- {x}" for x in issues))
+                # The old check only asked whether a prerequisite appeared
+                # somewhere in the plan, so DSC 100 in Fall and DSC 80 in
+                # Spring passed. This one respects quarter order, unit caps,
+                # duplicates and OR-groups.
+                plan_terms = [{"term": q, "courses": st.session_state.plan[q]}
+                              for q in QUARTERS if st.session_state.plan[q]]
+                findings = validate(plan_terms, COURSE_GRAPH)
+                errors = [v for v in findings if v.severity == "error"]
+                warns = [v for v in findings if v.severity == "warning"]
+                if errors:
+                    st.error("**Plan is not legal:**\n"
+                             + "\n".join(f"- `{v.code}` {v.message}" for v in errors))
                 else:
-                    st.success("All DSC prerequisites covered ✓")
+                    st.success("Plan passes every prerequisite, ordering and unit check ✓")
+                if warns:
+                    st.warning("\n".join(f"- `{v.code}` {v.message}" for v in warns))
                 if st.button("Clear All Plans"):
                     st.session_state.plan = {q: [] for q in QUARTERS}
                     st.rerun()

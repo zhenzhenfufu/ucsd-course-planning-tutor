@@ -1,3 +1,26 @@
+# Virtualenvs (one of these was created by a mistyped command)
 venv/
-.env
+重新建一个/
+"#"/
+\#/
+
+# Python
 __pycache__/
+*.py[cod]
+.pytest_cache/
+
+# macOS
+.DS_Store
+
+# Local tooling
+.claude/
+
+# Archived pre-rewrite artifacts (stale pyvis output, kept locally only)
+_archive/
+
+# Secrets — never commit
+.env
+.streamlit/secrets.toml
+
+# Derived, rebuilt from the catalog on first run
+.embedding_cache.json

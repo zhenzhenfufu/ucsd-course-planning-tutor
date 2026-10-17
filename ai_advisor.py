@@ -1,10 +1,27 @@
 import os
-import json
 import time
-from google import genai
-from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv()
+from dotenv import load_dotenv
+from google import genai
+
+from prereq_graph import build as build_graph
+from retrieval import context_for, get_index
+
+load_dotenv(Path(__file__).with_name(".env"))
+
+# Built once per process: parsing the catalog and loading the cached vectors
+# is cheap, but not per-keystroke cheap.
+_CG = None
+_INDEX = None
+
+
+def _resources():
+    global _CG, _INDEX
+    if _CG is None:
+        _CG = build_graph()
+        _INDEX = get_index(_CG)
+    return _CG, _INDEX
 
 SYSTEM_PROMPT = """You are an expert UCSD Data Science (DSC) academic advisor with deep knowledge of the program's curriculum, prerequisites, and course difficulty.
 
@@ -19,26 +36,19 @@ When giving advice:
 - Be direct and specific, referencing course codes (e.g., DSC 40A, DSC 100)
 - Flag when a planned schedule looks heavy (>16 units or high total weekly hours)
 - Recommend prerequisite courses when students seem underprepared
-- Use the course stats (Popularity, Content Difficulty, Exam Difficulty, Assignment Load, Average GPA, Hours/Week) to back up your advice
+- Only cite prerequisites that appear in the RELEVANT COURSES rows; if a course
+  you want to mention is not listed there, say you would need to look it up
+  rather than guessing its prerequisites
 - Keep responses concise but complete
 - Use markdown formatting: **bold** for course names, bullet points for lists"""
 
 # Try models from most to least quota-generous on the free tier
 MODELS = [
-    "gemini-2.0-flash-lite",
-    "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-1.5-flash-8b",
+    "gemini-3.1-flash-lite",
+    "gemini-2.5-flash-lite",
+    "gemini-flash-lite-latest",
+    "gemini-2.5-flash",
 ]
-
-
-def _slim_catalog(courses_data: list) -> str:
-    """Strip links/descriptions to reduce token usage."""
-    return json.dumps(
-        [{"id": c["id"], "name": c["name"], "units": c["units"], "stats": c.get("stats", {})}
-         for c in courses_data],
-        ensure_ascii=False,
-    )
 
 
 def get_ai_advice(conversation_history, selected_courses=None, courses_data=None):
@@ -48,11 +58,13 @@ def get_ai_advice(conversation_history, selected_courses=None, courses_data=None
     if not conversation_history:
         return "❌ No message to respond to."
 
-    if courses_data is None:
-        with open("dsc_courses.json", "r", encoding="utf-8") as f:
-            courses_data = json.load(f)
-
-    catalog_json = _slim_catalog(courses_data)
+    cg, index = _resources()
+    # Retrieve rows for the live question instead of pasting the whole
+    # catalog; graph expansion then guarantees the prerequisites of anything
+    # retrieved are present, which is what the model actually gets wrong.
+    question = conversation_history[-1]["content"]
+    catalog_json = context_for(question, index, k=10,
+                               extra=list(selected_courses or []), cg=cg, hops=1)
     plan_str = (
         f"Student's current planned courses: {selected_courses}"
         if selected_courses else "No courses selected yet."
@@ -65,10 +77,13 @@ def get_ai_advice(conversation_history, selected_courses=None, courses_data=None
         if role == "user":
             if i == 0:
                 content = (
-                    f"[COURSE CATALOG]:\n{catalog_json}\n\n"
+                    f"[RELEVANT COURSES]:\n{catalog_json}\n\n"
                     f"[{plan_str}]\n\n"
                     f"[STUDENT QUESTION]: {content}"
                 )
+            elif i == len(conversation_history) - 1:
+                content = (f"[RELEVANT COURSES]:\n{catalog_json}\n\n"
+                           f"[{plan_str}]\n\n{content}")
             else:
                 content = f"[{plan_str}]\n\n{content}"
         contents.append({"role": role, "parts": [{"text": content}]})

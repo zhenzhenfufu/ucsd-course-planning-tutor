@@ -1,0 +1,36 @@
+# Streamlit Community Cloud puts an app to sleep after about seven days with
+# no traffic, and a sleeping app greets visitors with a "Zzzz" screen. For a
+# link on a CV that is worse than a 404, because it looks abandoned.
+#
+# This pings the app every two days so it never reaches that threshold.
+#
+# Two caveats worth knowing:
+#   * GitHub disables scheduled workflows in a repository with no commits for
+#     60 days. Re-enable it from the Actions tab if that happens.
+#   * A plain GET is usually enough to reset the inactivity timer, but it is
+#     not a documented guarantee. If the app still sleeps, add an external
+#     monitor (UptimeRobot's free tier works) pointed at the same URL.
+name: keep the demo awake
+
+on:
+  schedule:
+    - cron: "17 4 */2 * *"     # every second day, 04:17 UTC
+  workflow_dispatch:            # and on demand from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping the Streamlit app
+        run: |
+          url="https://ucsd-course-planning-tutor.streamlit.app/"
+          code=$(curl -sS -o /tmp/body.html -w '%{http_code}' -L --max-time 60 "$url" || echo 000)
+          echo "HTTP $code"
+          if grep -qi 'gone to sleep' /tmp/body.html; then
+            echo "::warning::App was asleep; the ping should have woken it."
+          fi
+          # A non-2xx/3xx response means the app is gone, not merely sleeping.
+          case "$code" in
+            2*|3*) echo "reachable" ;;
+            *) echo "::error::Demo unreachable (HTTP $code)"; exit 1 ;;
+          esac
