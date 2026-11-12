@@ -3,7 +3,8 @@
 An academic planner for the UCSD Data Science major that will not hand you a
 schedule you are not allowed to take.
 
-**[Live demo](https://ucsd-course-planning-tutor.streamlit.app/)**
+**[Live demo](https://ucsd-course-planning-tutor.streamlit.app/)** ·
+[![tests](https://github.com/zhenzhenfufu/ucsd-course-planning-tutor/actions/workflows/tests.yml/badge.svg)](https://github.com/zhenzhenfufu/ucsd-course-planning-tutor/actions/workflows/tests.yml)
 
 ---
 
@@ -211,7 +212,9 @@ Violations the checker caught in arm A: 12 × `PREREQ_MISSING`,
 
 The checker is itself checked: 9 hand-built plans with known verdicts
 (`VALIDATOR_FIXTURES`), 9/9 correct. 27 unit tests cover the graph, the
-validator and retrieval, and run without network access.
+validator and retrieval, and run without network access. Both the tests and
+the validator self-test run in CI on every push and pull request
+(`.github/workflows/tests.yml`).
 
 ```bash
 python eval/run_eval.py            # full run

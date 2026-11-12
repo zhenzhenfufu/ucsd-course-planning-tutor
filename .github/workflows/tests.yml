@@ -1,0 +1,35 @@
+# Runs the checks that need no API key on every push and pull request:
+# the 27 unit tests (graph, checker, retrieval) and the validator self-test
+# against its known-legal and known-illegal fixtures. The planning eval itself
+# calls Gemini and stays a manual run.
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"   # same as the devcontainer
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+
+      - name: Unit tests
+        run: pytest tests/ -q
+
+      - name: Validator self-test
+        run: python eval/run_eval.py --offline
