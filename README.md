@@ -44,8 +44,8 @@ that cost:
 | DSC 161 | DSC 80 | ECON 5 or one of six POLI courses |
 | DSC 180A | DSC 102, MATH 189 | also DSC 106 and a machine-learning elective |
 
-Every sentence is now regenerated from `catalog.ucsd.edu`, for every department
-the graph touches, which took the graph from **74 edges to 143**. Three habits
+Every prerequisite is now parsed from `catalog.ucsd.edu`, for every department
+the graph touches, which took the graph from **74 edges to 142** (now 143). Three habits
 of the catalog had to be handled before the rest fell out:
 
 - the department is carried over rather than repeated — `DSC 20/R and 40A/R`
@@ -53,9 +53,10 @@ of the catalog had to be handled before the rest fell out:
 - a dash means a whole sequence — `MATH 20A-B-C`
 
 Two modelling rules go with it. A requirement a placement exam or AP score can
-satisfy is **not** a hard prerequisite, so it does not become an edge; where the
-ordering still binds for anyone who does take the course (`MATH 20A → 20B →
-20C`), that is recorded in `prereq_overrides.json` with the reason. And a
+satisfy is **not** a hard prerequisite: the validator treats it as met, so it
+never blocks a plan; where the ordering still binds for anyone who does take the
+course (`MATH 20A → 20B → 20C`), that is recorded in `prereq_overrides.json` with
+the reason. And a
 sequence offered as one alternative of a disjunction — `PHYS 4A-B or
 PHYS 2A-B-C` — is distributed into conjunctive normal form rather than
 flattened into a false conjunction.
@@ -72,11 +73,12 @@ shim kept only so an existing deployment pointed at the old path keeps working.
 ## Architecture
 
 ```
-data/catalog.json         catalog snapshot: 69 courses, prerequisites as prose
+data/catalog.json         catalog snapshot: 69 courses, parsed prerequisite groups
 data/scope.json           which courses are in scope, topic keywords, course sites
-        |                 (refresh/ regenerates catalog.json from catalog.ucsd.edu)
+data/offerings.json       quarters each course runs (tentative plans + Class Planner)
+        |                 (refresh/ checks both snapshots every week)
         v
-prereq_graph.py           parse prose -> prerequisite DAG (AND of OR-groups)
+prereq_graph.py           catalog snapshot -> prerequisite DAG (AND of OR-groups)
         |                 + substitution rules, abstract requirements
         |                 + prereq_overrides.json (reviewed corrections)
         v
@@ -86,57 +88,71 @@ retrieval.py              per-course documents -> embeddings (or TF-IDF)
 planner.py                generate a quarter -> validate -> regenerate
         |
         v
-validator.py              deterministic: ordering, units, duplicates, OR-groups
+validator.py              deterministic: ordering, units, duplicates, OR-groups, offerings
 ```
 
-### 1. Parsing prerequisites out of prose
+### 1. From catalog pages to a prerequisite graph
 
-The catalog states prerequisites in sentences, in **two opposite directions**:
+```
+catalog.ucsd.edu/courses/<SUBJECT>.html   one page per department in data/scope.json
+        |   refresh/catalog.py: each course entry -> ID, title, units,
+        |   and the text after its "Prerequisites:" label
+        v
+refresh/prereq_parse.py                   that clause -> AND of OR-groups,
+        |                                 condition tokens, flagged fragments
+        v
+data/catalog.json                         one record per in-scope course; no prose
+        |
+        v
+prereq_graph.py                           groups + prereq_overrides.json -> DAG
+```
 
-| Sentence | Meaning |
+The refresh job does the parsing once a week; the app and the validator only
+read `data/catalog.json`. A record stores the course's `prereq_groups`,
+`concurrent_ok`, `conditions` and flagged `ambiguities`, never the description.
+
+Requirements are an AND of OR-groups, so alternatives survive:
+
+```
+DSC 40A -> [[DSC 10], [MATH 20C, MATH 31BH], [MATH 18, MATH 20F, MATH 31AH]]
+```
+
+Options outside the scope (here `MATH 20F`, which the catalog does not
+define) stay in their group but never become graph nodes.
+
+What `refresh/prereq_parse.py` does with the rest of the clause:
+
+| Catalog wording | Stored as |
 |---|---|
-| `MATH 180A — Prerequisite: MATH 20C.` | MATH 20C comes **before** MATH 180A |
-| `MATH 20B — Prerequisite for MATH 20C.` | MATH 20B comes **before** MATH 20C |
+| major restriction, instructor consent, upper-division standing, credit exclusion | a condition token, not a prerequisite |
+| "recommended", "encouraged", "not required" | an `advisory` fragment, never a gate |
+| may be taken concurrently | `concurrent_ok` |
+| a placement exam, AP score or equivalent | the token `<exam or placement>` inside the group |
+| `A and B` inside an OR | distributed into CNF and flagged `nested-and` |
+| words it cannot place on a course | an `unresolved` fragment, listed rather than dropped |
 
-Reading the second form as if it were the first reverses the edge. Direction is
-therefore decided per sentence, before any course code is extracted.
+A group that holds `<exam or placement>` counts as met, because no plan can
+check a test score. Where the ordering still binds for anyone who takes the
+course (`MATH 20A → 20B → 20C`), `prereq_overrides.json` adds it as its own
+group with the reason. The same file holds the substitution rules and the
+satisfiers of other abstract tokens (`<qualifying elective>`).
 
-Two more forms look forward but are not prerequisites at all, and treating them
-as such was a real bug caught during development:
-
-| Sentence | Correct reading |
-|---|---|
-| `CSE 151A — Accepted as alternative to DSC 148/140A/140B` | CSE 151A **replaces** those courses |
-| `MATH 180A — Required or recommended for DSC 140A, 140B…` | advisory, **not** a gate |
-
-Parsing "accepted as alternative to DSC 140A" as a prerequisite would have made
-CSE 151A mandatory before DSC 140A — the exact inverse of what it means.
-
-Requirements are stored as an AND of OR-groups, so alternatives survive:
-
-```
-CSE 158 -> [[DSC 40B, CSE 12], [DSC 80, CSE 15L], [<probability>]]
-```
-
-`<probability>` is an *abstract requirement*: the prose says "a probability
-course" and names the acceptable ones elsewhere in the catalog
-(MATH 180A, MATH 183, CSE 103, ECE 109).
-
-What the parser produces:
+What the graph holds today (`python prereq_graph.py`):
 
 | | |
 |---|---|
 | courses | 69 |
 | prerequisite edges | 143 |
-| substitution rules found in prose | 7 |
+| substitution rules (carried over from the old dataset in `prereq_overrides.json`, marked "Owner to confirm") | 7 |
 | OR-groups (two or more alternatives) | 74 |
-| abstract requirement atoms | 5 |
+| abstract requirement atoms | 5, all `<exam or placement>` |
 | cycles | **0** (verified DAG) |
 | depth | 9 topological layers |
-| sentences it flagged as unresolved | 11, listed rather than dropped |
+| fragments flagged as ambiguous | 20, listed rather than dropped |
 
-Those 11 are reported, not silently discarded — they are references the prose
-makes that the parser cannot place on a course in scope.
+The 20 flagged fragments are 11 `unresolved` (administrative wording on
+DSC 190–199, such as a department stamp or an application to the chair),
+8 `advisory` ("recommended preparation" and similar) and 1 `nested-and`.
 
 ### 2. One source of truth
 
@@ -144,21 +160,26 @@ The Streamlit app used to carry its own hand-written `EDGES` list. Compared
 against the parsed graph, the two had drifted **25 edges apart**: 9 the hand
 list asserted that the catalog never says, 16 the hand list had missed.
 
-The hand list is gone. Facts the prose genuinely omits now live in
-`prereq_overrides.json` — including the edges from the old list that were
-**rejected**, each with the reason, so they do not quietly come back.
+The hand list is gone. Facts the catalog line leaves out now live in
+`prereq_overrides.json`, which also records the edges from the old list that
+were **rejected**, each with the reason. That list is a review record:
+`prereq_graph.py` does not read it, so a rejected pair can still appear as one
+alternative in an OR-group the catalog states (`MATH 20A → MATH 18`), where it
+never blocks a plan.
 
 ### 3. Retrieval
 
 The first version pasted the whole catalog — about 31 KB of JSON — into every
 request. Now each course becomes a document (name, units, prerequisite
-expression, what it unlocks, substitutions, topic keywords) and only the relevant
-rows are retrieved: typically **8–13% of the catalog** per question.
+expression, what it unlocks, substitutions, topic keywords and, in the app, the
+quarters it is offered) and only the relevant rows are retrieved:
+**8–13% of the catalog** per question in the earlier measurement, 9–16% with the
+offline TF-IDF backend on today's data (`python retrieval.py`).
 
-Similarity alone is not sufficient here. Asked *"what do I need before
-DSC 100?"*, embedding search returns DSC 100 and courses that read like it,
-but **DSC 40B — an actual prerequisite — does not rank**, because it is not
-textually similar to the question. So retrieval hits are expanded one hop along
+Similarity alone is not sufficient here. In that earlier measurement with
+embeddings, asked *"what do I need before DSC 100?"*, search returned DSC 100
+and courses that read like it, but **DSC 40B — an actual prerequisite — did not
+rank**, because it is not textually similar to the question. So retrieval hits are expanded one hop along
 the DAG: whenever a course is in context, the courses it depends on are too.
 
 ```
@@ -175,14 +196,16 @@ run offline.
 `validator.py` takes a plan and returns typed violations. No API calls, so the
 same plan always gets the same verdict:
 
-`PREREQ_MISSING` · `UNITS_BELOW_FULL_TIME` · `UNITS_OVER_CAP` ·
+`PREREQ_MISSING` · `NOT_OFFERED` · `UNITS_BELOW_FULL_TIME` · `UNITS_OVER_CAP` ·
 `DUPLICATE_COURSE` · `DUPLICATE_IN_TERM` · `UNKNOWN_COURSE` ·
 `UNITS_HEAVY` (warning) · `EMPTY_TERM` (warning)
 
 Prerequisites must be satisfied in a **strictly earlier** term, unless the
-catalog marks them concurrent-eligible (`PHYS 2A — Prerequisite: MATH 20B
-(concurrent OK)`). Substitutions and abstract requirements are honoured, so
-CSE 15L satisfies a DSC 80 requirement and ECE 109 satisfies `<probability>`.
+catalog says they may be taken concurrently (`concurrent_ok`; none of the 69
+courses in scope says so today). Substitution rules and abstract requirements
+are honoured: CSE 15L counts wherever DSC 80 is required (one of the carried-over
+rules the owner is to confirm), and a group a placement exam can satisfy never
+blocks a plan.
 
 ### 5. Planning term by term
 
@@ -211,16 +234,16 @@ Earlier measurement, taken before the October 2026 rebuild (74-edge graph; not r
 Violations the checker caught in arm A: 12 × `PREREQ_MISSING`,
 3 × `UNITS_BELOW_FULL_TIME`, 1 × `DUPLICATE_COURSE`.
 
-The checker is itself checked: 9 hand-built plans with known verdicts
-(`VALIDATOR_FIXTURES`), 9/9 correct. 90 unit tests cover the graph, the
-validator and retrieval, and run without network access. Both the tests and
+The checker is itself checked: 11 hand-built plans with known verdicts
+(`VALIDATOR_FIXTURES`), 11/11 correct. 230 unit tests cover the graph, the
+validator, retrieval, offerings, the app's plan view and the refresh code, and run without network access. Both the tests and
 the validator self-test run in CI on every push and pull request
 (`.github/workflows/tests.yml`).
 
 ```bash
 python eval/run_eval.py            # full run
 python eval/run_eval.py --offline  # validator self-test only, no API key
-pytest tests/ -q                   # 90 tests
+pytest tests/ -q                   # 230 tests
 ```
 
 ### What this does not do
@@ -233,6 +256,75 @@ goals from the DAG and reporting them is the obvious next step.
 
 ---
 
+## Keeping the data current
+
+There is no public UCSD API for courses, so a GitHub Actions job
+(`.github/workflows/refresh.yml`) refreshes the data **every Monday at 15:00 UTC**
+and can also be started by hand (Actions tab, "data-refresh", Run workflow).
+It opens or updates one pull request, `data-refresh`, whose body is a readable
+report of what changed; a person reviews and merges it. A data file is rewritten
+only when something other than fetch times and source status changed, so a quiet
+week opens no pull request, and the "as of" dates in the app are those of the
+last run that changed the data.
+
+| Source | What it gives | Written to |
+|---|---|---|
+| General Catalog (`catalog.ucsd.edu`) | course IDs, titles, units, prerequisite clauses (stored only as parsed groups) | `data/catalog.json` |
+| Department tentative plans (DSC, CSE, MATH, COGS, PHYS, ECE) | which quarters a course is planned for the year | `data/offerings.json` |
+| UCSD Class Planner public API (`/api/v1/public/*` only) | which courses are on the published schedule for a term | `data/offerings.json` |
+
+The fetcher identifies itself as `ucsd-course-planning-tutor (student project)`,
+makes at most one request per second to a host, honors `robots.txt`, uses
+conditional requests, sends no cookies and refuses to follow a redirect into
+UCSD single sign-on. A source that fails its shape check keeps its previous
+data. The job runs the offline tests itself and puts their summary in the pull
+request, because a pull request opened with the default token does not trigger
+`tests.yml`. To run it locally:
+
+```bash
+python -m refresh.run --report refresh_report.md
+```
+
+(With no `--only`, every source is refreshed; `--only catalog` limits the run to the named sources.)
+
+**What is stored.** Derived facts only: course IDs, titles, units, prerequisite
+groups, condition tokens, which quarters a course runs, `source_url`,
+`fetched_at` and a content hash. The hash is taken over the parsed result (a
+course's record, or a department's course-to-quarters table), not the page, so
+a page whose markup or wording changes while the data does not leaves the files
+unchanged. No catalog or department prose is copied, and the topic keywords in
+`data/scope.json` are written by the owner.
+
+**What the app shows.** The sidebar caption reads "Catalog as of DATE ·
+Offerings as of DATE", or "Offerings unavailable" if `data/offerings.json`
+cannot be read (the planner and validator still run). A banner states that
+quarter offerings are tentative department plans unless marked scheduled.
+
+**`NOT_OFFERED` severity.** The validator checks each course against the quarter
+it is planned in:
+
+| Evidence | Finding |
+|---|---|
+| Class Planner lists the term for that subject and the course is absent | error |
+| Department plan lists the course only in other quarters | warning |
+| Department plan does not list the course | warning |
+| Department plan lists the course with no quarter | warning |
+| By-arrangement courses, Summer, terms with no data | no finding |
+
+**CHEM and BIOL are entered by hand.** The chemistry page disallows robots in
+its path and the biology page has no documented feed, so neither is fetched.
+`data/offerings_manual.json` has empty `CHEM` and `BIOL` blocks for 2026-27; until
+the owner fills their `courses` (course ID to quarters such as `["FA", "WI"]`,
+plus `entered_by` and `entered_at`), those departments count as no coverage and
+produce no `NOT_OFFERED` findings. Fetched department data wins over manual data.
+Write quarters as a list of `FA`, `WI`, `SP`: the tests fail on anything else so
+a bad edit is caught in CI, and the app itself reads `Fall`/`Winter`/`Spring` in
+any case and ignores any other value instead of crashing.
+
+**One-time repository setting (owner only).** Settings, Actions, General,
+"Allow GitHub Actions to create and approve pull requests" must be enabled, or
+the workflow cannot open its pull request. It is off by default.
+
 ## Running it
 
 ```bash
@@ -242,20 +334,23 @@ streamlit run app.py
 ```
 
 Without a key the catalog, the graph and the validator all still work; the
-retrieval layer falls back to TF-IDF and the generative tabs are disabled.
+retrieval layer falls back to TF-IDF, and the chat and plan-generation tabs
+answer with a missing-key message instead of calling the model.
 
 ## Layout
 
 | Path | |
 |---|---|
-| `data/` | `catalog.json` (derived facts from the catalog) and `scope.json` (course scope, keywords) |
-| `refresh/` | fetches and parses the catalog into `data/catalog.json` |
-| `prereq_graph.py` | prose → prerequisite DAG |
+| `data/` | `catalog.json`, `offerings.json` (derived facts), `scope.json` (course scope, keywords), `sources.json` (department plan URLs), `offerings_manual.json` (hand-entered) |
+| `refresh/` | fetches and parses the catalog, department plans and Class Planner terms |
+| `prereq_graph.py` | catalog snapshot + `prereq_overrides.json` → prerequisite DAG |
 | `prereq_overrides.json` | reviewed corrections, and rejections with reasons |
 | `retrieval.py` | documents, embeddings/TF-IDF, graph expansion |
 | `validator.py` | deterministic plan checking |
 | `planner.py` | generate → validate → repair, both strategies |
 | `app.py` | Streamlit UI |
 | `eval/` | 20 planning tasks, harness, results |
-| `tests/` | 90 offline tests |
+| `tests/` | 230 offline tests |
+| `.github/workflows/refresh.yml` | weekly data refresh that opens a pull request |
+| `.github/workflows/tests.yml` | offline tests on every push and pull request |
 | `.github/workflows/keepalive.yml` | keeps the hosted demo from sleeping |

@@ -98,6 +98,38 @@ def test_stops_on_sso_redirect(clock):
         s.get(f"https://{HOST}/page")
 
 
+@pytest.mark.parametrize("location", [
+    "https://A5.UCSD.EDU/tritON/login",
+    "https://a5.ucsd.edu:443/tritON/login",
+    "https://A5.ucsd.edu:443/login",
+    "//a5.ucsd.edu:443/login",
+])
+def test_stops_on_sso_redirect_any_case_or_port(clock, location):
+    s, t = make({f"https://{HOST}/page": FakeResponse(302, headers={"Location": location})}, clock)
+    with pytest.raises(SSORedirect):
+        s.get(f"https://{HOST}/page")
+    assert not any("a5.ucsd.edu" in c["url"].lower() for c in t.calls)
+
+
+def test_host_case_and_port_share_robots_and_throttle(clock):
+    s, t = make({f"https://{HOST}/a": FakeResponse(text="a"),
+                 f"https://CATALOG.UCSD.EDU:443/b": FakeResponse(text="b")}, clock)
+    s.get(f"https://{HOST}/a")
+    s.get("https://CATALOG.UCSD.EDU:443/b")
+    assert [c["url"] for c in t.calls if c["url"].endswith("/robots.txt")] == [
+        f"https://{HOST}/robots.txt"]
+    assert len(clock.sleeps) == 2  # robots->a, a->b: one host, one interval
+
+
+def test_path_allowlist_ignores_host_case_and_port(clock):
+    allowed = {"classplanner.apps.ucsd.edu": ("/api/v1/public/",)}
+    ok = "https://ClassPlanner.apps.ucsd.edu:443/api/v1/public/x"
+    s, t = make({ok: FakeResponse(text="ok")}, clock, allowed_prefixes=allowed)
+    assert s.get(ok).text == "ok"
+    with pytest.raises(PathNotAllowed):
+        s.get("https://CLASSPLANNER.apps.ucsd.edu:443/api/v1/planner/x")
+
+
 def test_follows_relative_redirect_and_caps_at_five(clock):
     routes = {f"https://{HOST}/old": FakeResponse(301, headers={"Location": "/new"}),
               f"https://{HOST}/new": FakeResponse(text="moved")}

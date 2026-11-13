@@ -21,7 +21,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math20a",
-      "content_hash": "sha256:9781dfe8c7f6b03597b609f4c150c9d4891b37498852dccc5761dbab60b63044",
+      "content_hash": "sha256:df9fa3d72214901d18a9c7d9abc219f1e09646c442bc5bbad5b84e2385350286",
       "stale": false
     },
     "MATH 20B": {
@@ -43,7 +43,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math20b",
-      "content_hash": "sha256:f835311d7e399a63436d7649c122e77bccf1993290295417465560ffb8122e7e",
+      "content_hash": "sha256:70ebe94547044e34c4c57fec55cc07b01ad8ea125da9380033129f0a7b5f12e4",
       "stale": false
     },
     "MATH 20C": {
@@ -63,7 +63,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math20c",
-      "content_hash": "sha256:d4abe955423391b4acca5ee05e14c29fa1303b2f7372decc3631daf0d2e96b52",
+      "content_hash": "sha256:401c7e5c66e83d60faf6bdfebb0aa69a508c2588dd66eea0e5293d8702bf16cc",
       "stale": false
     },
     "MATH 18": {
@@ -87,7 +87,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math18",
-      "content_hash": "sha256:01c93f08791bb4ade7689570797778d89fb3ed7c16def2d808ff1da59d56c598",
+      "content_hash": "sha256:21125433f39041daaad390c1f1d3f23f2b54761f1811927e926c5761e6768905",
       "stale": false
     },
     "MATH 180A": {
@@ -109,7 +109,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math180a",
-      "content_hash": "sha256:3ff128af483dbceff80eedf720e2a986d012c8f5c6608fdca5653456fd4f9c72",
+      "content_hash": "sha256:747edbbfd86a77ac4fa63c6f2d4dd6868143cc7ee6dff968472c3bac4d189a00",
       "stale": false
     },
     "MATH 181A": {
@@ -138,7 +138,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math181a",
-      "content_hash": "sha256:af4e4017e1edf5dbcce67687db9565d67dabba711dedf95f06fa35397fc2fa15",
+      "content_hash": "sha256:96dd8a52186c0fe2a71753c60e531917a0f51b594bf524c14187b252a0f739dc",
       "stale": false
     },
     "MATH 181B": {
@@ -159,7 +159,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math181b",
-      "content_hash": "sha256:23f1fe02a26eead2295f0a2e29f74e1f9f54070600c8af2ccf60138c1713bbf2",
+      "content_hash": "sha256:e287969190dd60c8ec88f6d94b8ec2f32a4d5ac20ce32daecf43958d2b25fae0",
       "stale": false
     },
     "MATH 183": {
@@ -181,7 +181,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math183",
-      "content_hash": "sha256:e5b97007328ff54369fc1ef26776ac326d0fd49377b4c46466e16fb41bc76c45",
+      "content_hash": "sha256:876eb5bb460004672164d19ce21a0baea2bc7b0e60ebc166affa66b55b31bca4",
       "stale": false
     },
     "MATH 189": {
@@ -218,7 +218,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math189",
-      "content_hash": "sha256:e892f3cd72bfc153cde547d113a12a227ddb79c912ec086eadfa26ea6460e29c",
+      "content_hash": "sha256:b54f3779c76c57e1e829767a46fdb5957d1bf5108f63142ee40d29aeecc8b57f",
       "stale": false
     },
     "MATH 173A": {
@@ -244,7 +244,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math173a",
-      "content_hash": "sha256:e0e333345b45ba2061a3ea4241314991fed588f3916c99bd751005b6f1ac3a4d",
+      "content_hash": "sha256:760966bae52ab389524cde3d79d0cbbbcf6c104115ef66252208968df1d71dac",
       "stale": false
     },
     "MATH 173B": {
@@ -266,7 +266,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math173b",
-      "content_hash": "sha256:7fc5b04190219942f2aeaf27e749601e436c9ed5921538bf9269ace4fc298a4c",
+      "content_hash": "sha256:a6d726b14aa6700d2f50dba6e98bcbd5430a17a81f0d3db170b6c43cd3c69a13",
       "stale": false
     },
     "MATH 182": {
@@ -291,7 +291,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math182",
-      "content_hash": "sha256:526f083832831331b679d55a5bdf01e614112cbf76c1a033c4db136a5312e700",
+      "content_hash": "sha256:6d61a0353a33bc351e46cf419737606000d093e26fddd23ed1be987adab21808",
       "stale": false
     },
     "DSC 10": {
@@ -306,7 +306,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc10",
-      "content_hash": "sha256:7ab6c7b764ef6e0df948cd2180e4bb9b2e4fed555e8535f0e81acaadc0fdbd3a",
+      "content_hash": "sha256:8475f8b8c4a921c13810a5953ce8767d7bbda5a9afec8dd02e706482b9472dcf",
       "stale": false
     },
     "DSC 20": {
@@ -327,7 +327,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc20",
-      "content_hash": "sha256:28f5b09798404749b90da5e04ca8933586f0ddc1af70b40a3ab4bdd39e547554",
+      "content_hash": "sha256:b0507177c4ed7fc9b43acbfe9f42ed2ae85ac91cfcc64e4649649df0ba57a918",
       "stale": false
     },
     "DSC 30": {
@@ -348,7 +348,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc30",
-      "content_hash": "sha256:5865e1368025ac75904a7704e8d31a4a4f866d70c4e289f12e9a4eaebc310b8a",
+      "content_hash": "sha256:1253dfafb1f31830be6b467b48defac353dec23448313bb7443d8b42312f7065",
       "stale": false
     },
     "DSC 40A": {
@@ -378,7 +378,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc40a",
-      "content_hash": "sha256:e7e01f874a7b9a2e5b2499c6aa6c930a88eab35edcebaba7236d65b315edfb5d",
+      "content_hash": "sha256:d2625883f7004691600905570ad075deb3c5b0a837033123cf37552a7bfde059",
       "stale": false
     },
     "DSC 40B": {
@@ -402,7 +402,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc40b",
-      "content_hash": "sha256:e4120eace4772e168edf1413a949f32967c3dff6c53d07099978be63cc50139b",
+      "content_hash": "sha256:5eb935a596a28969a5a7f972523b68482494d534438000b483b03fe32f5115b6",
       "stale": false
     },
     "DSC 80": {
@@ -426,7 +426,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc80",
-      "content_hash": "sha256:055883766c86857b1ab9816b93bf3d25c0fb2f72da7003d9738e351a045445cd",
+      "content_hash": "sha256:77c5c137c40280796aef50c5ae43802dc352859bd3ea4379c3c664e4bd8f961a",
       "stale": false
     },
     "DSC 100": {
@@ -451,7 +451,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc100",
-      "content_hash": "sha256:99809cb9d1a3b60b062f9b29a1b14f78308fe315d0a619f0612e042faf305776",
+      "content_hash": "sha256:87ef09636a42e1da4a60e288c5b84f6dcb0c66b4e593e6288a200a95bb230f70",
       "stale": false
     },
     "DSC 102": {
@@ -473,7 +473,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc102",
-      "content_hash": "sha256:6fc907d7180244c5be899267245161ffa6f73a53fafcdf0615f4e06d24883aa7",
+      "content_hash": "sha256:f3f99fc436ffb3f484807e82eb76071316a2e3a0e55254e457d9d9716abc4848",
       "stale": false
     },
     "DSC 104": {
@@ -495,7 +495,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc104",
-      "content_hash": "sha256:c27cb4f88f5e702e7895630228aa8113f876823a2e4fe5bdc4bb4dba9c91d663",
+      "content_hash": "sha256:ac74c7d07ec9024cc6da9f9da3f41404abd4e3e28e3b6f8b61f7972ffd3e3538",
       "stale": false
     },
     "DSC 106": {
@@ -517,7 +517,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc106",
-      "content_hash": "sha256:b85d3f078dbb77bef70aaf1894418bce4b8ff36f4e5ed54180fd7ec17990fd42",
+      "content_hash": "sha256:9df942f9094ab72f1b997f2d483f971c3606d3f49ae8a1db21b238d1e8a0b954",
       "stale": false
     },
     "DSC 120": {
@@ -547,7 +547,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc120",
-      "content_hash": "sha256:41c40c210b44a6ee9eb0b33b1950f9e943461734fb1d70727b184e454202b983",
+      "content_hash": "sha256:cb5c01a3cbf14a48a7375b4391b6bb0e9ae14073cc0e0b5661ca9dde86477739",
       "stale": false
     },
     "DSC 123A": {
@@ -574,7 +574,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc123a",
-      "content_hash": "sha256:c715dc66e972bf022c5181ddd24231fbd63c0a1f7428ffa552412ee734b489c7",
+      "content_hash": "sha256:6a0c78a2f4d6e9f191e6d402680f592942c382c4ffccc5dea8e083ae05b20f36",
       "stale": false
     },
     "DSC 123B": {
@@ -597,7 +597,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc123b",
-      "content_hash": "sha256:3b86285a968224a62c602e100156810aad04c05e68398c52adc17c161f904043",
+      "content_hash": "sha256:e5cd75e81eec7b05966f712056e538d9ac6e48bccd92e57d9f16db339ee0dfd2",
       "stale": false
     },
     "DSC 140A": {
@@ -627,7 +627,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc140a",
-      "content_hash": "sha256:448f18a63941d7a3e45bb26e5f5f12c12f15088676627939790b7d2811a76976",
+      "content_hash": "sha256:94fa7a972ca39ba888720c0d497df346fa6832e313d4a05fe9898b7994585580",
       "stale": false
     },
     "DSC 140B": {
@@ -656,7 +656,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc140b",
-      "content_hash": "sha256:ac784c40520af7b934ee7da76abc41073676ff4e40f917bb778ae959d6ccade7",
+      "content_hash": "sha256:5897291c0cdc4f4ef9a255bc068e9ba66b313dba9596ab2710ebef1e3d1d4632",
       "stale": false
     },
     "DSC 148": {
@@ -695,7 +695,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc148",
-      "content_hash": "sha256:e21af45dbb62d3cf4d5ea7a4dabe0bc14dd96e5057bf1416b98df8d3f82a005a",
+      "content_hash": "sha256:13027c5650305eacb856eb61c253f86e4165760f1337dbc38233c9e3e048ffba",
       "stale": false
     },
     "DSC 155": {
@@ -725,7 +725,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc155",
-      "content_hash": "sha256:13c06e0cda97ab6552f5dbe16cae917d42539392625bd743c64d8fdac240f24c",
+      "content_hash": "sha256:01de770c3b51c0ee5fb49e48676e1be518e755b31e360e89d648c69aebeb828c",
       "stale": false
     },
     "DSC 160": {
@@ -746,7 +746,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc160",
-      "content_hash": "sha256:b0dca0715aaf9c6a7a74f6a6978dcd745d569b1145b3c23701b1ba9b0bd040bc",
+      "content_hash": "sha256:6903988ba2c52debb422de658dd9a35cceb39f55e485cbb078fd7c30e356ce48",
       "stale": false
     },
     "DSC 161": {
@@ -775,7 +775,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc161",
-      "content_hash": "sha256:84ba88a1bc0a473db7c01dc6c5a54821d0c54c37dc07328dde7dbb88454953ff",
+      "content_hash": "sha256:c2f525aa6ac797f7e1908154d5cfba273b312387e724f23d3060faa4d2052d57",
       "stale": false
     },
     "DSC 167": {
@@ -796,7 +796,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc167",
-      "content_hash": "sha256:cf6dcfcfb3378f52f52b32de94bfa8e25332ea9db56b64b543a33ed190a813bd",
+      "content_hash": "sha256:87ea8398f7b9ab7e9e12d867f6eb5eeccb47cd45185a1d3612f358ba227c25ca",
       "stale": false
     },
     "DSC 170": {
@@ -817,7 +817,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc170",
-      "content_hash": "sha256:d96bb03eee5551b28dac2dbebd15015d97e40a36722674b6bfb011a5af773e0e",
+      "content_hash": "sha256:2efb066950f8b591b97f7966b4b7a4c8737904bcc2d4c216087738f3c3dbe4f4",
       "stale": false
     },
     "DSC 180A": {
@@ -867,7 +867,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc180a",
-      "content_hash": "sha256:7e81cfdeb9adac656e0d224ee0856190495b1a966456d8e59f13f2847ecdafc9",
+      "content_hash": "sha256:3a96e7b1d6582a58fbbbeea0fb2e91cf1cac811690faaab5f308c2d0fcdf78a4",
       "stale": false
     },
     "DSC 180B": {
@@ -889,7 +889,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc180b",
-      "content_hash": "sha256:aef619f292f5839718659bff2e15814eecb6979b29b31b9a24ad04cafa4d1773",
+      "content_hash": "sha256:7709019341412900d0ff28f5effbd5d941032e8ee025368bc91541b817be3dba",
       "stale": false
     },
     "DSC 190": {
@@ -916,7 +916,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc190",
-      "content_hash": "sha256:bdcfe5f5f5bc8f801336e1cc66f15360eab8a99340a269c55488fa21f1b4eb53",
+      "content_hash": "sha256:004eaa7fee72b6baf49e80bbffab9858260bc7fb4ce2ea449300e128db78b584",
       "stale": false
     },
     "DSC 191": {
@@ -943,7 +943,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc191",
-      "content_hash": "sha256:d034890d1d20ae47d87c7637d4aa319f94bdf9311a64b5bb03561c7637b8f370",
+      "content_hash": "sha256:3068d4a182602889d651c0b5cd0b3529eca1aa034981602ce4e626e1292e0c1a",
       "stale": false
     },
     "DSC 197": {
@@ -971,7 +971,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc197",
-      "content_hash": "sha256:69392919171a7fb4f9e949c74de531ae469bb6eea60fe78e9c0720ff79562f86",
+      "content_hash": "sha256:d56a730fd3e76cba92b2a886a3118c8a6f7f5d926889ad07aedb878add159fe6",
       "stale": false
     },
     "DSC 198": {
@@ -1003,7 +1003,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc198",
-      "content_hash": "sha256:643f91c5a58fb695f0484ecd323ee4bbb66c9187ad2295b0bd35453f1bf4bd4c",
+      "content_hash": "sha256:c42ee9facb4c7844a3dc8a9308816bfd1963a1324f30ac6fae128aec882d2f1e",
       "stale": false
     },
     "DSC 199": {
@@ -1031,7 +1031,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc199",
-      "content_hash": "sha256:1d55a9791cbde521c7f0c1164f9146440faffd825836e91a513eec77457317fa",
+      "content_hash": "sha256:a17ab4876aa289fea10c908ad53734c9f580004e19468dbd510a392debad3c25",
       "stale": false
     },
     "CSE 11": {
@@ -1048,7 +1048,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse11",
-      "content_hash": "sha256:21412ec47e86aa519979e78cc85c01a40937b4a5c603af4f6ad52abf555ee5ed",
+      "content_hash": "sha256:b26eedc148cd5cbf06371742210e0268350397ac933897793ab2de616f89640c",
       "stale": false
     },
     "CSE 12": {
@@ -1070,7 +1070,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse12",
-      "content_hash": "sha256:0268cb6e8f9b6f972a417c297cdd533f919fca914c2890b75c31982093e8046a",
+      "content_hash": "sha256:ae4b2e5320de53a728af18f5f2d92979935d6d3fe9beb5eb8f6b0fedfc071150",
       "stale": false
     },
     "CSE 15L": {
@@ -1094,7 +1094,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse15l",
-      "content_hash": "sha256:d9ff3cb734de400abc25eff011b718be0f2fefa8e1e51e76549b17b1c8a7ccf8",
+      "content_hash": "sha256:a5cf1676d2a25d6ad4431a6ef1a0cb8483c49b05d616b0d3995980aea5326d3f",
       "stale": false
     },
     "CSE 100": {
@@ -1128,7 +1128,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse100",
-      "content_hash": "sha256:7fd4e48c4a5ab7d3507f193e71f1a5c68adc846036cb5089ccd9acf3d94aad43",
+      "content_hash": "sha256:f3c087ccf197358b2513007636ba54a6a7573c638b81db68a37aa736d256f3e8",
       "stale": false
     },
     "CSE 101": {
@@ -1157,7 +1157,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse101",
-      "content_hash": "sha256:d09ded6710459451cdd2510a794a7695b772561873e62778fca320b43416ddd3",
+      "content_hash": "sha256:c3e73b9d158af1ddc49feb0a63dd5715231fc1494aac9172995a0c441d10c42f",
       "stale": false
     },
     "CSE 103": {
@@ -1185,7 +1185,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse103",
-      "content_hash": "sha256:d33dedaed8c069f8209c9387797472c2f14d4265cd853d31315d8caf005ce148",
+      "content_hash": "sha256:aebd7e1d93ff11c58a2a50705ea1a8bb9c8011362b6001b6aa6b00c82c1c71b7",
       "stale": false
     },
     "CSE 151A": {
@@ -1232,7 +1232,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse151a",
-      "content_hash": "sha256:fb7fe4fa48425d35baa965328f14ffd8569e62b381a67ac068e66dc80671e218",
+      "content_hash": "sha256:70eaaf3c2ebfdbf1b1a96527a5c0fdcc628e12cc5c267ff39ac005c7ffc5ce55",
       "stale": false
     },
     "CSE 151B": {
@@ -1276,7 +1276,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse151b",
-      "content_hash": "sha256:f8c1a49ba56f70a6d6d0cb26cffe8718b183fd3918c9d8628d139178d4383fbc",
+      "content_hash": "sha256:344a5afcdbba590932da4f2548809aceecbc989bbea44089df5fd56176ed4fb6",
       "stale": false
     },
     "CSE 158": {
@@ -1318,7 +1318,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse158",
-      "content_hash": "sha256:1f74f23d75f0fe37a8d7ec578478c47a171892232b2d0b01503588e7dec7f667",
+      "content_hash": "sha256:01cfd6c6f1ea5c41e1b721bdf9776dbb7429db1da357711a3054ebc470604d2a",
       "stale": false
     },
     "ECE 101": {
@@ -1339,7 +1339,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/ECE.html#ece101",
-      "content_hash": "sha256:2e30011619f49664dbe85fd3adf03b5724af8a345318f1cd67fe5dd9f3802963",
+      "content_hash": "sha256:ac0775fb8d9649612f6d12fbf4a300182f8f891b7729a07c2e3df5052bb8771d",
       "stale": false
     },
     "ECE 109": {
@@ -1365,7 +1365,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/ECE.html#ece109",
-      "content_hash": "sha256:aa432114955e6a07e53f9493b974ff7a2775893535538caa6a3ef1ad83ac8fe5",
+      "content_hash": "sha256:65193ab8ff073723363d015bff9692f39367645dbd3cd154445ab358791f6f76",
       "stale": false
     },
     "COGS 108": {
@@ -1388,7 +1388,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/COGS.html#cogs108",
-      "content_hash": "sha256:dec99b86adb5d1ccee8239894187cbe600f654a091ff9c8a77c6dda5dda61dea",
+      "content_hash": "sha256:f3a04dce92bf41cb5d91bf10cc0972c69ad67306255ab79b62a236f6ef937f32",
       "stale": false
     },
     "COGS 188": {
@@ -1409,7 +1409,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/COGS.html#cogs188",
-      "content_hash": "sha256:b51a1c0c2dbbc5516956ec3f0225e24c48290c91706d93cf79b8661effe0d03c",
+      "content_hash": "sha256:695897580256d473b5135340e44e15e221d6754d4a10d2659148efca12141c71",
       "stale": false
     },
     "PHYS 2A": {
@@ -1444,7 +1444,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/PHYS.html#phys2a",
-      "content_hash": "sha256:a08b3b5fd21071afaa7b73fa35dd8380fcf3f6c4e8655e5c40cf134ade9aa8a9",
+      "content_hash": "sha256:653f99c59319b2f770bcf0c4dbceedb9e1f3379b94c98eeb69524633ee27f087",
       "stale": false
     },
     "PHYS 2B": {
@@ -1474,7 +1474,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/PHYS.html#phys2b",
-      "content_hash": "sha256:f7891f5f3709d9acac1062ca7528783c606b74a5c29cfe1a7cea569a1c4b3160",
+      "content_hash": "sha256:d5659fe66c69d3a69efb16b6e12b95353c11db095b52a452efef5ec1274ae2f5",
       "stale": false
     },
     "PHYS 2C": {
@@ -1507,7 +1507,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/PHYS.html#phys2c",
-      "content_hash": "sha256:a771449500063b8002cdf55285072207d613aa91a6322c924d45486b71ad3d14",
+      "content_hash": "sha256:d8d9cdd488369b2e13f2fa7611654032ca9b9d6b73ff9a9c8a6e84d1dd6db0ee",
       "stale": false
     },
     "PHYS 4A": {
@@ -1531,7 +1531,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/PHYS.html#phys4a",
-      "content_hash": "sha256:b2af85c445b5b789d8c85d6be14fa34d8fb207a34fe1f29623e3a419e38e2cd3",
+      "content_hash": "sha256:91aa5a9640fe36b6de2be5845429f5c846a399aafe4ab7a2a30d24a1a19b0d5d",
       "stale": false
     },
     "PHYS 4B": {
@@ -1561,7 +1561,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/PHYS.html#phys4b",
-      "content_hash": "sha256:825ba4ca67c4e6dccac7b4dc68cdfa00dc332a8595e8d37e065db0c5a6a622f5",
+      "content_hash": "sha256:7aecfe951bb16aba480f4300197f1400d627198f76bf663ee94c1d6543a4fa6d",
       "stale": false
     },
     "PHYS 4C": {
@@ -1623,7 +1623,7 @@
         }
       ],
       "catalog_url": "https://catalog.ucsd.edu/courses/PHYS.html#phys4c",
-      "content_hash": "sha256:40f07b6ad6b070fe5f19be3c264c6c5436713b576f70352d1776947c4a5fa144",
+      "content_hash": "sha256:cdf0e7416b3e616c0f96e6d85bfa66585294ad97616754cef952b09d4568bcc2",
       "stale": false
     },
     "CHEM 6A": {
@@ -1644,7 +1644,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CHEM.html#chem6a",
-      "content_hash": "sha256:d79e7ab3bf4de7895e481e1e6ec50988090ee87b31c64a1edc68adf890c830eb",
+      "content_hash": "sha256:5c40b0c24c48d64bdab43bea3327bd5ed6b2fe5571999ec8b556eaa60fa0a585",
       "stale": false
     },
     "CHEM 6B": {
@@ -1664,7 +1664,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CHEM.html#chem6b",
-      "content_hash": "sha256:4a3fec10c8843dc507e1214b72741f24e0858bfab2d3891d0e8da232b3eb11c0",
+      "content_hash": "sha256:f8f14cd4f416f1cd9d6c0d863b39547ff2a22ed0142a35c8a54d617eb163ff6d",
       "stale": false
     },
     "CHEM 6C": {
@@ -1684,7 +1684,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CHEM.html#chem6c",
-      "content_hash": "sha256:11d970ce9637eac631d77d97aa875401af9de7d16104f1914707daa59fa380b9",
+      "content_hash": "sha256:75a5caeeb57e0522a271a4521a866aa236f81563b8fc0b14e13776a8f92c3850",
       "stale": false
     },
     "CHEM 11": {
@@ -1699,7 +1699,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CHEM.html#chem11",
-      "content_hash": "sha256:630306cfa1b76bcc9ac515db923e6bbaf1287bf428c2a5207eae80079e504499",
+      "content_hash": "sha256:90ff93c488f6f61bea617cf0ec1454323646bca3aa6a0374147e0bbbd3b999e9",
       "stale": false
     },
     "BILD 1": {
@@ -1714,7 +1714,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/BIOL.html#bild1",
-      "content_hash": "sha256:4471576d341c4cc4507022644b14f0d3fc6a0ad2f641b46016de8d6e035b97c7",
+      "content_hash": "sha256:ed10f96ab07507b07d913bb93f0021198b48ed10beaf1ff6ba7802d46f9217a7",
       "stale": false
     },
     "BILD 2": {
@@ -1733,7 +1733,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/BIOL.html#bild2",
-      "content_hash": "sha256:82c74115231c7280c41fe81af2d8308eea8f77c981d56f5fb5bac253fedc1afc",
+      "content_hash": "sha256:98df4a20cc697891b309e66038e9502bb5bcefe85a4051f4627980da5782e69c",
       "stale": false
     },
     "BILD 3": {
@@ -1748,7 +1748,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/BIOL.html#bild3",
-      "content_hash": "sha256:aab09222b1270e0faafbfafc0140e3d491fb869ad3eb0a9d905ff0b717d525f4",
+      "content_hash": "sha256:c99cc2f54841e7d8f47c3fadcc9ab77452ba9018c4e29ca4b5bc1847e8e7f588",
       "stale": false
     },
     "BIBC 100": {
@@ -1776,7 +1776,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/BIOL.html#bibc100",
-      "content_hash": "sha256:0ee0e4bddef9536f529eedfdeb5aaaa08e27a825172114740f74fbbc6b33c755",
+      "content_hash": "sha256:84812d76a0bdcde71def2c00b97d65d5b683fb4d54b6a56b1789481f9d2aa767",
       "stale": false
     },
     "BIBC 102": {
@@ -1806,7 +1806,7 @@
       ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/BIOL.html#bibc102",
-      "content_hash": "sha256:b25cbfc38da28048097c69054e9a8bbf188a0141479e443c6a3bda3ff0d03f49",
+      "content_hash": "sha256:4589a893a1151cfee131890bfd9e5388cb71cd7bb966fa9645849432cef9cebb",
       "stale": false
     },
     "COGS 9": {
@@ -1821,7 +1821,7 @@
       "conditions": [],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/COGS.html#cogs9",
-      "content_hash": "sha256:1126eeb5140cb30dd13fb8e06ecdcb2228c17dfa4239aeb46190bef88751ecf7",
+      "content_hash": "sha256:2e47901f1253d3959b66ec165f4cbd4072694f72a11148156fcedc1339ee6315",
       "stale": false
     }
   },

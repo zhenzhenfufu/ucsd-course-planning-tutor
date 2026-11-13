@@ -90,7 +90,9 @@ def _start_options() -> list[Term]:
 
 
 _default_start = _start_year(START_TERM)
-YEAR_OPTIONS = [_default_start - 1, _default_start, _default_start + 1]
+# Every academic year a planner start quarter can fall in, plus the year before
+# the default, so "Load into My Plan" always lands on a selectable year.
+YEAR_OPTIONS = sorted({_default_start - 1} | {_start_year(t) for t in _start_options()})
 
 with st.sidebar:
     cat_date = (COURSE_GRAPH.catalog_meta.get("fetched_at") or "unknown")[:10]
@@ -454,8 +456,12 @@ with col_right:
     with tab_plan:
         for msg in st.session_state.pop("load_skipped", []):
             st.warning(msg)
+        year_options = YEAR_OPTIONS
+        if st.session_state.plan_year not in year_options:
+            # A selectbox whose state is not one of its options crashes the session.
+            year_options = sorted({*YEAR_OPTIONS, st.session_state.plan_year})
         start_year = st.selectbox(
-            "Academic year", YEAR_OPTIONS, format_func=year_label,
+            "Academic year", year_options, format_func=year_label,
             key="plan_year")
         q_tabs = st.tabs(QUARTERS + ["Overview"])
 

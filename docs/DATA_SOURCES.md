@@ -6,6 +6,24 @@ findings and verdicts, with selectors, column headers and quoted robots and
 terms lines, are in `docs/research/data-sources-2026-11-12.json`. This file
 is the summary and the plan.
 
+## Status (2026-11-13)
+
+The plan below has been implemented; design in
+[`docs/superpowers/specs/2026-11-12-data-refresh-design.md`](superpowers/specs/2026-11-12-data-refresh-design.md),
+task list in [`docs/superpowers/plans/2026-11-12-data-refresh.md`](superpowers/plans/2026-11-12-data-refresh.md).
+The research below is left as written on 2026-11-12, so present-tense remarks
+about `scraper.py` and `dsc_courses.json` describe the code of that date; both
+files have since been removed.
+
+| Plan step | State |
+|---|---|
+| 1. Catalog scraper | Done. `refresh/catalog.py` replaced `scraper.py` and writes `data/catalog.json`. |
+| 2. Offerings layer | Done. `refresh/offerings/` has one adapter per department plus the Class Planner client; output is `data/offerings.json`. CHEM and BIOL are entered by hand in `data/offerings_manual.json` (still empty). |
+| 3. `NOT_OFFERED` | Done in `validator.py`. |
+| 4. Refresh workflow | Done, weekly (Monday 15:00 UTC) and on demand: `.github/workflows/refresh.yml`. The daily check of the terms list was not built. |
+| 5. App | Done: "as of" dates, the tentative banner, SET link. |
+| 6. Descriptions | Resolved by removing them: only derived facts are stored. |
+
 ## Bottom line
 
 - **UCSD has no official public API for courses, the catalog, terms or the
@@ -42,7 +60,7 @@ is the summary and the plan.
   - Concrete case: the DS core changed from `MATH 189` to `MATH 189 or DSC 152`,
     and `DSC 152` has no catalog entry yet. The validator needs a rule for
     courses that are referenced but undefined.
-- **Parser pitfalls the current `scraper.py` hits:**
+- **Parser pitfalls the old `scraper.py` hit (removed; `refresh/catalog.py` handles them):**
   - It zips `p.course-name` with `p.course-descriptions` by index, but some
     description `<p>` tags have no class. On today's DSC page every description
     from DSC 40B/R onward lands on the wrong course. Walk siblings instead.
@@ -134,8 +152,8 @@ This is a reading of the terms, not legal advice.
 - **What the terms say:** the ucsd.edu Terms of Use allow one personal,
   non-commercial copy. They prohibit republishing, including use "on any other
   website or networked computer environment", without explicit permission.
-- **Where the public app conflicts:** it stores and shows full catalog
-  descriptions (`dsc_courses.json`).
+- **Where the public app conflicted (historical):** it stored and showed full
+  catalog descriptions (`dsc_courses.json`, since removed).
 - **Safer default:**
   - Store derived facts only: IDs, units, parsed prerequisite edges, terms
     offered, `source_url`, `fetched_at`.
@@ -156,7 +174,7 @@ This is a reading of the terms, not legal advice.
 ## Proposed plan
 
 1. **Fix the catalog scraper.**
-   - Replace `scraper.py`: walk siblings, normalize IDs, handle the unit forms.
+   - Replace `scraper.py` (done): walk siblings, normalize IDs, handle the unit forms.
    - Write a structured snapshot.
    - The prerequisite graph keeps reading through `prereq_graph.py` and
      `prereq_overrides.json`.

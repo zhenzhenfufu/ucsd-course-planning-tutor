@@ -1,5 +1,5 @@
 # Runs the checks that need no API key on every push and pull request:
-# the 27 unit tests (graph, checker, retrieval) and the validator self-test
+# the unit tests (graph, checker, retrieval, refresh, offerings) and the validator self-test
 # against its known-legal and known-illegal fixtures. The planning eval itself
 # calls Gemini and stays a manual run.
 name: tests

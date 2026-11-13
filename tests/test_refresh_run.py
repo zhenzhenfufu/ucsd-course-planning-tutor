@@ -3,10 +3,33 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from refresh.http import FetchResult
 from refresh.run import main
 
 FIX = Path(__file__).parent / "fixtures"
+REPO_ROOT = Path(__file__).resolve().parent.parent
+ROOT_REPORT = REPO_ROOT / "refresh_report.md"
+
+
+def _report_state():
+    return ROOT_REPORT.stat().st_mtime_ns if ROOT_REPORT.exists() else None
+
+
+@pytest.fixture(autouse=True, scope="module")
+def _repo_root_report_untouched():
+    """CI runs refresh.run and then these tests in the repo root; a test that
+    rewrote ./refresh_report.md would replace the real report in the PR body."""
+    before = _report_state()
+    yield
+    assert _report_state() == before, "a test wrote refresh_report.md in the repo root"
+
+
+@pytest.fixture(autouse=True)
+def _cwd_is_tmp(tmp_path, monkeypatch):
+    """Belt and braces: even a call without --report writes into tmp_path."""
+    monkeypatch.chdir(tmp_path)
 SCOPE = {"by_arrangement": [], "courses": {
     "DSC 30": {"department": "DSC", "keywords": ["a"]},
     "CSE 8A": {"department": "CSE", "keywords": ["b"]}}}
@@ -31,7 +54,8 @@ def test_catalog_run_writes_snapshot(tmp_path):
     d = _setup(tmp_path)
     s = FakeSession({"DSC": (FIX / "catalog_dsc.html").read_text(),
                      "CSE": (FIX / "catalog_cse.html").read_text()})
-    assert main(["--only", "catalog", "--data-dir", str(d)], session=s) == 0
+    assert main(["--only", "catalog", "--data-dir", str(d),
+                 "--report", str(d / "r.md")], session=s) == 0
     snap = json.loads((d / "catalog.json").read_text())
     assert set(snap["courses"]) == {"DSC 30", "CSE 8A"}
     assert sorted(s.urls) == ["https://catalog.ucsd.edu/courses/CSE.html",
@@ -43,13 +67,12 @@ def test_catalog_shape_failure_keeps_previous(tmp_path):
     (d / "catalog.json").write_text('{"previous": true}')
     s = FakeSession({"DSC": "<html><p>redesigned</p></html>",
                      "CSE": (FIX / "catalog_cse.html").read_text()})
-    assert main(["--only", "catalog", "--data-dir", str(d)], session=s) == 1
+    assert main(["--only", "catalog", "--data-dir", str(d),
+                 "--report", str(d / "r.md")], session=s) == 1
     assert json.loads((d / "catalog.json").read_text()) == {"previous": True}
 
 
 # ---- offerings + classplanner ----------------------------------------------
-
-import pytest  # noqa: E402
 
 COGS_URL = "https://docs.google.com/spreadsheets/d/e/X/pub?gid=866922720&single=true&output=csv"
 SOURCES = {"2026-27": {
@@ -103,7 +126,8 @@ def test_failed_adapter_keeps_previous_block(tmp_path):
     prev = {"source_url": "old", "courses": {"CSE 8A": ["FA"]}}
     (d / "offerings.json").write_text(json.dumps({"tentative": {"2026-27": {"CSE": prev}}}))
     s = FakeSession2(_pages(cse="<html>not a sheet</html>"))
-    assert main(["--only", "offerings", "--data-dir", str(d)], session=s) == 0
+    assert main(["--only", "offerings", "--data-dir", str(d),
+                 "--report", str(d / "r.md")], session=s) == 0
     out = json.loads((d / "offerings.json").read_text())
     assert out["tentative"]["2026-27"]["CSE"] == prev
     assert out["sources"]["cse"]["ok"] is False and out["sources"]["cse"]["error"]
@@ -114,7 +138,8 @@ def test_failed_adapter_keeps_previous_block(tmp_path):
 def test_unconfigured_term_skipped(tmp_path):
     d = _setup2(tmp_path)
     s = FakeSession2(_pages())
-    assert main(["--only", "classplanner", "--data-dir", str(d)], session=s) == 0
+    assert main(["--only", "classplanner", "--data-dir", str(d),
+                 "--report", str(d / "r.md")], session=s) == 0
     out = json.loads((d / "offerings.json").read_text())
     assert set(out["scheduled"]) == {"WI27"}
     assert out["scheduled"]["WI27"]["subjects"] == {"CSE": 0, "DSC": 1}
@@ -126,7 +151,8 @@ def test_unconfigured_term_skipped(tmp_path):
 def test_subject_failure_is_omitted_and_partial(tmp_path):
     d = _setup2(tmp_path)
     s = FakeSession2(_pages(), fail_subject="CSE")
-    assert main(["--only", "classplanner", "--data-dir", str(d)], session=s) == 0
+    assert main(["--only", "classplanner", "--data-dir", str(d),
+                 "--report", str(d / "r.md")], session=s) == 0
     out = json.loads((d / "offerings.json").read_text())
     assert out["scheduled"]["WI27"]["subjects"] == {"DSC": 1}
     assert "partial" in out["sources"]["classplanner"]["error"]
@@ -138,7 +164,8 @@ def test_cogs_wrong_gid_refused_without_fetch(tmp_path):
     bad["2026-27"]["COGS"]["url"] = COGS_URL.replace("866922720", "1")
     (d / "sources.json").write_text(json.dumps(bad))
     s = FakeSession2(_pages())
-    assert main(["--only", "offerings", "--data-dir", str(d)], session=s) == 0
+    assert main(["--only", "offerings", "--data-dir", str(d),
+                 "--report", str(d / "r.md")], session=s) == 0
     out = json.loads((d / "offerings.json").read_text())
     assert out["sources"]["cogs"]["ok"] is False
     assert not any("gid=1" in u for u in s.urls)
@@ -152,7 +179,135 @@ def test_all_sources_failed_exits_1(tmp_path):
             raise RuntimeError("down")
 
         post_json = get
-    assert main(["--only", "offerings", "classplanner", "--data-dir", str(d)], session=Dead()) == 1
+    assert main(["--only", "offerings", "classplanner", "--data-dir", str(d),
+                 "--report", str(d / "r.md")], session=Dead()) == 1
     out = json.loads((d / "offerings.json").read_text())
     assert out["sources"]["classplanner"]["ok"] is False
     assert "RuntimeError" in out["sources"]["classplanner"]["error"]
+
+
+def test_default_selects_all_sources(tmp_path, capsys):
+    import refresh.run as run
+
+    class Dead:
+        def get(self, url):
+            raise RuntimeError("down")
+
+        post_json = get
+
+    d = _setup(tmp_path)
+    (d / "sources.json").write_text(json.dumps(SOURCES))
+    assert run.main(["--data-dir", str(d), "--report", str(d / "r.md")], session=Dead()) == 1
+    err = capsys.readouterr().err
+    for name in ("catalog", "offerings", "classplanner"):
+        assert name in err
+
+
+def test_main_writes_report_only_where_told(tmp_path, monkeypatch):
+    (tmp_path / "data").mkdir()
+    d = _setup(tmp_path / "data")
+    cwd = tmp_path / "cwd"
+    cwd.mkdir()
+    monkeypatch.chdir(cwd)
+    s = FakeSession({"DSC": (FIX / "catalog_dsc.html").read_text(),
+                     "CSE": (FIX / "catalog_cse.html").read_text()})
+    report = tmp_path / "out" / "report.md"
+    report.parent.mkdir()
+    assert main(["--only", "catalog", "--data-dir", str(d), "--report", str(report)],
+                session=s) == 0
+    assert report.read_text().strip()
+    assert list(cwd.iterdir()) == []
+
+
+# ---- quiet weeks: no data diff ---------------------------------------------
+
+class FakeSession3(FakeSession2):
+    """Serves catalog pages too, so one run can refresh every source."""
+
+    def __init__(self, pages, catalog_pages, terms=None):
+        super().__init__(pages)
+        self.catalog_pages, self.terms = catalog_pages, terms or TERMS
+
+    def get(self, url):
+        if url.startswith("https://catalog.ucsd.edu/courses/"):
+            self.urls.append(url)
+            subject = url.rsplit("/", 1)[1].removesuffix(".html")
+            return FetchResult(url, 200, self.catalog_pages[subject], False, {})
+        if url.endswith("/terms"):
+            self.urls.append(url)
+            return FetchResult(url, 200, json.dumps(self.terms), False, {})
+        return super().get(url)
+
+
+def _catalog_pages():
+    return {"DSC": (FIX / "catalog_dsc.html").read_text(),
+            "CSE": (FIX / "catalog_cse.html").read_text()}
+
+
+def _run_all(d, session, report):
+    return main(["--data-dir", str(d), "--report", str(report)], session=session)
+
+
+def _tick(monkeypatch):
+    """Make every run's timestamps different, as they are a week apart in CI."""
+    import itertools
+
+    import refresh.run as run
+    n = itertools.count()
+    monkeypatch.setattr(run, "_now", lambda: f"2026-11-{10 + next(n) % 20:02d}T00:00:00Z")
+
+
+def test_unchanged_sources_leave_data_files_byte_identical(tmp_path, monkeypatch):
+    d = _setup2(tmp_path)
+    _tick(monkeypatch)
+    assert _run_all(d, FakeSession3(_pages(), _catalog_pages()), d / "r1.md") == 0
+    before = {n: (d / n).read_bytes() for n in ("catalog.json", "offerings.json")}
+    assert _run_all(d, FakeSession3(_pages(), _catalog_pages()), d / "r2.md") == 0
+    after = {n: (d / n).read_bytes() for n in ("catalog.json", "offerings.json")}
+    assert after == before
+    # The report still shows this run's sources as having run.
+    assert "classplanner" in (d / "r2.md").read_text().lower()
+
+
+def test_changed_content_is_written_with_new_timestamps(tmp_path, monkeypatch):
+    d = _setup2(tmp_path)
+    _tick(monkeypatch)
+    assert _run_all(d, FakeSession3(_pages(), _catalog_pages()), d / "r1.md") == 0
+    first = json.loads((d / "offerings.json").read_text())
+    s = FakeSession3(_pages(), _catalog_pages())
+    s.post_json = lambda url, payload: {"total": 1, "courses": [{"module_code": "DSC 30"}]} \
+        if payload["subject_code"][0] == "DSC" else {"total": 0, "courses": []}
+    assert _run_all(d, s, d / "r2.md") == 0
+    second = json.loads((d / "offerings.json").read_text())
+    assert second["scheduled"]["WI27"]["courses"] == ["DSC 30"]
+    assert second["generated_at"] != first["generated_at"]
+
+
+def test_status_only_change_does_not_rewrite(tmp_path, monkeypatch):
+    """A source that fails this week keeps its block; its new ok/error is report-only."""
+    d = _setup2(tmp_path)
+    _tick(monkeypatch)
+    assert _run_all(d, FakeSession3(_pages(), _catalog_pages()), d / "r1.md") == 0
+    before = (d / "offerings.json").read_bytes()
+    assert _run_all(d, FakeSession3(_pages(cse="<html>gone</html>"), _catalog_pages()),
+                    d / "r2.md") == 0
+    assert (d / "offerings.json").read_bytes() == before
+    assert "| cse | FAILED |" in (d / "r2.md").read_text()
+
+
+def test_irrelevant_markup_changes_leave_data_byte_identical(tmp_path, monkeypatch):
+    """A nonce, an ad or reworded description prose is not a data change."""
+    d = _setup2(tmp_path)
+    _tick(monkeypatch)
+    assert _run_all(d, FakeSession3(_pages(), _catalog_pages()), d / "r1.md") == 0
+    before = {n: (d / n).read_bytes() for n in ("catalog.json", "offerings.json")}
+    pages = _pages()
+    pages["https://dsc.example/o"] = pages["https://dsc.example/o"].replace(
+        "<body>", "<body><!-- nonce=4f2a --><div class='ad'>Apply now</div>").replace(
+        "Sample page text that is not part of the table.", "Different intro text.")
+    cat = _catalog_pages()
+    cat["DSC"] = cat["DSC"].replace("<body>", "<body><!-- build 8f3a -->").replace(
+        "Zorblax quuxes the wibble frames.", "A reworded description.")
+    assert _run_all(d, FakeSession3(pages, cat), d / "r2.md") == 0
+    after = {n: (d / n).read_bytes() for n in ("catalog.json", "offerings.json")}
+    assert after == before

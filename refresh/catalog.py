@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 from collections import Counter
 from dataclasses import asdict, dataclass, field
@@ -35,6 +36,22 @@ class CatalogCourse:
     ambiguities: list[dict] = field(default_factory=list)
     catalog_url: str = ""
     content_hash: str = ""
+
+
+# Fields a stored record carries that are not part of what was parsed.
+_UNHASHED = ("content_hash", "stale")
+
+
+def course_hash(record: dict) -> str:
+    """Hash of a course's parsed record (every field but content_hash and stale).
+
+    Description prose, page markup and nonces are not in the record, so they
+    cannot change the hash; the hash is stable across a JSON round trip, so it
+    can be recomputed from data/catalog.json.
+    """
+    fields = {k: v for k, v in record.items() if k not in _UNHASHED}
+    blob = json.dumps(fields, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return "sha256:" + hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
 
 def _squash(text: str) -> str:
@@ -107,14 +124,14 @@ def parse_course_page(html: str, department: str, page_url: str) -> list[Catalog
         groups = [g for g in ([o for o in grp if o != cid] for grp in parsed.groups) if g]
 
         unique = [a for a in _anchors_before(name_p) if anchor_counts[a] == 1]
-        courses.append(CatalogCourse(
+        course = CatalogCourse(
             id=cid, department=department, title=title, units=units,
             units_max=units_max, units_text=units_text,
             prereq_groups=groups, concurrent_ok=parsed.concurrent_ok,
             conditions=parsed.conditions, ambiguities=parsed.ambiguities,
-            catalog_url=f"{page_url}#{unique[0]}" if unique else page_url,
-            content_hash="sha256:" + hashlib.sha256(
-                _squash(f"{name_p.get_text(' ')} {text}").encode()).hexdigest()))
+            catalog_url=f"{page_url}#{unique[0]}" if unique else page_url)
+        course.content_hash = course_hash(asdict(course))
+        courses.append(course)
     return courses
 
 

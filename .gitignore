@@ -24,3 +24,7 @@ _archive/
 
 # Derived, rebuilt from the catalog on first run
 .embedding_cache.json
+
+# Refresh outputs
+refresh_report.md
+.refresh_cache/

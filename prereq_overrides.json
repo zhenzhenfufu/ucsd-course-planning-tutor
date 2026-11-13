@@ -1,9 +1,10 @@
 {
   "_comment": [
-    "The catalog descriptions are the source of truth for prerequisites.",
-    "Prerequisite sentences are regenerated from catalog.ucsd.edu; this file records the reviewed",
-    "decisions the catalog text cannot carry — sequence orderings that a placement exam can bypass,",
-    "and the edges deliberately NOT adopted, each with its reason."
+    "catalog.ucsd.edu is the source of truth for prerequisites; refresh/ parses it into data/catalog.json.",
+    "This file records the reviewed decisions the parsed catalog cannot carry: sequence orderings",
+    "that a placement exam can bypass, owner-confirmed readings of ambiguous lines, carried-over",
+    "substitutes and advisories, and edges deliberately not adopted (rejected_edges is documentation",
+    "only; build() does not apply it), each with its reason."
   ],
   "add_edges": [
     {
@@ -20,6 +21,11 @@
       "from": "MATH 20C",
       "to": "MATH 189",
       "why": "MATH 189 lists MATH 18 and a probability course; the department also requires MATH 20C, which the catalog line omits."
+    },
+    {
+      "from": "DSC 106",
+      "to": "DSC 180A",
+      "why": "The catalog line reads '(… or CSE 151A and DSC 106)', which taken literally makes DSC 106 optional. The owner confirmed on 2026-11-13 that DSC 180A requires DSC 106."
     }
   ],
   "abstract_satisfiers": {

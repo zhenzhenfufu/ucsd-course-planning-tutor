@@ -52,6 +52,15 @@ def _default_session() -> requests.Session:
     return session
 
 
+def _host(url: str) -> str:
+    """Lower-case host name without port or credentials ("" if none).
+
+    Every host comparison (SSO stop, allowlist, robots, throttle) uses this,
+    so A5.UCSD.EDU or a5.ucsd.edu:443 cannot slip past a check.
+    """
+    return urlsplit(url).hostname or ""
+
+
 class FetchError(Exception):
     pass
 
@@ -124,13 +133,12 @@ class PoliteSession:
         if self.allowed_prefixes is None:
             return
         parts = urlsplit(url)
-        prefixes = self.allowed_prefixes.get(parts.netloc, ())
+        prefixes = self.allowed_prefixes.get(_host(url), ())
         if not any(parts.path.startswith(p) for p in prefixes):
             raise PathNotAllowed(url)
 
     def _check_robots(self, url: str) -> None:
-        parts = urlsplit(url)
-        host = parts.netloc
+        host = _host(url)
         if host not in self._robots:
             robots_url = f"https://{host}/robots.txt"
             rules = None
@@ -146,7 +154,7 @@ class PoliteSession:
             raise RobotsDisallowed(url)
 
     def _throttled(self, method, url, headers, payload):
-        host = urlsplit(url).netloc
+        host = _host(url)
         last = self._last_request.get(host)
         if last is not None:
             wait = self.min_interval - (self.clock() - last)
@@ -166,7 +174,7 @@ class PoliteSession:
             if resp.status_code in (301, 302, 303, 307, 308):
                 location = resp.headers.get("Location", "")
                 target = urljoin(current, location)
-                if urlsplit(target).netloc == SSO_HOST:
+                if _host(target) == SSO_HOST:
                     raise SSORedirect(f"{current} redirected to {SSO_HOST}")
                 self._check_allowed(target)
                 self._check_robots(target)

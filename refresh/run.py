@@ -1,4 +1,4 @@
-"""Refresh entry point: python -m refresh.run [--only catalog ...]."""
+"""Refresh entry point: python -m refresh.run [--only catalog ...]; no --only runs every source."""
 
 from __future__ import annotations
 
@@ -14,8 +14,10 @@ from refresh.catalog import (CATALOG_BASE, build_catalog_snapshot, parse_course_
 from refresh import classplanner
 from refresh.http import FetchError, PoliteSession
 from refresh.offerings import ADAPTERS
+from refresh.report import diff_catalog, diff_offerings, render_report
 
 SOURCES = ("catalog", "offerings", "classplanner")
+CACHE_DIR = Path(__file__).resolve().parent.parent / ".refresh_cache"
 
 
 class ShapeError(Exception):
@@ -34,7 +36,44 @@ def _write_json(path: Path, data: dict) -> None:
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def refresh_catalog(session: PoliteSession, data_dir: Path) -> None:
+def _now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _catalog_content(snap: dict) -> dict:
+    """catalog.json without the fields every run changes (fetch time, status)."""
+    return {k: v for k, v in snap.items() if k not in ("fetched_at", "status")}
+
+
+def _offerings_content(data: dict) -> dict:
+    """offerings.json without fetch times, Class Planner refresh times and source status."""
+    def drop(block, keys):
+        return {k: v for k, v in block.items() if k not in keys} if isinstance(block, dict) else block
+    return {
+        **{k: v for k, v in data.items() if k not in ("generated_at", "sources")},
+        "sources": {name: drop(src, ("ok", "fetched_at", "error"))
+                    for name, src in (data.get("sources") or {}).items()},
+        "tentative": {ay: {dept: drop(b, ("fetched_at", "status")) for dept, b in depts.items()}
+                      if isinstance(depts, dict) else depts
+                      for ay, depts in (data.get("tentative") or {}).items()},
+        "scheduled": {code: drop(b, ("fetched_at", "last_full_refresh_at"))
+                      for code, b in (data.get("scheduled") or {}).items()},
+    }
+
+
+def _write_if_changed(path: Path, data: dict, content) -> bool:
+    """Write `data` unless the file already holds the same content apart from
+    timestamps and status; then the file stays byte-identical, so a quiet week
+    leaves no diff (and the workflow opens no pull request)."""
+    old = _read_json(path)
+    if old is not None and content(old) == content(data):
+        return False
+    _write_json(path, data)
+    return True
+
+
+def refresh_catalog(session: PoliteSession, data_dir: Path) -> dict:
+    """Fetch every subject page; write catalog.json if its content changed. Returns the snapshot."""
     scope = json.loads((data_dir / "scope.json").read_text(encoding="utf-8"))
     scope_ids = list(scope["courses"])
     subjects = sorted({c["department"] for c in scope["courses"].values()})
@@ -52,17 +91,26 @@ def refresh_catalog(session: PoliteSession, data_dir: Path) -> None:
         pages[subject] = courses
         edition = edition or parse_edition(res.text)
     previous = _read_json(data_dir / "catalog.json")
-    fetched_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    snap = build_catalog_snapshot(pages, scope_ids, previous, fetched_at, edition)
-    _write_json(data_dir / "catalog.json", snap)
+    snap = build_catalog_snapshot(pages, scope_ids, previous, _now(), edition)
+    snap["status"] = {"ok": True, "error": None}
+    _write_if_changed(data_dir / "catalog.json", snap, _catalog_content)
     print(f"catalog: {len(snap['courses'])} courses from {len(pages)} subjects", file=sys.stderr)
+    return snap
 
 
 COGS_GID = "gid=866922720"
+_QORDER = {"FA": 0, "WI": 1, "SP": 2}
 
 
-def _now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+def courses_hash(courses: dict) -> str:
+    """Hash of a department's parsed course -> quarters mapping.
+
+    Taken over the normalised result, not the page bytes, so a nonce, an ad or
+    reworded page text leaves it (and offerings.json) unchanged.
+    """
+    norm = {cid: sorted(qs, key=lambda q: (_QORDER.get(q, 9), q)) for cid, qs in courses.items()}
+    blob = json.dumps(norm, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
 
 def _err(exc: Exception) -> str:
@@ -70,6 +118,7 @@ def _err(exc: Exception) -> str:
 
 
 def _record(out: dict, name: str, ok: bool, source_url: str | None, error: str | None) -> None:
+    out.setdefault("_ran", set()).add(name)
     out.setdefault("sources", {})[name] = {"ok": ok, "fetched_at": _now(),
                                            "source_url": source_url, "error": error}
 
@@ -95,7 +144,7 @@ def refresh_offerings(session, data_dir: Path, out: dict) -> bool:
                     raise ShapeError(f"{url} returned {res.status}")
                 courses = ADAPTERS[dept].parse(res.text, year)
                 new_blocks[year] = {"source_url": url, "fetched_at": _now(),
-                                    "content_hash": hashlib.sha256(res.text.encode("utf-8")).hexdigest(),
+                                    "content_hash": courses_hash(courses),
                                     "status": "tentative", "courses": courses}
             except Exception as exc:  # noqa: BLE001 - any failure keeps the previous block
                 errors.append(f"{year}: {_err(exc)}")
@@ -152,20 +201,30 @@ def main(argv: list[str] | None = None, session: PoliteSession | None = None) ->
     ap = argparse.ArgumentParser(prog="refresh.run")
     ap.add_argument("--only", nargs="+", choices=SOURCES, default=None)
     ap.add_argument("--data-dir", default="data")
-    ap.add_argument("--report", default="refresh_report.md")  # written by a later task
+    ap.add_argument("--report", default="refresh_report.md")
+    ap.add_argument("--tests-summary", default=None, help="one line for the report's Tests section")
     args = ap.parse_args(argv)
     data_dir = Path(args.data_dir)
-    dept_session = session or PoliteSession()
-    cp_session = session or PoliteSession(allowed_prefixes=classplanner.ALLOWED)
+    dept_session = session or PoliteSession(cache_dir=CACHE_DIR)
+    cp_session = session or PoliteSession(allowed_prefixes=classplanner.ALLOWED,
+                                          cache_dir=CACHE_DIR)
     failures = 0
-    selected = args.only or ("catalog",)
+    selected = tuple(args.only) if args.only else SOURCES
     offerings_path = data_dir / "offerings.json"
     out = _read_json(offerings_path) or {}
+    old_offerings = json.loads(json.dumps(out))
+    old_catalog = _read_json(data_dir / "catalog.json") or {}
+    catalog_ran, catalog_error, catalog_snap = False, None, None
     touched = False
     for name in selected:
         try:
             if name == "catalog":
-                refresh_catalog(dept_session, data_dir)
+                catalog_ran = True
+                try:
+                    catalog_snap = refresh_catalog(dept_session, data_dir)
+                except Exception as e:  # noqa: BLE001
+                    catalog_error = _err(e)  # catalog.json stays untouched: last good wins
+                    raise
             elif name == "offerings":
                 touched = True
                 failures += not refresh_offerings(dept_session, data_dir, out)
@@ -175,11 +234,28 @@ def main(argv: list[str] | None = None, session: PoliteSession | None = None) ->
         except Exception as e:  # noqa: BLE001 - one source must not stop the others
             failures += 1
             print(f"{name}: FAILED, keeping previous data ({_err(e)})", file=sys.stderr)
+    ran = set(out.pop("_ran", set()))
+    if catalog_ran:
+        ran.add("catalog")
     if touched:
         out["generated_at"] = _now()
         out.setdefault("scheduled", {})
         out.setdefault("tentative", {})
-        _write_json(offerings_path, out)
+        _write_if_changed(offerings_path, out, _offerings_content)
+    # The report shows this run's fetch times and statuses, even when the data
+    # files were left untouched because nothing but those changed.
+    new_catalog = catalog_snap or _read_json(data_dir / "catalog.json") or {}
+    cstat = ({"ok": False, "error": catalog_error} if catalog_error
+             else new_catalog.get("status") or {})
+    sources = {**(out.get("sources") or {}),
+               "catalog": {"ok": cstat.get("ok", True), "error": cstat.get("error"),
+                           "fetched_at": new_catalog.get("fetched_at"),
+                           "source_url": new_catalog.get("source") or CATALOG_BASE}}
+    sources_plan = _read_json(data_dir / "sources.json")
+    report = render_report(diff_catalog(old_catalog, new_catalog),
+                           diff_offerings(old_offerings, out), sources,
+                           args.tests_summary, sources_plan=sources_plan, ran=ran)
+    Path(args.report).write_text(report, encoding="utf-8")
     return 1 if failures == len(selected) else 0
 
 
