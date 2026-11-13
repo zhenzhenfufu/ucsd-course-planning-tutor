@@ -28,6 +28,8 @@ from pathlib import Path
 
 import networkx as nx
 
+from refresh.prereq_parse import ABSTRACT_PATTERNS, ABSTRACT_SATISFIERS  # noqa: F401
+
 CATALOG_PATH = Path(__file__).with_name("dsc_courses.json")
 OVERRIDES_PATH = Path(__file__).with_name("prereq_overrides.json")
 
@@ -53,26 +55,6 @@ BACKWARD_RE = re.compile(r"prerequisites?\s*:", re.I)
 NONE_RE = re.compile(r"no prerequisites?", re.I)
 
 CONCURRENT_RE = re.compile(r"concurrent", re.I)
-
-# Requirements the catalog phrases in prose, and the courses it names as
-# acceptable ways to satisfy them.
-ABSTRACT_SATISFIERS: dict[str, list[str]] = {
-    "<probability>": ["MATH 180A", "MATH 183", "CSE 103", "ECE 109"],
-    "<programming>": ["DSC 20", "DSC 30", "CSE 11", "CSE 12", "DSC 10"],
-    "<upper-division standing>": [],   # standing, not a course
-    "<instructor approval>": [],       # administrative
-    "<qualifying elective>": [],       # depends on the student's track
-    "<high school chemistry>": [],     # external
-}
-
-ABSTRACT_PATTERNS: list[tuple[re.Pattern, str]] = [
-    (re.compile(r"probability(\s+course)?", re.I), "<probability>"),
-    (re.compile(r"programming(\s+(course|background))?", re.I), "<programming>"),
-    (re.compile(r"upper-division standing", re.I), "<upper-division standing>"),
-    (re.compile(r"instructor approval", re.I), "<instructor approval>"),
-    (re.compile(r"qualifying elective", re.I), "<qualifying elective>"),
-    (re.compile(r"high school chemistry", re.I), "<high school chemistry>"),
-]
 
 # Tails too vague to become edges; recorded as ambiguities instead.
 VAGUE_RE = re.compile(
