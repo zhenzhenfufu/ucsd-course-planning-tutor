@@ -1,4 +1,4 @@
-"""Refresh entry point: python -m refresh.run [--only catalog ...]."""
+"""Refresh entry point: python -m refresh.run [--only catalog ...]; no --only runs every source."""
 
 from __future__ import annotations
 
@@ -172,7 +172,7 @@ def main(argv: list[str] | None = None, session: PoliteSession | None = None) ->
     cp_session = session or PoliteSession(allowed_prefixes=classplanner.ALLOWED,
                                           cache_dir=CACHE_DIR)
     failures = 0
-    selected = args.only or ("catalog",)
+    selected = tuple(args.only) if args.only else SOURCES
     offerings_path = data_dir / "offerings.json"
     out = _read_json(offerings_path) or {}
     old_offerings = json.loads(json.dumps(out))

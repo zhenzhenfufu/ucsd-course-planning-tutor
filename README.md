@@ -213,7 +213,7 @@ Violations the checker caught in arm A: 12 × `PREREQ_MISSING`,
 3 × `UNITS_BELOW_FULL_TIME`, 1 × `DUPLICATE_COURSE`.
 
 The checker is itself checked: 11 hand-built plans with known verdicts
-(`VALIDATOR_FIXTURES`), 11/11 correct. 200 unit tests cover the graph, the
+(`VALIDATOR_FIXTURES`), 11/11 correct. 201 unit tests cover the graph, the
 validator, retrieval, offerings and the refresh code, and run without network access. Both the tests and
 the validator self-test run in CI on every push and pull request
 (`.github/workflows/tests.yml`).
@@ -221,7 +221,7 @@ the validator self-test run in CI on every push and pull request
 ```bash
 python eval/run_eval.py            # full run
 python eval/run_eval.py --offline  # validator self-test only, no API key
-pytest tests/ -q                   # 200 tests
+pytest tests/ -q                   # 201 tests
 ```
 
 ### What this does not do
@@ -257,10 +257,10 @@ request, because a pull request opened with the default token does not trigger
 `tests.yml`. To run it locally:
 
 ```bash
-python -m refresh.run --only catalog offerings classplanner --report refresh_report.md
+python -m refresh.run --report refresh_report.md
 ```
 
-(`refresh.run` refreshes only the catalog unless `--only` names more sources.)
+(With no `--only`, every source is refreshed; `--only catalog` limits the run to the named sources.)
 
 **What is stored.** Derived facts only: course IDs, titles, units, prerequisite
 groups, condition tokens, which quarters a course runs, `source_url`,
@@ -318,7 +318,7 @@ retrieval layer falls back to TF-IDF and the generative tabs are disabled.
 | `planner.py` | generate → validate → repair, both strategies |
 | `app.py` | Streamlit UI |
 | `eval/` | 20 planning tasks, harness, results |
-| `tests/` | 200 offline tests |
+| `tests/` | 201 offline tests |
 | `.github/workflows/refresh.yml` | weekly data refresh that opens a pull request |
 | `.github/workflows/tests.yml` | offline tests on every push and pull request |
 | `.github/workflows/keepalive.yml` | keeps the hosted demo from sleeping |

@@ -156,3 +156,20 @@ def test_all_sources_failed_exits_1(tmp_path):
     out = json.loads((d / "offerings.json").read_text())
     assert out["sources"]["classplanner"]["ok"] is False
     assert "RuntimeError" in out["sources"]["classplanner"]["error"]
+
+
+def test_default_selects_all_sources(tmp_path, capsys):
+    import refresh.run as run
+
+    class Dead:
+        def get(self, url):
+            raise RuntimeError("down")
+
+        post_json = get
+
+    d = _setup(tmp_path)
+    (d / "sources.json").write_text(json.dumps(SOURCES))
+    assert run.main(["--data-dir", str(d), "--report", str(d / "r.md")], session=Dead()) == 1
+    err = capsys.readouterr().err
+    for name in ("catalog", "offerings", "classplanner"):
+        assert name in err
