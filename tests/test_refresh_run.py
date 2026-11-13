@@ -217,3 +217,79 @@ def test_main_writes_report_only_where_told(tmp_path, monkeypatch):
                 session=s) == 0
     assert report.read_text().strip()
     assert list(cwd.iterdir()) == []
+
+
+# ---- quiet weeks: no data diff ---------------------------------------------
+
+class FakeSession3(FakeSession2):
+    """Serves catalog pages too, so one run can refresh every source."""
+
+    def __init__(self, pages, catalog_pages, terms=None):
+        super().__init__(pages)
+        self.catalog_pages, self.terms = catalog_pages, terms or TERMS
+
+    def get(self, url):
+        if url.startswith("https://catalog.ucsd.edu/courses/"):
+            self.urls.append(url)
+            subject = url.rsplit("/", 1)[1].removesuffix(".html")
+            return FetchResult(url, 200, self.catalog_pages[subject], False, {})
+        if url.endswith("/terms"):
+            self.urls.append(url)
+            return FetchResult(url, 200, json.dumps(self.terms), False, {})
+        return super().get(url)
+
+
+def _catalog_pages():
+    return {"DSC": (FIX / "catalog_dsc.html").read_text(),
+            "CSE": (FIX / "catalog_cse.html").read_text()}
+
+
+def _run_all(d, session, report):
+    return main(["--data-dir", str(d), "--report", str(report)], session=session)
+
+
+def _tick(monkeypatch):
+    """Make every run's timestamps different, as they are a week apart in CI."""
+    import itertools
+
+    import refresh.run as run
+    n = itertools.count()
+    monkeypatch.setattr(run, "_now", lambda: f"2026-11-{10 + next(n) % 20:02d}T00:00:00Z")
+
+
+def test_unchanged_sources_leave_data_files_byte_identical(tmp_path, monkeypatch):
+    d = _setup2(tmp_path)
+    _tick(monkeypatch)
+    assert _run_all(d, FakeSession3(_pages(), _catalog_pages()), d / "r1.md") == 0
+    before = {n: (d / n).read_bytes() for n in ("catalog.json", "offerings.json")}
+    assert _run_all(d, FakeSession3(_pages(), _catalog_pages()), d / "r2.md") == 0
+    after = {n: (d / n).read_bytes() for n in ("catalog.json", "offerings.json")}
+    assert after == before
+    # The report still shows this run's sources as having run.
+    assert "classplanner" in (d / "r2.md").read_text().lower()
+
+
+def test_changed_content_is_written_with_new_timestamps(tmp_path, monkeypatch):
+    d = _setup2(tmp_path)
+    _tick(monkeypatch)
+    assert _run_all(d, FakeSession3(_pages(), _catalog_pages()), d / "r1.md") == 0
+    first = json.loads((d / "offerings.json").read_text())
+    s = FakeSession3(_pages(), _catalog_pages())
+    s.post_json = lambda url, payload: {"total": 1, "courses": [{"module_code": "DSC 30"}]} \
+        if payload["subject_code"][0] == "DSC" else {"total": 0, "courses": []}
+    assert _run_all(d, s, d / "r2.md") == 0
+    second = json.loads((d / "offerings.json").read_text())
+    assert second["scheduled"]["WI27"]["courses"] == ["DSC 30"]
+    assert second["generated_at"] != first["generated_at"]
+
+
+def test_status_only_change_does_not_rewrite(tmp_path, monkeypatch):
+    """A source that fails this week keeps its block; its new ok/error is report-only."""
+    d = _setup2(tmp_path)
+    _tick(monkeypatch)
+    assert _run_all(d, FakeSession3(_pages(), _catalog_pages()), d / "r1.md") == 0
+    before = (d / "offerings.json").read_bytes()
+    assert _run_all(d, FakeSession3(_pages(cse="<html>gone</html>"), _catalog_pages()),
+                    d / "r2.md") == 0
+    assert (d / "offerings.json").read_bytes() == before
+    assert "| cse | FAILED |" in (d / "r2.md").read_text()

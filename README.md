@@ -240,7 +240,10 @@ There is no public UCSD API for courses, so a GitHub Actions job
 (`.github/workflows/refresh.yml`) refreshes the data **every Monday at 15:00 UTC**
 and can also be started by hand (Actions tab, "data-refresh", Run workflow).
 It opens or updates one pull request, `data-refresh`, whose body is a readable
-report of what changed; a person reviews and merges it.
+report of what changed; a person reviews and merges it. A data file is rewritten
+only when something other than fetch times and source status changed, so a quiet
+week opens no pull request, and the "as of" dates in the app are those of the
+last run that changed the data.
 
 | Source | What it gives | Written to |
 |---|---|---|
