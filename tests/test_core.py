@@ -113,6 +113,19 @@ def test_dsc_180a_accepts_dsc_152(cg):
     assert ["DSC 152", "MATH 189"] in [sorted(g) for g in cg.requirements["DSC 180A"].groups]
 
 
+def test_dsc_180a_requires_dsc_106(cg):
+    """Owner-confirmed override: an ML elective alone does not satisfy DSC 180A."""
+    assert ["DSC 106"] in cg.requirements["DSC 180A"].groups
+    plan = [{"term": "T1", "courses": ["DSC 180A", "DSC 10", "MATH 20A"]}]
+    done = ["DSC 102", "MATH 189", "DSC 140A"]
+    missing = [v for v in validate(plan, cg, completed=done)
+               if v.course == "DSC 180A" and v.code == "PREREQ_MISSING"]
+    assert missing and "DSC 106" in missing[0].message
+    ok = [v for v in validate(plan, cg, completed=done + ["DSC 106"])
+          if v.course == "DSC 180A" and v.code == "PREREQ_MISSING"]
+    assert ok == []
+
+
 def test_completed_out_of_scope_option_satisfies(cg):
     assert "ECON 120A" not in cg.courses
     assert cg.satisfied(["ECON 120A", "MATH 180A"], {"ECON 120A"})

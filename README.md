@@ -235,7 +235,7 @@ Violations the checker caught in arm A: 12 × `PREREQ_MISSING`,
 3 × `UNITS_BELOW_FULL_TIME`, 1 × `DUPLICATE_COURSE`.
 
 The checker is itself checked: 11 hand-built plans with known verdicts
-(`VALIDATOR_FIXTURES`), 11/11 correct. 229 unit tests cover the graph, the
+(`VALIDATOR_FIXTURES`), 11/11 correct. 230 unit tests cover the graph, the
 validator, retrieval, offerings, the app's plan view and the refresh code, and run without network access. Both the tests and
 the validator self-test run in CI on every push and pull request
 (`.github/workflows/tests.yml`).
@@ -243,7 +243,7 @@ the validator self-test run in CI on every push and pull request
 ```bash
 python eval/run_eval.py            # full run
 python eval/run_eval.py --offline  # validator self-test only, no API key
-pytest tests/ -q                   # 229 tests
+pytest tests/ -q                   # 230 tests
 ```
 
 ### What this does not do
@@ -350,7 +350,7 @@ answer with a missing-key message instead of calling the model.
 | `planner.py` | generate → validate → repair, both strategies |
 | `app.py` | Streamlit UI |
 | `eval/` | 20 planning tasks, harness, results |
-| `tests/` | 229 offline tests |
+| `tests/` | 230 offline tests |
 | `.github/workflows/refresh.yml` | weekly data refresh that opens a pull request |
 | `.github/workflows/tests.yml` | offline tests on every push and pull request |
 | `.github/workflows/keepalive.yml` | keeps the hosted demo from sleeping |
