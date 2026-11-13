@@ -1,0 +1,36 @@
+{
+  "2026-27": {
+    "DSC": {
+      "url": "https://datascience.ucsd.edu/current-students/course-offerings/",
+      "kind": "html",
+      "url_verified": true
+    },
+    "CSE": {
+      "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYc7qv9lyLh-F8EzlVcE2td3jObRp2B88ZIru9XQw0_G70kfDCjVRo64EWWDdEEkzyc_s1sX2JMfqb/pub?gid=684727614&single=true&output=csv",
+      "kind": "csv",
+      "page_url": "https://cse.ucsd.edu/undergraduate/tentative-course-offerings",
+      "url_verified": true
+    },
+    "MATH": {
+      "url": "https://math.ucsd.edu/students/planned-course-offerings?year=2026-2027",
+      "kind": "html",
+      "url_verified": true
+    },
+    "COGS": {
+      "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-pFK5zou3FdqmceGomf_NC47wKhhVhQxe5uwp18Kw32AyJGG3-Bfk-cJPac5YjW26rcCN-wVYWLj0/pub?gid=866922720&single=true&output=csv",
+      "kind": "csv",
+      "page_url": "https://cogsci.ucsd.edu/undergraduates/courses/index.html",
+      "url_verified": true
+    },
+    "PHYS": {
+      "url": "https://physics.ucsd.edu/students/courseofferings",
+      "kind": "html",
+      "url_verified": true
+    },
+    "ECE": {
+      "url": "https://ece.ucsd.edu/ece-tentative-course-list",
+      "kind": "html",
+      "url_verified": true
+    }
+  }
+}

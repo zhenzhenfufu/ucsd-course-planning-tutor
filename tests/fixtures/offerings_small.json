@@ -1,0 +1,9 @@
+{"generated_at": "2026-11-12T00:00:00Z",
+ "sources": {"classplanner": {"ok": true, "fetched_at": "2026-11-12T00:00:00Z", "source_url": "https://example.test/cp", "error": null}},
+ "scheduled": {"WI27": {"last_full_refresh_at": "2026-11-12T00:00:00Z", "fetched_at": "2026-11-12T00:00:00Z",
+                        "subjects": {"DSC": 2, "MATH": 0}, "courses": ["DSC 10", "DSC 20"]}},
+ "tentative": {"2026-27": {
+   "DSC": {"source_url": "https://example.test/dsc", "fetched_at": "2026-11-12T00:00:00Z", "content_hash": "abc", "status": "tentative",
+           "courses": {"DSC 10": ["FA", "WI", "SP"], "DSC 30": ["FA"]}},
+   "MATH": {"source_url": "https://example.test/math", "fetched_at": "2026-11-12T00:00:00Z", "content_hash": "def", "status": "tentative",
+            "courses": {"MATH 18": ["FA", "WI", "SP"]}}}}}

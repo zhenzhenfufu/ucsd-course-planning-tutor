@@ -1,0 +1,4 @@
+{"2026-27": {
+  "CHEM": {"entered_by": "tester", "entered_at": "2026-11-12", "source_url": "https://example.test/chem",
+           "courses": {"CHEM 6A": ["FA"], "CHEM 6B": ["WI"]}},
+  "BIOL": {"entered_by": null, "entered_at": null, "source_url": "https://example.test/biol", "courses": {}}}}

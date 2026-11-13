@@ -1,0 +1,16 @@
+{
+  "2026-27": {
+    "CHEM": {
+      "entered_by": null,
+      "entered_at": null,
+      "source_url": "https://chem-web.ucsd.edu/ext/ugcourses.html?year=2026-2027",
+      "courses": {}
+    },
+    "BIOL": {
+      "entered_by": null,
+      "entered_at": null,
+      "source_url": "https://biology.ucsd.edu/education/undergrad/course/course-offerings.html",
+      "courses": {}
+    }
+  }
+}
