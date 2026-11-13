@@ -1,22 +1,14 @@
-"""Prerequisite graph built from the free-text course descriptions.
+"""Prerequisite graph built from the generated catalog snapshot (data/catalog.json).
 
-The catalog stores prerequisites as prose, in two opposite directions:
+Requirements are an AND of OR-groups, already parsed by the refresh code:
 
-    "Prerequisite: MATH 20C."              -> MATH 20C is a prereq OF this course
-    "Prerequisite for MATH 20C and ..."    -> this course is a prereq of MATH 20C
-
-Parsing the second form as if it were the first reverses the edge, so direction
-is decided per sentence before any course code is extracted.
-
-Requirements are kept as an AND of OR-groups:
-
-    "Prerequisites: DSC 40B or CSE 12, DSC 80 or CSE 15L, and a probability course"
-    -> [[DSC 40B, CSE 12], [DSC 80, CSE 15L], [<probability>]]
+    [[DSC 40B, CSE 12], [DSC 80, CSE 15L], [<probability>]]
 
 Groups may contain abstract tokens ("a probability course") that no single code
 satisfies; ABSTRACT_SATISFIERS lists the courses the catalog itself names as
-acceptable. Anything that resolves to neither a code nor a known abstract token
-is recorded in `ambiguities` rather than silently dropped.
+acceptable. Options outside the scope are kept in the groups (a completed
+out-of-scope course still satisfies its group) but never become graph nodes.
+Reviewed decisions the catalog cannot carry live in `prereq_overrides.json`.
 """
 
 from __future__ import annotations
@@ -30,39 +22,12 @@ import networkx as nx
 
 from refresh.prereq_parse import ABSTRACT_PATTERNS, ABSTRACT_SATISFIERS  # noqa: F401
 
-CATALOG_PATH = Path(__file__).with_name("dsc_courses.json")
+# A fragment the parser could not turn into a course names a test-score route in.
+PLACEMENT_RE = re.compile(r"placement|\bAP\b")
+DATA = Path(__file__).with_name("data")
+CATALOG_PATH = DATA / "catalog.json"
+SCOPE_PATH = DATA / "scope.json"
 OVERRIDES_PATH = Path(__file__).with_name("prereq_overrides.json")
-
-# A course code: department prefix + number with optional letter suffix.
-COURSE_RE = re.compile(r"\b([A-Z]{2,5})\s*(\d{1,3}[A-Z]{0,2})\b")
-# A bare number continuing an earlier prefix: "DSC 140A, 140B, 148, and 155".
-BARE_NUM_RE = re.compile(r"(?<![A-Za-z0-9])(\d{1,3}[A-Z]{0,2})(?![A-Za-z0-9])")
-
-# Three forward-facing sentence kinds with different meanings. Order matters:
-# SUBSTITUTION is checked before ADVISORY, and ADVISORY before HARD_FORWARD,
-# because "required or recommended for" contains "required ... for".
-#
-#   substitution -> this course can stand IN PLACE OF the named ones
-#   advisory     -> this course is suggested before them, but is not required
-#   hard forward -> this course is genuinely a prerequisite of the named ones
-SUBSTITUTION_RE = re.compile(r"accepted as|alternative to|alternative probability", re.I)
-ADVISORY_RE = re.compile(
-    r"required or recommended for|recommended for|strongly recommended|required for", re.I
-)
-HARD_FORWARD_RE = re.compile(r"(?:required\s+)?prerequisite for", re.I)
-# Sentences that state what this course needs.
-BACKWARD_RE = re.compile(r"prerequisites?\s*:", re.I)
-NONE_RE = re.compile(r"no prerequisites?", re.I)
-
-CONCURRENT_RE = re.compile(r"concurrent", re.I)
-
-# Tails too vague to become edges; recorded as ambiguities instead.
-VAGUE_RE = re.compile(
-    r"many upper-division|most stem majors|several dsc|some upper-division|"
-    r"and most|equivalent",
-    re.I,
-)
-
 
 @dataclass
 class Requirement:
@@ -88,6 +53,9 @@ class CourseGraph:
     courses: dict[str, dict]
     substitutes: dict[str, set[str]]     # course -> courses accepted in its place
     abstract_satisfiers: dict[str, list[str]] = field(default_factory=dict)
+    by_arrangement: set[str] = field(default_factory=set)
+    referenced: dict[str, dict] = field(default_factory=dict)
+    catalog_meta: dict = field(default_factory=dict)
 
     def satisfied(self, group: list[str], taken: set[str]) -> bool:
         """A group is met if any option, or an accepted substitute, is taken."""
@@ -121,69 +89,6 @@ class CourseGraph:
         return course in self.courses
 
 
-def _split_sentences(text: str) -> list[str]:
-    return [s.strip() for s in re.split(r"(?<=[.;])\s+", text or "") if s.strip()]
-
-
-def _extract_codes(text: str, valid: set[str]) -> list[str]:
-    """Pull course codes, expanding bare numbers that continue a prefix."""
-    codes: list[str] = []
-    last_dept: str | None = None
-    pos = 0
-    for m in COURSE_RE.finditer(text):
-        # Bare numbers sitting between the previous match and this one.
-        if last_dept:
-            for bm in BARE_NUM_RE.finditer(text[pos:m.start()]):
-                cand = f"{last_dept} {bm.group(1)}"
-                if cand in valid:
-                    codes.append(cand)
-        dept, num = m.group(1), m.group(2)
-        code = f"{dept} {num}"
-        if code in valid:
-            codes.append(code)
-            last_dept = dept
-        pos = m.end()
-    if last_dept:
-        for bm in BARE_NUM_RE.finditer(text[pos:]):
-            cand = f"{last_dept} {bm.group(1)}"
-            if cand in valid:
-                codes.append(cand)
-    # de-duplicate, keep order
-    seen: set[str] = set()
-    return [c for c in codes if not (c in seen or seen.add(c))]
-
-
-def _parse_backward(clause: str, valid: set[str]) -> tuple[list[list[str]], list[str]]:
-    """Parse the part after 'Prerequisite:' into AND-of-OR groups."""
-    body = re.split(r"prerequisites?\s*:", clause, flags=re.I)[-1]
-    body = body.rstrip(". ")
-    groups: list[list[str]] = []
-    unresolved: list[str] = []
-
-    # AND separators: commas and the word "and" (but not inside an "or" pair).
-    for chunk in re.split(r",\s*(?:and\s+)?|\s+and\s+", body):
-        chunk = chunk.strip()
-        if not chunk:
-            continue
-        options: list[str] = []
-        for alt in re.split(r"\s+or\s+", chunk):
-            alt = alt.strip()
-            if not alt:
-                continue
-            codes = _extract_codes(alt, valid)
-            if codes:
-                options.extend(codes)
-                continue
-            token = next((tok for pat, tok in ABSTRACT_PATTERNS if pat.search(alt)), None)
-            if token:
-                options.append(token)
-            elif not VAGUE_RE.search(alt):
-                unresolved.append(alt)
-        if options:
-            groups.append(options)
-    return groups, unresolved
-
-
 def _load_overrides(path: Path) -> dict:
     if not path.exists():
         return {}
@@ -192,74 +97,45 @@ def _load_overrides(path: Path) -> dict:
 
 
 def build(catalog_path: Path | str = CATALOG_PATH,
+          scope_path: Path | str = SCOPE_PATH,
           overrides_path: Path | str = OVERRIDES_PATH):
-    """Parse the catalog into a prerequisite DAG.
-
-    Reviewed corrections come from `prereq_overrides.json` so that the parser
-    stays honest about what the prose actually says, and every departure from
-    it is written down with a reason.
-    """
-    courses = json.loads(Path(catalog_path).read_text(encoding="utf-8"))
+    """Build the prerequisite DAG from the catalog snapshot plus reviewed overrides."""
+    snap = json.loads(Path(catalog_path).read_text(encoding="utf-8"))
+    scope = json.loads(Path(scope_path).read_text(encoding="utf-8"))
     overrides = _load_overrides(Path(overrides_path))
-    by_id = {c["id"]: c for c in courses}
+    in_scope = set(scope["courses"])
+
+    by_id: dict[str, dict] = {}
+    reqs: dict[str, Requirement] = {}
+    ambiguities: list[dict] = []
+    for cid, rec in snap["courses"].items():
+        if cid not in in_scope:
+            continue
+        links = dict(scope["courses"][cid].get("links") or {})
+        links["Catalog"] = rec["catalog_url"]
+        by_id[cid] = {
+            "id": cid, "department": rec["department"], "name": rec["title"],
+            "units": rec["units"], "units_max": rec["units_max"],
+            "keywords": list(scope["courses"][cid].get("keywords") or []),
+            "links": links, "catalog_url": rec["catalog_url"],
+            "conditions": list(rec.get("conditions") or []),
+            "stale": bool(rec.get("stale")),
+        }
+        reqs[cid] = Requirement(cid, [list(g) for g in rec["prereq_groups"]],
+                                bool(rec.get("concurrent_ok")))
+        if any(PLACEMENT_RE.search(a["fragment"]) for a in rec.get("ambiguities") or []):
+            # A placement exam or AP score also satisfies the line, and the planner
+            # cannot see test scores. The catalog's course groups are therefore not
+            # hard gates; orderings that still bind come back through add_edges.
+            reqs[cid].groups = []
+            ambiguities.append({"course": cid, "kind": "placement-bypass",
+                                "text": "placement or AP score also satisfies"})
+        for amb in rec.get("ambiguities") or []:
+            ambiguities.append({"course": cid, "kind": amb["kind"],
+                                "text": amb["fragment"]})
     valid = set(by_id)
 
-    reqs: dict[str, Requirement] = {cid: Requirement(cid) for cid in valid}
-    ambiguities: list[dict] = []
-    hard_forward: list[tuple[str, str]] = []
-    # target course -> courses the catalog says may be taken in its place
-    substitutes: dict[str, set[str]] = {}
-    advisories: list[tuple[str, str]] = []
-
-    for course in courses:
-        cid = course["id"]
-        for sent in _split_sentences(course.get("description", "")):
-            if NONE_RE.search(sent):
-                continue
-            if BACKWARD_RE.search(sent):
-                groups, unresolved = _parse_backward(sent, valid)
-                reqs[cid].groups.extend(groups)
-                if CONCURRENT_RE.search(sent):
-                    reqs[cid].concurrent_ok = True
-                for u in unresolved:
-                    ambiguities.append(
-                        {"course": cid, "kind": "out-of-catalog-requirement",
-                         "text": u, "sentence": sent}
-                    )
-                continue
-
-            if SUBSTITUTION_RE.search(sent):
-                kind, bucket = "substitution", None
-            elif ADVISORY_RE.search(sent):
-                kind, bucket = "advisory", None
-            elif HARD_FORWARD_RE.search(sent):
-                kind, bucket = "hard-forward", None
-            else:
-                continue
-
-            targets = [t for t in _extract_codes(sent, valid) if t != cid]
-            for t in targets:
-                if kind == "substitution":
-                    substitutes.setdefault(t, set()).add(cid)
-                elif kind == "advisory":
-                    advisories.append((cid, t))
-                else:
-                    hard_forward.append((cid, t))
-            if VAGUE_RE.search(sent) or not targets:
-                ambiguities.append(
-                    {"course": cid, "kind": f"vague-{kind}",
-                     "text": sent, "sentence": sent}
-                )
-
-    # Only genuine "prerequisite for" statements become requirements.
-    # Substitutions and advisories deliberately do not: treating
-    # "accepted as alternative to DSC 140A" as a prerequisite of DSC 140A
-    # inverts its meaning, and "recommended for" is not a hard gate.
-    for src, dst in hard_forward:
-        if src not in reqs[dst].atoms():
-            reqs[dst].groups.append([src])
-
-    # Reviewed corrections: facts the prose leaves out.
+    # Reviewed corrections: facts the catalog line leaves out.
     abstract = {k: list(v) for k, v in ABSTRACT_SATISFIERS.items()}
     for extra in overrides.get("add_edges", []):
         src, dst = extra["from"], extra["to"]
@@ -267,30 +143,44 @@ def build(catalog_path: Path | str = CATALOG_PATH,
             reqs[dst].groups.append([src])
     for token, sats in overrides.get("abstract_satisfiers", {}).items():
         abstract[token] = sorted(set(abstract.get(token, [])) | set(sats))
+    substitutes: dict[str, set[str]] = {}
+    for sub in overrides.get("substitutes", []):
+        substitutes.setdefault(sub["replaces"], set()).add(sub["course"])
 
     graph = nx.DiGraph()
     for cid, c in by_id.items():
         graph.add_node(cid, name=c["name"], units=c.get("units"),
                        department=c.get("department"))
-    for cid, req in reqs.items():
-        for group in req.groups:
-            for atom in group:
-                if atom in valid:
+    # Single-option groups first; an alternative that would close a cycle
+    # (cross-listed courses naming each other, e.g. DSC 148 / CSE 158) is dropped.
+    for want_single in (True, False):
+        for cid, req in reqs.items():
+            for group in req.groups:
+                if (len(group) == 1) != want_single:
+                    continue
+                for atom in group:
+                    if atom not in valid or atom == cid:
+                        continue
+                    if not want_single and nx.has_path(graph, cid, atom):
+                        ambiguities.append({"course": cid, "kind": "cycle-edge-dropped",
+                                            "text": f"{atom} before {cid}"})
+                        continue
                     graph.add_edge(atom, cid, kind="prereq", alternatives=len(group))
-    # Advisory edges are kept for visualisation but never gate a plan, so they
-    # go in a separate graph rather than polluting the prerequisite DAG.
+    # Advisory edges are kept for visualisation but never gate a plan.
     advisory_graph = nx.DiGraph()
     advisory_graph.add_nodes_from(graph.nodes)
-    advisory_graph.add_edges_from((s, t) for s, t in advisories)
+    advisory_graph.add_edges_from(
+        (e["from"], e["to"]) for e in overrides.get("advisory_edges", [])
+        if e["from"] in valid and e["to"] in valid)
 
     return CourseGraph(
-        graph=graph,
-        advisory=advisory_graph,
-        requirements=reqs,
-        ambiguities=ambiguities,
-        courses=by_id,
-        substitutes=substitutes,
+        graph=graph, advisory=advisory_graph, requirements=reqs,
+        ambiguities=ambiguities, courses=by_id, substitutes=substitutes,
         abstract_satisfiers=abstract,
+        by_arrangement=set(scope.get("by_arrangement") or []),
+        referenced=dict(snap.get("referenced") or {}),
+        catalog_meta={"fetched_at": snap.get("fetched_at"),
+                      "catalog_edition": snap.get("catalog_edition")},
     )
 
 

@@ -45,7 +45,13 @@ def test_backward_statement_points_the_right_way(cg):
 
 
 def test_forward_statement_points_the_right_way(cg):
-    # "MATH 20B ... Prerequisite for MATH 20C"
+    # MATH 20B -> MATH 20C is a reviewed ordering carried in add_edges.
+    import json
+
+    from prereq_graph import OVERRIDES_PATH
+    adds = json.loads(OVERRIDES_PATH.read_text(encoding="utf-8"))["add_edges"]
+    assert {"from": "MATH 20B", "to": "MATH 20C"} in [
+        {"from": e["from"], "to": e["to"]} for e in adds]
     assert cg.graph.has_edge("MATH 20B", "MATH 20C")
     assert not cg.graph.has_edge("MATH 20C", "MATH 20B")
 
@@ -88,11 +94,20 @@ def test_substitute_satisfies_a_group(cg):
 
 
 def test_out_of_catalog_references_are_reported_not_dropped(cg):
-    texts = {a["text"] for a in cg.ambiguities}
-    # MATH 31AH is an honours alternative the catalog names for several courses
-    # and the dataset does not carry. It must be reported, not silently dropped.
-    assert "MATH 31AH" in texts
+    # MATH 31AH is an honours alternative the catalog names but the scope omits.
+    assert "MATH 31AH" in cg.referenced
+    options = {o for g in cg.requirements["DSC 40A"].groups for o in g}
+    assert "MATH 31AH" in options
     assert all(a["kind"] for a in cg.ambiguities)
+
+
+def test_dsc_180a_accepts_dsc_152(cg):
+    assert ["DSC 152", "MATH 189"] in [sorted(g) for g in cg.requirements["DSC 180A"].groups]
+
+
+def test_completed_out_of_scope_option_satisfies(cg):
+    assert "ECON 120A" not in cg.courses
+    assert cg.satisfied(["ECON 120A", "MATH 180A"], {"ECON 120A"})
 
 
 def test_topological_layers_cover_everything(cg):
