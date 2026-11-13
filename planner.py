@@ -23,11 +23,14 @@ import os
 import re
 import time
 from dataclasses import dataclass, field
+from datetime import date
 from pathlib import Path
 
 from dotenv import load_dotenv
 
+from offerings import Offerings, load_offerings
 from prereq_graph import CourseGraph, build
+from terms import Term, parse_term, term_from_code, terms_from
 from retrieval import context_for, get_index
 from validator import Violation, repair_hint, validate
 
@@ -57,18 +60,44 @@ Rules:
 """
 
 
-def eligible_now(cg: CourseGraph, taken: set[str]) -> list[str]:
+_FALL_STARTS = (9, 20)   # approximate; Fall classes begin in the last week of September
+
+
+def default_start_term(offerings: Offerings, today: date) -> Term:
+    """Latest term with a published schedule, else the next Fall after `today`."""
+    terms = []
+    for code in (offerings.scheduled if offerings.available else {}):
+        try:
+            terms.append(term_from_code(code))
+        except ValueError:
+            continue
+    if terms:
+        # Within a calendar year the order is WI, SP, SU, FA.
+        return max(terms, key=lambda t: (t.year, ("WI", "SP", "SU", "FA").index(t.quarter)))
+    year = today.year if (today.month, today.day) < _FALL_STARTS else today.year + 1
+    return Term("FA", year)
+
+
+def eligible_now(cg: CourseGraph, taken: set[str], term: Term | None = None,
+                 offerings: Offerings | None = None) -> list[str]:
     """Courses whose prerequisites are already satisfied by `taken`.
 
     Handing the model this list turns "reason over a 68-node DAG" into "choose
     from these", which is the part it is actually reliable at. The list is
     computed from the graph, so it cannot drift from what the validator will
-    later enforce.
+    later enforce. With `term` and `offerings`, courses the published schedule
+    shows as absent from that term are dropped too.
     """
-    return sorted(
-        cid for cid in cg.courses
-        if cid not in taken and not cg.missing_groups(cid, taken)
-    )
+    out = []
+    for cid in sorted(cg.courses):
+        if cid in taken or cg.missing_groups(cid, taken):
+            continue
+        if term is not None and offerings is not None:
+            dept = cg.courses[cid].get("department") or cid.split(" ", 1)[0]
+            if offerings.lookup(cid, dept, term, cg.by_arrangement).kind == "scheduled_absent":
+                continue
+        out.append(cid)
+    return out
 
 
 @dataclass
@@ -196,7 +225,9 @@ Rules:
 
 def plan_iterative(goal: str, completed: list[str], n_terms: int = 3,
                    cg: CourseGraph | None = None, index=None,
-                   max_rounds: int = 2, k: int = 12) -> PlanResult:
+                   max_rounds: int = 2, k: int = 12,
+                   start_term: str | None = None,
+                   offerings: Offerings | None = None) -> PlanResult:
     """Plan one term at a time against a freshly computed eligible set.
 
     Planning all terms at once asks the model to satisfy a global constraint:
@@ -209,12 +240,16 @@ def plan_iterative(goal: str, completed: list[str], n_terms: int = 3,
     from google import genai
 
     cg = cg or build()
-    index = index or get_index(cg)
+    offerings = offerings if offerings is not None else load_offerings()
+    index = index or get_index(cg, offerings=offerings)
     key = os.getenv("GEMINI_API_KEY")
     if not key:
         return PlanResult([], [], 0, False, False, error="GEMINI_API_KEY not set")
 
     client = genai.Client(api_key=key)
+    start = (parse_term(start_term) if start_term else None) \
+        or default_start_term(offerings, date.today())
+    labels = terms_from(start, n_terms)
     taken = {c.strip().upper() for c in completed}
     terms: list[dict] = []
     transcript: list[str] = []
@@ -222,16 +257,19 @@ def plan_iterative(goal: str, completed: list[str], n_terms: int = 3,
     per_term_first_pass: list[bool] = []
 
     for t in range(1, n_terms + 1):
-        eligible = eligible_now(cg, taken)
+        term = labels[t - 1]
+        eligible = eligible_now(cg, taken, term, offerings)
         if not eligible:
             break
         rows = "\n".join(
-            f"- {index.docs[c]}" for c in eligible if c in index.docs
+            f"- {index.docs[c]} Offered: "
+            f"{offerings.summary(c, cg.courses[c].get('department') or c.split(' ', 1)[0])}"
+            for c in eligible if c in index.docs
         )
         base = (
             f"[GOAL]: {goal}\n"
             f"[COMPLETED SO FAR]: {', '.join(sorted(taken)) or 'none'}\n"
-            f"[TERM]: {t} of {n_terms}\n"
+            f"[TERM]: {term.name} ({t} of {n_terms})\n"
             f"[ELIGIBLE]: {', '.join(eligible)}\n\n"
             f"[DETAILS]\n{rows}"
         )
@@ -249,7 +287,7 @@ def plan_iterative(goal: str, completed: list[str], n_terms: int = 3,
             transcript.append(raw)
             data = _extract_json(raw) or {}
             chosen = [str(c).strip().upper() for c in data.get("courses", [])]
-            trial = terms + [{"term": f"Term {t}", "courses": chosen}]
+            trial = terms + [{"term": term.name, "courses": chosen}]
             errs = [v for v in validate(trial, cg, completed) if v.severity == "error"]
             if attempt == 1:
                 per_term_first_pass.append(not errs)
@@ -260,7 +298,7 @@ def plan_iterative(goal: str, completed: list[str], n_terms: int = 3,
                 repair_hint([v for v in validate(trial, cg, completed)])
                 + f"\n\nChoose only from: {', '.join(eligible)}"}]})
 
-        terms.append({"term": f"Term {t}", "courses": chosen})
+        terms.append({"term": term.name, "courses": chosen})
         taken |= set(chosen)
 
     violations = validate(terms, cg, completed)

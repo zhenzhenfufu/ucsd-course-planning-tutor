@@ -1,7 +1,12 @@
 import streamlit as st
 import pandas as pd
+from datetime import date
+
 from ai_advisor import get_ai_advice
+from offerings import load_offerings
+from planner import default_start_term
 from prereq_graph import build as build_graph
+from terms import Term, parse_term, terms_from
 from validator import validate
 
 st.set_page_config(layout="wide", page_title="UCSD Course Planner", page_icon="🔱")
@@ -16,6 +21,17 @@ st.markdown("""
 
 
 COURSE_GRAPH = build_graph()
+
+
+@st.cache_resource
+def get_offerings():
+    """Loaded once per process and shared by the validator, planner and retrieval."""
+    return load_offerings()
+
+
+OFFERINGS = get_offerings()
+START_TERM = default_start_term(OFFERINGS, date.today())
+CLASS_PLANNER_URL = "https://classplanner.apps.ucsd.edu/search"
 courses_data = list(COURSE_GRAPH.courses.values())
 df = pd.DataFrame(courses_data)
 df["keywords"] = df["keywords"].apply(lambda k: k if isinstance(k, list) else [])
@@ -49,6 +65,35 @@ for src, dst in EDGES:
     prereqs_map.setdefault(dst, []).append(src)
 
 QUARTERS = ["Fall", "Winter", "Spring", "Summer"]
+
+
+def quarter_label(q: str, start_year: int) -> str:
+    """'Fall' + 2026 -> 'Fall 2026'; Winter/Spring/Summer fall in the next calendar year."""
+    return f"{q} {start_year if q == 'Fall' else start_year + 1}"
+
+
+def _start_year(term: Term) -> int:
+    return term.year if term.quarter == "FA" else term.year - 1
+
+
+def year_label(start: int) -> str:
+    return f"{start}-{(start + 1) % 100:02d}"
+
+
+def _start_options() -> list[Term]:
+    return terms_from(START_TERM, 6)
+
+
+_default_start = _start_year(START_TERM)
+YEAR_OPTIONS = [_default_start - 1, _default_start, _default_start + 1]
+
+with st.sidebar:
+    cat_date = (COURSE_GRAPH.catalog_meta.get("fetched_at") or "unknown")[:10]
+    if OFFERINGS.available:
+        st.caption(f"Catalog as of {cat_date} · Offerings as of "
+                   f"{(OFFERINGS.generated_at or 'unknown')[:10]}")
+    else:
+        st.caption(f"Catalog as of {cat_date} · Offerings unavailable")
 
 RESOURCES = [
     {"category": "Enrollment", "icon": "📋", "color": "#e8f4fd", "border": "#2196F3", "links": [
@@ -86,6 +131,9 @@ if "selected_dept" not in st.session_state:
 def all_selected() -> list[str]:
     return [c for q in QUARTERS for c in st.session_state.plan[q]]
 
+
+st.info("Quarter offerings are tentative department plans unless marked scheduled. "
+        "Check the Schedule of Classes before you enroll.")
 
 col_left, col_mid, col_right = st.columns([0.25, 0.42, 0.33], gap="large")
 
@@ -171,6 +219,9 @@ with col_mid:
             unlocks = [dst for (src, dst) in EDGES if src == cid]
             if unlocks:
                 st.caption("Unlocks: " + " · ".join(unlocks))
+
+            st.markdown(f"**Offered:** {OFFERINGS.summary(cid, dept)} "
+                        f"· [Class Planner]({CLASS_PLANNER_URL})")
 
             st.divider()
 
@@ -318,6 +369,7 @@ with col_right:
                         conversation_history=st.session_state.messages,
                         selected_courses=all_selected(),
                         courses_data=courses_data,
+                        offerings=OFFERINGS,
                     )
                 st.markdown(ans)
             st.session_state.messages.append({"role": "assistant", "content": ans})
@@ -339,6 +391,10 @@ with col_right:
             "What are you trying to do?",
             placeholder="e.g. specialise in machine learning as early as possible",
             height=80, key="auto_goal")
+        c0, _ = st.columns(2)
+        start_choice = c0.selectbox(
+            "Start quarter", [t.name for t in _start_options()],
+            index=0, key="auto_start")
         c1, c2 = st.columns(2)
         n_terms = c1.number_input("Quarters to plan", 1, 6, 3, key="auto_terms")
         done = c2.multiselect("Already completed", sorted(COURSE_GRAPH.courses),
@@ -351,7 +407,8 @@ with col_right:
                 with st.spinner("Planning quarter by quarter…"):
                     from planner import plan_iterative
                     res = plan_iterative(goal, list(done), int(n_terms),
-                                         cg=COURSE_GRAPH)
+                                         cg=COURSE_GRAPH, start_term=start_choice,
+                                         offerings=OFFERINGS)
                 st.session_state.auto_result = res
 
         res = st.session_state.get("auto_result")
@@ -373,12 +430,19 @@ with col_right:
                     st.error("Could not reach a legal plan:\n"
                              + "\n".join(f"- `{v.code}` {v.message}" for v in errs))
                 if st.button("Load into My Plan", key="auto_load"):
-                    for i, term in enumerate(res.plan):
-                        if i < len(QUARTERS):
-                            st.session_state.plan[QUARTERS[i]] = list(term["courses"])
+                    # My Plan has one slot per quarter name; the academic-year
+                    # selector there supplies the year.
+                    for term in res.plan:
+                        parsed = parse_term(term["term"])
+                        if parsed is not None:
+                            name = parsed.name.split()[0]
+                            st.session_state.plan[name] = list(term["courses"])
                     st.rerun()
 
     with tab_plan:
+        start_year = st.selectbox(
+            "Academic year", YEAR_OPTIONS, index=1, format_func=year_label,
+            key="plan_year")
         q_tabs = st.tabs(QUARTERS + ["Overview"])
 
         for i, q in enumerate(QUARTERS):
@@ -411,9 +475,10 @@ with col_right:
                 # somewhere in the plan, so DSC 100 in Fall and DSC 80 in
                 # Spring passed. This one respects quarter order, unit caps,
                 # duplicates and OR-groups.
-                plan_terms = [{"term": q, "courses": st.session_state.plan[q]}
+                plan_terms = [{"term": quarter_label(q, start_year),
+                               "courses": st.session_state.plan[q]}
                               for q in QUARTERS if st.session_state.plan[q]]
-                findings = validate(plan_terms, COURSE_GRAPH)
+                findings = validate(plan_terms, COURSE_GRAPH, offerings=OFFERINGS)
                 errors = [v for v in findings if v.severity == "error"]
                 warns = [v for v in findings if v.severity == "warning"]
                 if errors:

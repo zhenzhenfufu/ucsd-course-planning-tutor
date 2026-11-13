@@ -69,8 +69,9 @@ def build_documents(cg: CourseGraph, offerings=None) -> dict[str, str]:
     folded into the text, so "what do I need before DSC 100" and "what does
     DSC 80 open up" both retrieve the right rows instead of relying on the
     model to already know the structure. Catalog descriptions are not stored,
-    so the topic keywords stand in for them. `offerings` is reserved for later
-    and ignored for now.
+    so the topic keywords stand in for them. With `offerings`, each row ends
+    with "Offered: <summary>" (tentative department plans and published
+    schedules), so the model sees which quarters a course runs.
     """
     docs: dict[str, str] = {}
     for cid, course in cg.courses.items():
@@ -90,6 +91,9 @@ def build_documents(cg: CourseGraph, offerings=None) -> dict[str, str]:
             + ("Topics: " + ", ".join(course.get("keywords") or []) + "."
                if course.get("keywords") else "")
         )
+        if offerings is not None:
+            dept = course.get("department") or cid.split(" ", 1)[0]
+            docs[cid] += " Offered: " + offerings.summary(cid, dept)
     return docs
 
 
@@ -180,10 +184,11 @@ class EmbeddingIndex:
         return [Hit(cid, round(s, 4), self.docs[cid]) for s, cid in scored[:k]]
 
 
-def get_index(cg: CourseGraph | None = None, prefer_embeddings: bool = True):
+def get_index(cg: CourseGraph | None = None, prefer_embeddings: bool = True,
+              offerings=None):
     """Return the best index available in this environment."""
     cg = cg or build()
-    docs = build_documents(cg)
+    docs = build_documents(cg, offerings)
     key = os.getenv("GEMINI_API_KEY")
     if prefer_embeddings and key:
         try:

@@ -323,3 +323,44 @@ def test_not_offered_silent_when_unavailable(cg, tmp_path):
     gone = load_offerings(tmp_path / "missing.json", tmp_path / "missing2.json")
     assert not gone.available
     assert _no([{"term": "Winter 2027", "courses": ["DSC 30"]}], cg, gone) == []
+
+
+# --------------------------------------------------------------------------
+# Planner / retrieval use real quarters
+# --------------------------------------------------------------------------
+from datetime import date  # noqa: E402
+
+from planner import default_start_term, eligible_now  # noqa: E402
+from terms import parse_term  # noqa: E402
+
+
+def test_eligible_drops_scheduled_absent(cg, off):
+    wi27 = parse_term("Winter 2027")
+    taken = {"DSC 10", "DSC 20"}
+    assert "DSC 30" in eligible_now(cg, taken, term=None, offerings=off)
+    assert "DSC 30" not in eligible_now(cg, taken, term=wi27, offerings=off)
+    assert "DSC 30" in eligible_now(cg, taken)
+    assert "DSC 20" in eligible_now(cg, {"DSC 10"}, term=wi27, offerings=off)
+
+
+def test_eligible_without_offerings_data_unchanged(cg, tmp_path):
+    gone = load_offerings(tmp_path / "missing.json", tmp_path / "missing2.json")
+    wi27 = parse_term("Winter 2027")
+    assert eligible_now(cg, set(), term=wi27, offerings=gone) == eligible_now(cg, set())
+
+
+def test_default_start_term_uses_latest_scheduled(off):
+    assert default_start_term(off, date(2026, 11, 12)).code == "WI27"
+
+
+def test_default_start_term_without_data(tmp_path):
+    gone = load_offerings(tmp_path / "missing.json", tmp_path / "missing2.json")
+    assert default_start_term(gone, date(2026, 11, 12)).name == "Fall 2027"
+    assert default_start_term(gone, date(2027, 9, 1)).name == "Fall 2027"
+    assert default_start_term(gone, date(2027, 6, 1)).name == "Fall 2027"
+
+
+def test_documents_include_offerings(cg, off):
+    docs = build_documents(cg, off)
+    assert "Offered: " + off.summary("DSC 30", "DSC") in docs["DSC 30"]
+    assert "Offered:" not in build_documents(cg)["DSC 30"]

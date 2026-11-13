@@ -5,6 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from google import genai
 
+from offerings import load_offerings
 from prereq_graph import build as build_graph
 from retrieval import context_for, get_index
 
@@ -16,11 +17,12 @@ _CG = None
 _INDEX = None
 
 
-def _resources():
+def _resources(offerings=None):
     global _CG, _INDEX
     if _CG is None:
         _CG = build_graph()
-        _INDEX = get_index(_CG)
+        _INDEX = get_index(_CG, offerings=offerings if offerings is not None
+                           else load_offerings())
     return _CG, _INDEX
 
 SYSTEM_PROMPT = """You are an expert UCSD Data Science (DSC) academic advisor with deep knowledge of the program's curriculum, and prerequisites.
@@ -38,6 +40,8 @@ When giving advice:
 - Only cite prerequisites that appear in the RELEVANT COURSES rows; if a course
   you want to mention is not listed there, say you would need to look it up
   rather than guessing its prerequisites
+- Offerings marked tentative come from department plans and may change; tell
+  the student to check the Schedule of Classes before enrolling
 - Keep responses concise but complete
 - Use markdown formatting: **bold** for course names, bullet points for lists"""
 
@@ -50,14 +54,15 @@ MODELS = [
 ]
 
 
-def get_ai_advice(conversation_history, selected_courses=None, courses_data=None):
+def get_ai_advice(conversation_history, selected_courses=None, courses_data=None,
+                  offerings=None):
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         return "❌ **Missing API Key** — add `GEMINI_API_KEY` to your `.env` file."
     if not conversation_history:
         return "❌ No message to respond to."
 
-    cg, index = _resources()
+    cg, index = _resources(offerings)
     # Retrieve rows for the live question instead of pasting the whole
     # catalog; graph expansion then guarantees the prerequisites of anything
     # retrieved are present, which is what the model actually gets wrong.
