@@ -62,5 +62,69 @@
       "edge": "MATH 20A -> MATH 18",
       "why": "The catalog names MATH 20A as one way to clear MATH 18's placement requirement, not as an ordering. Treating it as an edge would force linear algebra after third-quarter calculus, which is the opposite of how the major is advised."
     }
+  ],
+  "substitutes": [
+    {
+      "course": "CSE 12",
+      "replaces": "DSC 30",
+      "why": "Carried over from the hand-written dataset (before 2026-11); the catalog prerequisite line does not state it. Owner to confirm."
+    },
+    {
+      "course": "CSE 15L",
+      "replaces": "DSC 80",
+      "why": "Carried over from the hand-written dataset (before 2026-11); the catalog prerequisite line does not state it. Owner to confirm."
+    },
+    {
+      "course": "CSE 151A",
+      "replaces": "DSC 148",
+      "why": "Carried over from the hand-written dataset (before 2026-11); the catalog prerequisite line does not state it. Owner to confirm."
+    },
+    {
+      "course": "CSE 151A",
+      "replaces": "DSC 140A",
+      "why": "Carried over from the hand-written dataset (before 2026-11); the catalog prerequisite line does not state it. Owner to confirm."
+    },
+    {
+      "course": "CSE 151A",
+      "replaces": "DSC 140B",
+      "why": "Carried over from the hand-written dataset (before 2026-11); the catalog prerequisite line does not state it. Owner to confirm."
+    },
+    {
+      "course": "ECE 109",
+      "replaces": "MATH 180A",
+      "why": "Carried over from the hand-written dataset (before 2026-11); the catalog prerequisite line does not state it. Owner to confirm."
+    },
+    {
+      "course": "COGS 188",
+      "replaces": "DSC 180A",
+      "why": "Carried over from the hand-written dataset (before 2026-11); the catalog prerequisite line does not state it. Owner to confirm."
+    }
+  ],
+  "advisory_edges": [
+    {
+      "from": "DSC 140A",
+      "to": "MATH 181A",
+      "why": "Carried over from the hand-written dataset (before 2026-11); the catalog prerequisite line does not state it. Owner to confirm."
+    },
+    {
+      "from": "MATH 180A",
+      "to": "DSC 140A",
+      "why": "Carried over from the hand-written dataset (before 2026-11); the catalog prerequisite line does not state it. Owner to confirm."
+    },
+    {
+      "from": "MATH 180A",
+      "to": "DSC 140B",
+      "why": "Carried over from the hand-written dataset (before 2026-11); the catalog prerequisite line does not state it. Owner to confirm."
+    },
+    {
+      "from": "MATH 180A",
+      "to": "DSC 148",
+      "why": "Carried over from the hand-written dataset (before 2026-11); the catalog prerequisite line does not state it. Owner to confirm."
+    },
+    {
+      "from": "MATH 180A",
+      "to": "DSC 155",
+      "why": "Carried over from the hand-written dataset (before 2026-11); the catalog prerequisite line does not state it. Owner to confirm."
+    }
   ]
 }
