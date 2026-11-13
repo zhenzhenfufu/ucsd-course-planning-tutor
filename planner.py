@@ -223,6 +223,32 @@ Rules:
 """
 
 
+def plan_load_selection(plan: list[dict]):
+    """Which planned terms can go into My Plan's single academic-year view.
+
+    Returns (start_year, {quarter name: courses}, skipped term labels). The
+    year is that of the plan's first placeable term; terms in any other
+    academic year (or unplaceable labels) are skipped, so no tab is ever
+    filled twice.
+    """
+    start_year = None
+    loaded: dict[str, list[str]] = {}
+    skipped: list[str] = []
+    for term in plan:
+        t = parse_term(term.get("term", ""))
+        if t is None:
+            skipped.append(str(term.get("term")))
+            continue
+        y = t.year if t.quarter == "FA" else t.year - 1
+        if start_year is None:
+            start_year = y
+        if y != start_year:
+            skipped.append(t.name)
+            continue
+        loaded[t.name.split()[0]] = list(term["courses"])
+    return start_year, loaded, skipped
+
+
 def plan_iterative(goal: str, completed: list[str], n_terms: int = 3,
                    cg: CourseGraph | None = None, index=None,
                    max_rounds: int = 2, k: int = 12,
@@ -281,27 +307,27 @@ def plan_iterative(goal: str, completed: list[str], n_terms: int = 3,
             try:
                 raw = _call(client, contents, TERM_SYSTEM)
             except RuntimeError as exc:
-                return PlanResult(terms, validate(terms, cg, completed),
+                return PlanResult(terms, validate(terms, cg, completed, offerings),
                                   rounds_used, False, False, error=str(exc),
                                   transcript=transcript)
             transcript.append(raw)
             data = _extract_json(raw) or {}
             chosen = [str(c).strip().upper() for c in data.get("courses", [])]
             trial = terms + [{"term": term.name, "courses": chosen}]
-            errs = [v for v in validate(trial, cg, completed) if v.severity == "error"]
+            errs = [v for v in validate(trial, cg, completed, offerings) if v.severity == "error"]
             if attempt == 1:
                 per_term_first_pass.append(not errs)
             if not errs:
                 break
             contents.append({"role": "model", "parts": [{"text": raw}]})
             contents.append({"role": "user", "parts": [{"text":
-                repair_hint([v for v in validate(trial, cg, completed)])
+                repair_hint([v for v in validate(trial, cg, completed, offerings)])
                 + f"\n\nChoose only from: {', '.join(eligible)}"}]})
 
         terms.append({"term": term.name, "courses": chosen})
         taken |= set(chosen)
 
-    violations = validate(terms, cg, completed)
+    violations = validate(terms, cg, completed, offerings)
     legal = not any(v.severity == "error" for v in violations)
     return PlanResult(terms, violations, rounds_used,
                       all(per_term_first_pass) if per_term_first_pass else False,

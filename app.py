@@ -4,7 +4,7 @@ from datetime import date
 
 from ai_advisor import get_ai_advice
 from offerings import load_offerings
-from planner import default_start_term
+from planner import default_start_term, plan_load_selection
 from prereq_graph import build as build_graph
 from terms import Term, parse_term, terms_from
 from validator import validate
@@ -76,6 +76,11 @@ def _start_year(term: Term) -> int:
     return term.year if term.quarter == "FA" else term.year - 1
 
 
+def _term_year(label: str) -> int:
+    t = parse_term(label)
+    return _start_year(t) if t else 0
+
+
 def year_label(start: int) -> str:
     return f"{start}-{(start + 1) % 100:02d}"
 
@@ -120,6 +125,8 @@ RESOURCES = [
 
 if "plan" not in st.session_state:
     st.session_state.plan = {q: [] for q in QUARTERS}
+if "plan_year" not in st.session_state:
+    st.session_state.plan_year = _default_start
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "selected_course" not in st.session_state:
@@ -430,18 +437,25 @@ with col_right:
                     st.error("Could not reach a legal plan:\n"
                              + "\n".join(f"- `{v.code}` {v.message}" for v in errs))
                 if st.button("Load into My Plan", key="auto_load"):
-                    # My Plan has one slot per quarter name; the academic-year
-                    # selector there supplies the year.
-                    for term in res.plan:
-                        parsed = parse_term(term["term"])
-                        if parsed is not None:
-                            name = parsed.name.split()[0]
-                            st.session_state.plan[name] = list(term["courses"])
+                    # My Plan shows one academic year: load the plan's first
+                    # year, replace those quarter tabs, and say what was left out.
+                    yr, loaded, skipped = plan_load_selection(res.plan)
+                    if yr is not None:
+                        for name, courses in loaded.items():
+                            st.session_state.plan[name] = courses
+                        st.session_state.plan_year = yr
+                    st.session_state.load_skipped = [
+                        f"{lbl} is in another academic year and was not loaded."
+                        if yr is None or parse_term(lbl) is None else
+                        f"{lbl} is in {year_label(_term_year(lbl))} and was not loaded."
+                        for lbl in skipped]
                     st.rerun()
 
     with tab_plan:
+        for msg in st.session_state.pop("load_skipped", []):
+            st.warning(msg)
         start_year = st.selectbox(
-            "Academic year", YEAR_OPTIONS, index=1, format_func=year_label,
+            "Academic year", YEAR_OPTIONS, format_func=year_label,
             key="plan_year")
         q_tabs = st.tabs(QUARTERS + ["Overview"])
 

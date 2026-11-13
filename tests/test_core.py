@@ -364,3 +364,45 @@ def test_documents_include_offerings(cg, off):
     docs = build_documents(cg, off)
     assert "Offered: " + off.summary("DSC 30", "DSC") in docs["DSC 30"]
     assert "Offered:" not in build_documents(cg)["DSC 30"]
+
+
+from planner import plan_iterative, plan_load_selection  # noqa: E402
+
+
+def test_plan_iterative_validates_with_passed_offerings(cg, off, tmp_path, monkeypatch):
+    import validator
+    from google import genai
+    import planner
+    gone = load_offerings(tmp_path / "missing.json", tmp_path / "missing2.json")
+    # The validator's process default would flag DSC 30 in Winter 2027.
+    monkeypatch.setattr(validator, "_default_offerings", off)
+    monkeypatch.setenv("GEMINI_API_KEY", "x")
+    monkeypatch.setattr(genai, "Client", lambda **k: object())
+    monkeypatch.setattr(planner, "_call", lambda *a, **k: '{"courses": ["DSC 30"]}')
+    res = plan_iterative("goal", ["DSC 10", "DSC 20"], 1, cg=cg, index=_FakeIndex(),
+                         start_term="Winter 2027", offerings=gone)
+    assert res.plan and res.plan[0]["term"] == "Winter 2027"
+    assert not [v for v in res.violations if v.code == "NOT_OFFERED"]
+
+
+class _FakeIndex:
+    docs: dict = {}
+
+
+def test_load_selection_skips_other_academic_year():
+    plan = [{"term": "Winter 2027", "courses": ["A"]},
+            {"term": "Spring 2027", "courses": ["B"]},
+            {"term": "Fall 2027", "courses": ["C"]}]
+    year, by_q, skipped = plan_load_selection(plan)
+    assert year == 2026 and by_q == {"Winter": ["A"], "Spring": ["B"]}
+    assert skipped == ["Fall 2027"]
+
+
+def test_load_selection_single_year_loads_all_and_no_collisions():
+    plan = [{"term": "Fall 2026", "courses": ["A"]}, {"term": "Winter 2027", "courses": ["B"]},
+            {"term": "Spring 2027", "courses": ["C"]}, {"term": "Fall 2027", "courses": ["D"]},
+            {"term": "Winter 2028", "courses": ["E"]}]
+    year, by_q, skipped = plan_load_selection(plan)
+    assert year == 2026 and by_q == {"Fall": ["A"], "Winter": ["B"], "Spring": ["C"]}
+    assert skipped == ["Fall 2027", "Winter 2028"]
+    assert plan_load_selection([]) == (None, {}, [])
