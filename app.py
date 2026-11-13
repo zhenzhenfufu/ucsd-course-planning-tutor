@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import json
 from ai_advisor import get_ai_advice
 from prereq_graph import build as build_graph
 from validator import validate
@@ -16,14 +15,20 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-@st.cache_data
-def load_data():
-    with open("dsc_courses.json", "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-courses_data = load_data()
+COURSE_GRAPH = build_graph()
+courses_data = list(COURSE_GRAPH.courses.values())
 df = pd.DataFrame(courses_data)
+df["keywords"] = df["keywords"].apply(lambda k: k if isinstance(k, list) else [])
+df["keywords_text"] = df["keywords"].apply(", ".join)
+
+
+def units_label(row) -> str:
+    """'4' for a fixed-unit course, '2–4' for a variable-unit one."""
+    lo, hi = float(row["units"]), float(row.get("units_max") or row["units"])
+    return f"{lo:g}–{hi:g}" if hi > lo else f"{lo:g}"
+
+
+df["units_label"] = df.apply(units_label, axis=1)
 
 DEPT_ORDER = ["DSC", "MATH", "CSE", "ECE", "COGS", "PHYS", "CHEM", "BIOL"]
 DEPT_LABELS = {
@@ -33,11 +38,10 @@ DEPT_LABELS = {
 all_depts_in_data = df["department"].unique().tolist()
 DEPTS = [d for d in DEPT_ORDER if d in all_depts_in_data]
 
-# Prerequisites come from prereq_graph, which parses them out of the catalog
-# descriptions and applies the reviewed corrections in prereq_overrides.json.
+# Prerequisites come from prereq_graph, which reads the catalog snapshot in
+# data/catalog.json and applies the reviewed corrections in prereq_overrides.json.
 # The app used to carry its own hand-written EDGES list; the two had drifted
 # 25 edges apart, so the list was removed rather than maintained twice.
-COURSE_GRAPH = build_graph()
 EDGES = sorted(COURSE_GRAPH.graph.edges())
 
 prereqs_map: dict[str, list[str]] = {}
@@ -53,18 +57,18 @@ RESOURCES = [
         ("Waitlist Guide", "https://students.ucsd.edu/academics/enroll/waitlist.html", "How UCSD waitlists work: auto-enroll thresholds, position checking, and what to do if you're stuck."),
     ]},
     {"category": "Grades & Reviews", "icon": "📊", "color": "#f0fdf4", "border": "#22c55e", "links": [
-        ("CAPE Reviews", "https://cape.ucsd.edu/", "Student evaluations for every UCSD course and professor — workload, teaching quality, exam difficulty."),
+        ("SET / CAPE Reviews", "https://set.ucsd.edu/", "Student evaluations of teaching. CAPE results end at Spring 2023; newer terms are on SET."),
         ("Capes GPA Tool", "https://capes.vercel.app/", "Visual grade distributions by professor sourced from CAPE data. Compare sections before enrolling."),
         ("Rate My Professors — UCSD", "https://www.ratemyprofessors.com/school/1078", "Professor ratings and reviews from students across all UCSD departments."),
     ]},
     {"category": "Degree Planning", "icon": "🎓", "color": "#fdf4ff", "border": "#a855f7", "links": [
         ("Degree Audit (DARS)", "https://act.ucsd.edu/studentDarsSelfservice/audit/read.html?printerFriendly=true", "Automated audit of your transcript — see exactly what requirements you've fulfilled and what's still missing."),
         ("Academic Calendar", "https://blink.ucsd.edu/instructors/resources/academic/calendars/", "Enrollment windows, add/drop deadlines, finals, and quarter dates. Bookmark this."),
-        ("DSC Major Requirements", "https://datascience.ucsd.edu/current-students/course-information/", "Full list of required and elective courses for the BS in Data Science, including allowed substitutions."),
-        ("DSC Course Catalog", "https://catalog.ucsd.edu/courses/DSC.html", "Official UCSD catalog with formal prerequisites, descriptions, and unit counts for all DSC courses."),
+        ("DSC Major Requirements", "https://datascience.ucsd.edu/current-students/major-requirements/", "Full list of required and elective courses for the BS in Data Science, including allowed substitutions."),
+        ("DSC Course Catalog", "https://catalog.ucsd.edu/courses/DSC.html", "Official UCSD catalog with formal prerequisites and unit counts for all DSC courses."),
     ]},
     {"category": "Support & Advising", "icon": "💬", "color": "#fff7ed", "border": "#f97316", "links": [
-        ("DSC Advising", "https://datascience.ucsd.edu/current-students/advising/", "Book an appointment with a DSC academic advisor for course selection, petitions, and graduation planning."),
+        ("DSC Advising", "https://datascience.ucsd.edu/current-students/academic-advising/", "Book an appointment with a DSC academic advisor for course selection, petitions, and graduation planning."),
         ("Triton Advising Hub", "https://advising.ucsd.edu/", "Central UCSD advising portal — college advisor, GE requirements, petitions, and academic standing."),
     ]},
 ]
@@ -95,7 +99,7 @@ with col_left:
         mask = (
             df["id"].str.contains(search, case=False)
             | df["name"].str.contains(search, case=False)
-            | df["description"].str.contains(search, case=False)
+            | df["keywords_text"].str.contains(search, case=False)
         )
         results = df[mask]
         if results.empty:
@@ -108,7 +112,7 @@ with col_left:
                 if st.button(btn_label, key=f"s_{row['id']}", use_container_width=True):
                     st.session_state.selected_course = row["id"]
                     st.rerun()
-                st.caption(f"{row['name'][:50]}{'…' if len(row['name'])>50 else ''} · {row['units']}u")
+                st.caption(f"{row['name'][:50]}{'…' if len(row['name'])>50 else ''} · {row['units_label']}u")
     else:
         dept_cols = st.columns(4)
         for i, dept in enumerate(DEPTS):
@@ -127,7 +131,7 @@ with col_left:
             if st.button(btn_label, key=f"c_{row['id']}", use_container_width=True):
                 st.session_state.selected_course = row["id"]
                 st.rerun()
-            st.caption(f"{row['name'][:52]}{'…' if len(row['name'])>52 else ''} · {row['units']}u")
+            st.caption(f"{row['name'][:52]}{'…' if len(row['name'])>52 else ''} · {row['units_label']}u")
 
 # ── MIDDLE: Course Info Hub ───────────────────────────────────────────────────
 with col_mid:
@@ -142,15 +146,16 @@ with col_mid:
             cid_url = cid.replace(" ", "+")
             cid_encoded = cid.replace(" ", "%20")
             links_dict = course.get("links") or {}
-            site_url = links_dict.get("🌐 Course Site", "")
+            site_url = links_dict.get("Course Site", "")
+            catalog_url = course.get("catalog_url") or f"https://catalog.ucsd.edu/courses/{dept}.html"
 
             # Header
             st.markdown(f"## {cid}")
-            st.markdown(f"**{course['name']}** &nbsp;·&nbsp; {course['units']} units &nbsp;·&nbsp; `{dept}`")
+            st.markdown(f"**{course['name']}** &nbsp;·&nbsp; {course['units_label']} units &nbsp;·&nbsp; `{dept}`")
 
-            desc = course.get("description", "")
-            if desc:
-                st.write(desc)
+            kws = course.get("keywords") or []
+            if kws:
+                st.markdown(" ".join(f"`{k}`" for k in kws))
 
             # Prerequisites
             prereqs = prereqs_map.get(cid, [])
@@ -178,9 +183,9 @@ with col_mid:
             with r1:
                 st.markdown(
                     f"""<div style="background:#f0fdf4;border-left:3px solid #22c55e;border-radius:6px;padding:10px 12px">
-                    <a href="https://cape.ucsd.edu/responses/Results.aspx?courseNumber={cid_url}" target="_blank"
-                       style="font-weight:700;color:#15803d;text-decoration:none">📝 CAPE Reviews</a>
-                    <p style="font-size:0.78rem;color:#444;margin-top:5px">Student evaluations — workload, exam difficulty, professor quality</p>
+                    <a href="https://set.ucsd.edu/" target="_blank"
+                       style="font-weight:700;color:#15803d;text-decoration:none">📝 SET / CAPE Reviews</a>
+                    <p style="font-size:0.78rem;color:#444;margin-top:5px">Student evaluations of teaching. CAPE results end at Spring 2023</p>
                     </div>""", unsafe_allow_html=True)
             with r2:
                 st.markdown(
@@ -226,7 +231,7 @@ with col_mid:
             mat_cols = []
             if site_url:
                 mat_cols.append(("🌐 Course Website", site_url, "Official site — syllabus, lecture notes, assignments, and past exams"))
-            mat_cols.append(("📋 UCSD Catalog", f"https://catalog.ucsd.edu/courses/{dept}.html", f"Formal description and official prerequisite rules for {dept} courses"))
+            mat_cols.append(("📋 Catalog entry", catalog_url, f"Official catalog entry with the formal prerequisite rules for {cid}"))
             youtube_url = f"https://www.youtube.com/results?search_query=UCSD+{cid_encoded}+lecture"
             mat_cols.append(("▶ YouTube Lectures", youtube_url, "Search for recorded lectures, review videos, or tutorial walkthroughs"))
 
@@ -286,9 +291,9 @@ with col_mid:
         st.info("← Click any course on the left to see reviews, links, Reddit discussions, and more.")
 
         # Show course websites as quick links
-        sites = [(row["id"], row["name"], row["links"]["🌐 Course Site"])
+        sites = [(row["id"], row["name"], row["links"]["Course Site"])
                  for _, row in df.iterrows()
-                 if isinstance(row.get("links"), dict) and "🌐 Course Site" in row["links"]]
+                 if isinstance(row.get("links"), dict) and "Course Site" in row["links"]]
         if sites:
             st.markdown("**Quick jump — course websites:**")
             for cid, name, url in sites:
@@ -383,13 +388,13 @@ with col_right:
                     q_rows = df[df["id"].isin(courses_here)]
                     for _, row in q_rows.iterrows():
                         ci, cb = st.columns([0.82, 0.18])
-                        ci.markdown(f"**{row['id']}** · {row['units']}u")
+                        ci.markdown(f"**{row['id']}** · {row['units_label']}u")
                         ci.caption(row["name"][:44] + ("…" if len(row["name"]) > 44 else ""))
                         if cb.button("✕", key=f"rm_{q}_{row['id']}"):
                             st.session_state.plan[q].remove(row["id"])
                             st.rerun()
                     st.divider()
-                    st.metric("Units", q_rows["units"].sum())
+                    st.metric("Units", f"{q_rows['units'].sum():g}")
                 else:
                     st.caption(f"No courses added to {q} yet.")
 
@@ -399,9 +404,9 @@ with col_right:
                 for q in QUARTERS:
                     if st.session_state.plan[q]:
                         q_df = df[df["id"].isin(st.session_state.plan[q])]
-                        st.markdown(f"**{q}**: {', '.join(st.session_state.plan[q])} — {q_df['units'].sum()} units")
+                        st.markdown(f"**{q}**: {', '.join(st.session_state.plan[q])} — {q_df['units'].sum():g} units")
                 st.divider()
-                st.metric("Total Units", df[df["id"].isin(all_c)]["units"].sum())
+                st.metric("Total Units", f"{df[df['id'].isin(all_c)]['units'].sum():g}")
                 # The old check only asked whether a prerequisite appeared
                 # somewhere in the plan, so DSC 100 in Fall and DSC 80 in
                 # Spring passed. This one respects quarter order, unit caps,

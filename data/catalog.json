@@ -1,0 +1,1983 @@
+{
+  "source": "https://catalog.ucsd.edu/courses/",
+  "fetched_at": "2026-11-13T14:45:24Z",
+  "catalog_edition": "2026–27",
+  "courses": {
+    "MATH 20A": {
+      "id": "MATH 20A",
+      "department": "MATH",
+      "title": "Calculus for Science and Engineering",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "<exam or placement>",
+          "MATH 4C",
+          "MATH 10A"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math20a",
+      "content_hash": "sha256:9781dfe8c7f6b03597b609f4c150c9d4891b37498852dccc5761dbab60b63044",
+      "stale": false
+    },
+    "MATH 20B": {
+      "id": "MATH 20B",
+      "department": "MATH",
+      "title": "Calculus for Science and Engineering",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "<exam or placement>",
+          "MATH 20A",
+          "MATH 10B",
+          "MATH 10C"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math20b",
+      "content_hash": "sha256:f835311d7e399a63436d7649c122e77bccf1993290295417465560ffb8122e7e",
+      "stale": false
+    },
+    "MATH 20C": {
+      "id": "MATH 20C",
+      "department": "MATH",
+      "title": "Calculus and Analytic Geometry for Science and Engineering",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "<exam or placement>",
+          "MATH 20B"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math20c",
+      "content_hash": "sha256:d4abe955423391b4acca5ee05e14c29fa1303b2f7372decc3631daf0d2e96b52",
+      "stale": false
+    },
+    "MATH 18": {
+      "id": "MATH 18",
+      "department": "MATH",
+      "title": "Linear Algebra",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "<exam or placement>",
+          "MATH 4C",
+          "MATH 10A",
+          "MATH 20A"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "instructor consent"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math18",
+      "content_hash": "sha256:01c93f08791bb4ade7689570797778d89fb3ed7c16def2d808ff1da59d56c598",
+      "stale": false
+    },
+    "MATH 180A": {
+      "id": "MATH 180A",
+      "department": "MATH",
+      "title": "Introduction to Probability",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 20C",
+          "MATH 31BH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "instructor consent"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math180a",
+      "content_hash": "sha256:3ff128af483dbceff80eedf720e2a986d012c8f5c6608fdca5653456fd4f9c72",
+      "stale": false
+    },
+    "MATH 181A": {
+      "id": "MATH 181A",
+      "department": "MATH",
+      "title": "Introduction to Mathematical Statistics I",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 180A"
+        ],
+        [
+          "MATH 18",
+          "MATH 20F",
+          "MATH 31AH"
+        ],
+        [
+          "MATH 20C"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "instructor consent"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math181a",
+      "content_hash": "sha256:af4e4017e1edf5dbcce67687db9565d67dabba711dedf95f06fa35397fc2fa15",
+      "stale": false
+    },
+    "MATH 181B": {
+      "id": "MATH 181B",
+      "department": "MATH",
+      "title": "Introduction to Mathematical Statistics II",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 181A"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "instructor consent"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math181b",
+      "content_hash": "sha256:23f1fe02a26eead2295f0a2e29f74e1f9f54070600c8af2ccf60138c1713bbf2",
+      "stale": false
+    },
+    "MATH 183": {
+      "id": "MATH 183",
+      "department": "MATH",
+      "title": "Statistical Methods",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 20C",
+          "MATH 31BH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "instructor consent"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math183",
+      "content_hash": "sha256:e5b97007328ff54369fc1ef26776ac326d0fd49377b4c46466e16fb41bc76c45",
+      "stale": false
+    },
+    "MATH 189": {
+      "id": "MATH 189",
+      "department": "MATH",
+      "title": "Exploratory Data Analysis and Inference",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 18",
+          "MATH 20F",
+          "MATH 31AH"
+        ],
+        [
+          "MATH 20C"
+        ],
+        [
+          "BENG 134",
+          "CSE 103",
+          "ECE 109",
+          "ECON 120A",
+          "MAE 108",
+          "MATH 180A",
+          "MATH 183",
+          "MATH 186",
+          "SE 125"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "instructor consent"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math189",
+      "content_hash": "sha256:e892f3cd72bfc153cde547d113a12a227ddb79c912ec086eadfa26ea6460e29c",
+      "stale": false
+    },
+    "MATH 173A": {
+      "id": "MATH 173A",
+      "department": "MATH",
+      "title": "Optimization Methods for Data Science I",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 20C",
+          "MATH 31BH"
+        ],
+        [
+          "MATH 18",
+          "MATH 31AH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "instructor consent"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math173a",
+      "content_hash": "sha256:e0e333345b45ba2061a3ea4241314991fed588f3916c99bd751005b6f1ac3a4d",
+      "stale": false
+    },
+    "MATH 173B": {
+      "id": "MATH 173B",
+      "department": "MATH",
+      "title": "Optimization Methods for Data Science II",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 123A",
+          "MATH 173A"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "instructor consent"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math173b",
+      "content_hash": "sha256:7fc5b04190219942f2aeaf27e749601e436c9ed5921538bf9269ace4fc298a4c",
+      "stale": false
+    },
+    "MATH 182": {
+      "id": "MATH 182",
+      "department": "MATH",
+      "title": "Hidden Data in Random Matrices",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 180A"
+        ],
+        [
+          "MATH 18",
+          "MATH 31AH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "instructor consent"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math182",
+      "content_hash": "sha256:526f083832831331b679d55a5bdf01e614112cbf76c1a033c4db136a5312e700",
+      "stale": false
+    },
+    "DSC 10": {
+      "id": "DSC 10",
+      "department": "DSC",
+      "title": "Principles of Data Science",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc10",
+      "content_hash": "sha256:7ab6c7b764ef6e0df948cd2180e4bb9b2e4fed555e8535f0e81acaadc0fdbd3a",
+      "stale": false
+    },
+    "DSC 20": {
+      "id": "DSC 20",
+      "department": "DSC",
+      "title": "Programming and Basic Data Structures for Data Science",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 10"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc20",
+      "content_hash": "sha256:28f5b09798404749b90da5e04ca8933586f0ddc1af70b40a3ab4bdd39e547554",
+      "stale": false
+    },
+    "DSC 30": {
+      "id": "DSC 30",
+      "department": "DSC",
+      "title": "Data Structures and Algorithms for Data Science",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 20"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc30",
+      "content_hash": "sha256:5865e1368025ac75904a7704e8d31a4a4f866d70c4e289f12e9a4eaebc310b8a",
+      "stale": false
+    },
+    "DSC 40A": {
+      "id": "DSC 40A",
+      "department": "DSC",
+      "title": "Theoretical Foundations of Data Science I",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 10"
+        ],
+        [
+          "MATH 20C",
+          "MATH 31BH"
+        ],
+        [
+          "MATH 18",
+          "MATH 20F",
+          "MATH 31AH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc40a",
+      "content_hash": "sha256:e7e01f874a7b9a2e5b2499c6aa6c930a88eab35edcebaba7236d65b315edfb5d",
+      "stale": false
+    },
+    "DSC 40B": {
+      "id": "DSC 40B",
+      "department": "DSC",
+      "title": "Theoretical Foundations of Data Science II",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 20"
+        ],
+        [
+          "DSC 40A"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc40b",
+      "content_hash": "sha256:e4120eace4772e168edf1413a949f32967c3dff6c53d07099978be63cc50139b",
+      "stale": false
+    },
+    "DSC 80": {
+      "id": "DSC 80",
+      "department": "DSC",
+      "title": "The Practice and Application of Data Science",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 30"
+        ],
+        [
+          "DSC 40A"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc80",
+      "content_hash": "sha256:055883766c86857b1ab9816b93bf3d25c0fb2f72da7003d9738e351a045445cd",
+      "stale": false
+    },
+    "DSC 100": {
+      "id": "DSC 100",
+      "department": "DSC",
+      "title": "Introduction to Data Management",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 40B"
+        ],
+        [
+          "DSC 80"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc100",
+      "content_hash": "sha256:99809cb9d1a3b60b062f9b29a1b14f78308fe315d0a619f0612e042faf305776",
+      "stale": false
+    },
+    "DSC 102": {
+      "id": "DSC 102",
+      "department": "DSC",
+      "title": "Systems for Scalable Analytics",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 100"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc102",
+      "content_hash": "sha256:6fc907d7180244c5be899267245161ffa6f73a53fafcdf0615f4e06d24883aa7",
+      "stale": false
+    },
+    "DSC 104": {
+      "id": "DSC 104",
+      "department": "DSC",
+      "title": "Beyond Relational Data Management",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 100"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc104",
+      "content_hash": "sha256:c27cb4f88f5e702e7895630228aa8113f876823a2e4fe5bdc4bb4dba9c91d663",
+      "stale": false
+    },
+    "DSC 106": {
+      "id": "DSC 106",
+      "department": "DSC",
+      "title": "Introduction to Data Visualization",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 80"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc106",
+      "content_hash": "sha256:b85d3f078dbb77bef70aaf1894418bce4b8ff36f4e5ed54180fd7ec17990fd42",
+      "stale": false
+    },
+    "DSC 120": {
+      "id": "DSC 120",
+      "department": "DSC",
+      "title": "Signal Processing for Data Analysis",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 18",
+          "MATH 31AH"
+        ],
+        [
+          "MATH 20C",
+          "MATH 31BH"
+        ],
+        [
+          "DSC 80"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc120",
+      "content_hash": "sha256:41c40c210b44a6ee9eb0b33b1950f9e943461734fb1d70727b184e454202b983",
+      "stale": false
+    },
+    "DSC 123A": {
+      "id": "DSC 123A",
+      "department": "DSC",
+      "title": "Optimization Methods for Data Science I",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 20C",
+          "MATH 31BH"
+        ],
+        [
+          "MATH 18",
+          "MATH 31AH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "credit exclusion",
+        "instructor consent"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc123a",
+      "content_hash": "sha256:c715dc66e972bf022c5181ddd24231fbd63c0a1f7428ffa552412ee734b489c7",
+      "stale": false
+    },
+    "DSC 123B": {
+      "id": "DSC 123B",
+      "department": "DSC",
+      "title": "Optimization Methods for Data Science II",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 123A",
+          "MATH 173A"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "credit exclusion",
+        "instructor consent"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc123b",
+      "content_hash": "sha256:3b86285a968224a62c602e100156810aad04c05e68398c52adc17c161f904043",
+      "stale": false
+    },
+    "DSC 140A": {
+      "id": "DSC 140A",
+      "department": "DSC",
+      "title": "Probabilistic Modeling and Machine Learning",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 80"
+        ],
+        [
+          "ECE 109",
+          "ECON 120A",
+          "MAE 108",
+          "MATH 180A",
+          "MATH 183",
+          "MATH 186"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc140a",
+      "content_hash": "sha256:448f18a63941d7a3e45bb26e5f5f12c12f15088676627939790b7d2811a76976",
+      "stale": false
+    },
+    "DSC 140B": {
+      "id": "DSC 140B",
+      "department": "DSC",
+      "title": "Representation Learning",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 80"
+        ],
+        [
+          "ECE 109",
+          "ECON 120A",
+          "MAE 108",
+          "MATH 180A",
+          "MATH 183",
+          "MATH 186"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc140b",
+      "content_hash": "sha256:ac784c40520af7b934ee7da76abc41073676ff4e40f917bb778ae959d6ccade7",
+      "stale": false
+    },
+    "DSC 148": {
+      "id": "DSC 148",
+      "department": "DSC",
+      "title": "Introduction to Data Mining",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 40B",
+          "CSE 12"
+        ],
+        [
+          "DSC 80",
+          "CSE 15L",
+          "CSE 29"
+        ],
+        [
+          "MATH 180A",
+          "MATH 180B",
+          "MATH 181A",
+          "MATH 183",
+          "MATH 186",
+          "CSE 103",
+          "ECE 109",
+          "ECON 120A",
+          "MAE 108"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "credit exclusion",
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc148",
+      "content_hash": "sha256:e21af45dbb62d3cf4d5ea7a4dabe0bc14dd96e5057bf1416b98df8d3f82a005a",
+      "stale": false
+    },
+    "DSC 155": {
+      "id": "DSC 155",
+      "department": "DSC",
+      "title": "Hidden Data in Random Matrices",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 180A"
+        ],
+        [
+          "MATH 18",
+          "MATH 31AH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "credit exclusion"
+      ],
+      "ambiguities": [
+        {
+          "kind": "advisory",
+          "fragment": "Completion of MATH 102 is encouraged but not required"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc155",
+      "content_hash": "sha256:13c06e0cda97ab6552f5dbe16cae917d42539392625bd743c64d8fdac240f24c",
+      "stale": false
+    },
+    "DSC 160": {
+      "id": "DSC 160",
+      "department": "DSC",
+      "title": "Data Science and the Arts",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 80"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc160",
+      "content_hash": "sha256:b0dca0715aaf9c6a7a74f6a6978dcd745d569b1145b3c23701b1ba9b0bd040bc",
+      "stale": false
+    },
+    "DSC 161": {
+      "id": "DSC 161",
+      "department": "DSC",
+      "title": "Text as Data",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "ECON 5",
+          "POLI 170A",
+          "POLI 171",
+          "POLI 30",
+          "POLI 30D",
+          "POLI 5",
+          "POLI 5D"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "credit exclusion",
+        "enrollment restriction",
+        "upper-division standing"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc161",
+      "content_hash": "sha256:84ba88a1bc0a473db7c01dc6c5a54821d0c54c37dc07328dde7dbb88454953ff",
+      "stale": false
+    },
+    "DSC 167": {
+      "id": "DSC 167",
+      "department": "DSC",
+      "title": "Fairness and Algorithmic Decision-Making",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 80"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc167",
+      "content_hash": "sha256:cf6dcfcfb3378f52f52b32de94bfa8e25332ea9db56b64b543a33ed190a813bd",
+      "stale": false
+    },
+    "DSC 170": {
+      "id": "DSC 170",
+      "department": "DSC",
+      "title": "Spatial Data Science and Applications",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 80"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc170",
+      "content_hash": "sha256:d96bb03eee5551b28dac2dbebd15015d97e40a36722674b6bfb011a5af773e0e",
+      "stale": false
+    },
+    "DSC 180A": {
+      "id": "DSC 180A",
+      "department": "DSC",
+      "title": "Data Science Project I",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 102"
+        ],
+        [
+          "MATH 189",
+          "DSC 152"
+        ],
+        [
+          "DSC 140B",
+          "CSE 151A",
+          "COGS 188",
+          "CSE 158",
+          "CSE 158R",
+          "DSC 148",
+          "DSC 140A"
+        ],
+        [
+          "DSC 140B",
+          "CSE 151A",
+          "COGS 188",
+          "CSE 158",
+          "CSE 158R",
+          "DSC 148",
+          "DSC 140A",
+          "DSC 106"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "major restriction"
+      ],
+      "ambiguities": [
+        {
+          "kind": "nested-and",
+          "fragment": "CSE 151A and DSC 106"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc180a",
+      "content_hash": "sha256:7e81cfdeb9adac656e0d224ee0856190495b1a966456d8e59f13f2847ecdafc9",
+      "stale": false
+    },
+    "DSC 180B": {
+      "id": "DSC 180B",
+      "department": "DSC",
+      "title": "Data Science Project II",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "DSC 180A"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc180b",
+      "content_hash": "sha256:aef619f292f5839718659bff2e15814eecb6979b29b31b9a24ad04cafa4d1773",
+      "stale": false
+    },
+    "DSC 190": {
+      "id": "DSC 190",
+      "department": "DSC",
+      "title": "Topics in Data Science",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "instructor consent"
+      ],
+      "ambiguities": [
+        {
+          "kind": "unresolved",
+          "fragment": "department"
+        },
+        {
+          "kind": "unresolved",
+          "fragment": "to ensure that students have the sufficient educational background for"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc190",
+      "content_hash": "sha256:bdcfe5f5f5bc8f801336e1cc66f15360eab8a99340a269c55488fa21f1b4eb53",
+      "stale": false
+    },
+    "DSC 191": {
+      "id": "DSC 191",
+      "department": "DSC",
+      "title": "Seminar in Data Science",
+      "units": 1.0,
+      "units_max": 2.0,
+      "units_text": "1 or 2",
+      "prereq_groups": [],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "instructor consent"
+      ],
+      "ambiguities": [
+        {
+          "kind": "unresolved",
+          "fragment": "Department"
+        },
+        {
+          "kind": "unresolved",
+          "fragment": "to ensure that students have sufficient educational background for a"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc191",
+      "content_hash": "sha256:d034890d1d20ae47d87c7637d4aa319f94bdf9311a64b5bb03561c7637b8f370",
+      "stale": false
+    },
+    "DSC 197": {
+      "id": "DSC 197",
+      "department": "DSC",
+      "title": "Data Science Internship",
+      "units": 1.0,
+      "units_max": 4.0,
+      "units_text": "1–4",
+      "prereq_groups": [],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "instructor consent",
+        "department approval"
+      ],
+      "ambiguities": [
+        {
+          "kind": "unresolved",
+          "fragment": "An application for Special Studies must be filed with the"
+        },
+        {
+          "kind": "unresolved",
+          "fragment": "the department chair"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc197",
+      "content_hash": "sha256:69392919171a7fb4f9e949c74de531ae469bb6eea60fe78e9c0720ff79562f86",
+      "stale": false
+    },
+    "DSC 198": {
+      "id": "DSC 198",
+      "department": "DSC",
+      "title": "Directed Group Study in Data Science",
+      "units": 2.0,
+      "units_max": 4.0,
+      "units_text": "2 or 4",
+      "prereq_groups": [],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "instructor consent",
+        "department approval"
+      ],
+      "ambiguities": [
+        {
+          "kind": "unresolved",
+          "fragment": "Department stamp required"
+        },
+        {
+          "kind": "unresolved",
+          "fragment": "An application for Special Studies must be filed with the"
+        },
+        {
+          "kind": "unresolved",
+          "fragment": "the department chair"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc198",
+      "content_hash": "sha256:643f91c5a58fb695f0484ecd323ee4bbb66c9187ad2295b0bd35453f1bf4bd4c",
+      "stale": false
+    },
+    "DSC 199": {
+      "id": "DSC 199",
+      "department": "DSC",
+      "title": "Independent Study for Data Science Undergraduates",
+      "units": 2.0,
+      "units_max": 4.0,
+      "units_text": "2 or 4",
+      "prereq_groups": [],
+      "concurrent_ok": false,
+      "conditions": [
+        "upper-division standing",
+        "instructor consent",
+        "department approval"
+      ],
+      "ambiguities": [
+        {
+          "kind": "unresolved",
+          "fragment": "An application for Special Studies must be filed with the"
+        },
+        {
+          "kind": "unresolved",
+          "fragment": "the department chair"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc199",
+      "content_hash": "sha256:1d55a9791cbde521c7f0c1164f9146440faffd825836e91a513eec77457317fa",
+      "stale": false
+    },
+    "CSE 11": {
+      "id": "CSE 11",
+      "department": "CSE",
+      "title": "Introduction to Programming and Computational Problem-Solving: Accelerated Pace",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [],
+      "concurrent_ok": false,
+      "conditions": [
+        "enrollment restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse11",
+      "content_hash": "sha256:21412ec47e86aa519979e78cc85c01a40937b4a5c603af4f6ad52abf555ee5ed",
+      "stale": false
+    },
+    "CSE 12": {
+      "id": "CSE 12",
+      "department": "CSE",
+      "title": "Basic Data Structures and Object-Oriented Design",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "CSE 8B",
+          "CSE 11"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "enrollment restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse12",
+      "content_hash": "sha256:0268cb6e8f9b6f972a417c297cdd533f919fca914c2890b75c31982093e8046a",
+      "stale": false
+    },
+    "CSE 15L": {
+      "id": "CSE 15L",
+      "department": "CSE",
+      "title": "Software Tools and Techniques Laboratory",
+      "units": 2.0,
+      "units_max": 2.0,
+      "units_text": "2",
+      "prereq_groups": [
+        [
+          "CSE 8B",
+          "CSE 11",
+          "CSE 12",
+          "DSC 30"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "enrollment restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse15l",
+      "content_hash": "sha256:d9ff3cb734de400abc25eff011b718be0f2fefa8e1e51e76549b17b1c8a7ccf8",
+      "stale": false
+    },
+    "CSE 100": {
+      "id": "CSE 100",
+      "department": "CSE",
+      "title": "Advanced Data Structures",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "CSE 21",
+          "MATH 154",
+          "MATH 158",
+          "MATH 184",
+          "MATH 188"
+        ],
+        [
+          "CSE 12"
+        ],
+        [
+          "CSE 15L",
+          "CSE 29",
+          "ECE 15"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "enrollment restriction",
+        "credit exclusion"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse100",
+      "content_hash": "sha256:7fd4e48c4a5ab7d3507f193e71f1a5c68adc846036cb5089ccd9acf3d94aad43",
+      "stale": false
+    },
+    "CSE 101": {
+      "id": "CSE 101",
+      "department": "CSE",
+      "title": "Design and Analysis of Algorithms",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "CSE 21",
+          "MATH 154",
+          "MATH 158",
+          "MATH 184",
+          "MATH 188"
+        ],
+        [
+          "CSE 12",
+          "DSC 30"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "enrollment restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse101",
+      "content_hash": "sha256:d09ded6710459451cdd2510a794a7695b772561873e62778fca320b43416ddd3",
+      "stale": false
+    },
+    "CSE 103": {
+      "id": "CSE 103",
+      "department": "CSE",
+      "title": "A Practical Introduction to Probability and Statistics",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 20B"
+        ],
+        [
+          "CSE 21",
+          "MATH 154",
+          "MATH 158",
+          "MATH 184",
+          "MATH 188"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse103",
+      "content_hash": "sha256:d33dedaed8c069f8209c9387797472c2f14d4265cd853d31315d8caf005ce148",
+      "stale": false
+    },
+    "CSE 151A": {
+      "id": "CSE 151A",
+      "department": "CSE",
+      "title": "Machine Learning: Learning Algorithms",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "CSE 12",
+          "DSC 40B"
+        ],
+        [
+          "CSE 15L",
+          "CSE 29",
+          "DSC 80"
+        ],
+        [
+          "COGS 118D",
+          "CSE 103",
+          "ECE 109",
+          "ECON 120A",
+          "MAE 108",
+          "MATH 180A",
+          "MATH 180B",
+          "MATH 181A",
+          "MATH 183",
+          "MATH 186"
+        ],
+        [
+          "MATH 18",
+          "MATH 31AH"
+        ],
+        [
+          "MATH 20C",
+          "MATH 31BH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse151a",
+      "content_hash": "sha256:fb7fe4fa48425d35baa965328f14ffd8569e62b381a67ac068e66dc80671e218",
+      "stale": false
+    },
+    "CSE 151B": {
+      "id": "CSE 151B",
+      "department": "CSE",
+      "title": "Deep Learning",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 20C",
+          "MATH 31BH"
+        ],
+        [
+          "BENG 134",
+          "COGS 118D",
+          "CSE 103",
+          "ECE 109",
+          "ECON 120A",
+          "MAE 108",
+          "MATH 180A",
+          "MATH 180B",
+          "MATH 181A",
+          "MATH 183",
+          "MATH 186",
+          "SE 125"
+        ],
+        [
+          "COGS 118A",
+          "COGS 118B",
+          "COGS 188",
+          "CSE 151A",
+          "DSC 140B",
+          "ECE 175A"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse151b",
+      "content_hash": "sha256:f8c1a49ba56f70a6d6d0cb26cffe8718b183fd3918c9d8628d139178d4383fbc",
+      "stale": false
+    },
+    "CSE 158": {
+      "id": "CSE 158",
+      "department": "CSE",
+      "title": "Recommender Systems and Web Mining",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "CSE 12",
+          "DSC 40B"
+        ],
+        [
+          "CSE 15L",
+          "CSE 29",
+          "DSC 80"
+        ],
+        [
+          "BENG 100",
+          "BENG 134",
+          "COGS 118D",
+          "CSE 103",
+          "ECE 109",
+          "ECON 120A",
+          "MAE 108",
+          "MATH 180A",
+          "MATH 180B",
+          "MATH 181A",
+          "MATH 183",
+          "MATH 186"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "major restriction",
+        "credit exclusion"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse158",
+      "content_hash": "sha256:1f74f23d75f0fe37a8d7ec578478c47a171892232b2d0b01503588e7dec7f667",
+      "stale": false
+    },
+    "ECE 101": {
+      "id": "ECE 101",
+      "department": "ECE",
+      "title": "Linear Systems Fundamentals",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "ECE 45"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "enrollment restriction"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/ECE.html#ece101",
+      "content_hash": "sha256:2e30011619f49664dbe85fd3adf03b5724af8a345318f1cd67fe5dd9f3802963",
+      "stale": false
+    },
+    "ECE 109": {
+      "id": "ECE 109",
+      "department": "ECE",
+      "title": "Engineering Probability and Statistics",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 20A"
+        ],
+        [
+          "MATH 20B"
+        ],
+        [
+          "MATH 20C",
+          "MATH 31BH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/ECE.html#ece109",
+      "content_hash": "sha256:aa432114955e6a07e53f9493b974ff7a2775893535538caa6a3ef1ad83ac8fe5",
+      "stale": false
+    },
+    "COGS 108": {
+      "id": "COGS 108",
+      "department": "COGS",
+      "title": "Data Science in Practice",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "CSE 11",
+          "CSE 8A",
+          "COGS 18",
+          "DSC 10",
+          "MAE 8"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/COGS.html#cogs108",
+      "content_hash": "sha256:dec99b86adb5d1ccee8239894187cbe600f654a091ff9c8a77c6dda5dda61dea",
+      "stale": false
+    },
+    "COGS 188": {
+      "id": "COGS 188",
+      "department": "COGS",
+      "title": "Artificial Intelligence Algorithms",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "COGS 109",
+          "COGS 118A",
+          "COGS 118B"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/COGS.html#cogs188",
+      "content_hash": "sha256:b51a1c0c2dbbc5516956ec3f0225e24c48290c91706d93cf79b8661effe0d03c",
+      "stale": false
+    },
+    "PHYS 2A": {
+      "id": "PHYS 2A",
+      "department": "PHYS",
+      "title": "Physics—Mechanics",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 10A",
+          "MATH 20A",
+          "MATH 20B",
+          "MATH 20C",
+          "MATH 31BH"
+        ],
+        [
+          "MATH 10B",
+          "MATH 20A",
+          "MATH 20B",
+          "MATH 20C",
+          "MATH 31BH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [
+        {
+          "kind": "advisory",
+          "fragment": "Recommended preparation: prior or concurrent enrollment in MATH 20B"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/PHYS.html#phys2a",
+      "content_hash": "sha256:a08b3b5fd21071afaa7b73fa35dd8380fcf3f6c4e8655e5c40cf134ade9aa8a9",
+      "stale": false
+    },
+    "PHYS 2B": {
+      "id": "PHYS 2B",
+      "department": "PHYS",
+      "title": "Physics—Electricity and Magnetism",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "PHYS 2A",
+          "PHYS 4A"
+        ],
+        [
+          "MATH 20B",
+          "MATH 20C",
+          "MATH 31BH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [
+        {
+          "kind": "advisory",
+          "fragment": "Recommended preparation: prior or concurrent enrollment in MATH 20C or"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/PHYS.html#phys2b",
+      "content_hash": "sha256:f7891f5f3709d9acac1062ca7528783c606b74a5c29cfe1a7cea569a1c4b3160",
+      "stale": false
+    },
+    "PHYS 2C": {
+      "id": "PHYS 2C",
+      "department": "PHYS",
+      "title": "Physics—Fluids, Waves, Thermodynamics, and Optics",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "PHYS 2A",
+          "PHYS 4A"
+        ],
+        [
+          "MATH 20C",
+          "MATH 31BH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [
+        {
+          "kind": "advisory",
+          "fragment": "Recommended preparation: prior or concurrent enrollment in MATH 20D"
+        },
+        {
+          "kind": "advisory",
+          "fragment": "Prior completion of PHYS 2B is strongly recommended"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/PHYS.html#phys2c",
+      "content_hash": "sha256:a771449500063b8002cdf55285072207d613aa91a6322c924d45486b71ad3d14",
+      "stale": false
+    },
+    "PHYS 4A": {
+      "id": "PHYS 4A",
+      "department": "PHYS",
+      "title": "Physics for Physics Majors–Mechanics",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "MATH 20A"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [
+        {
+          "kind": "advisory",
+          "fragment": "Recommended preparation: prior or concurrent enrollment in MATH 20B and"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/PHYS.html#phys4a",
+      "content_hash": "sha256:b2af85c445b5b789d8c85d6be14fa34d8fb207a34fe1f29623e3a419e38e2cd3",
+      "stale": false
+    },
+    "PHYS 4B": {
+      "id": "PHYS 4B",
+      "department": "PHYS",
+      "title": "Physics for Physics Majors—Fluids, Waves, Statistical and Thermal Physics",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "PHYS 4A"
+        ],
+        [
+          "MATH 20A"
+        ],
+        [
+          "MATH 20B"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [
+        {
+          "kind": "advisory",
+          "fragment": "Recommended preparation: prior or concurrent enrollment in MATH 20C or"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/PHYS.html#phys4b",
+      "content_hash": "sha256:825ba4ca67c4e6dccac7b4dc68cdfa00dc332a8595e8d37e065db0c5a6a622f5",
+      "stale": false
+    },
+    "PHYS 4C": {
+      "id": "PHYS 4C",
+      "department": "PHYS",
+      "title": "Physics for Physics Majors—Electricity and Magnetism",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "PHYS 4A",
+          "PHYS 2A"
+        ],
+        [
+          "PHYS 4A",
+          "PHYS 2B"
+        ],
+        [
+          "PHYS 4A",
+          "PHYS 2C"
+        ],
+        [
+          "PHYS 4B",
+          "PHYS 2A"
+        ],
+        [
+          "PHYS 4B",
+          "PHYS 2B"
+        ],
+        [
+          "PHYS 4B",
+          "PHYS 2C"
+        ],
+        [
+          "MATH 20A",
+          "MATH 31BH"
+        ],
+        [
+          "MATH 20B",
+          "MATH 31BH"
+        ],
+        [
+          "MATH 20C",
+          "MATH 31BH"
+        ],
+        [
+          "MATH 18",
+          "MATH 20F",
+          "MATH 31AH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [
+        {
+          "kind": "advisory",
+          "fragment": "Recommended preparation: prior or concurrent enrollment in MATH 20E or"
+        }
+      ],
+      "catalog_url": "https://catalog.ucsd.edu/courses/PHYS.html#phys4c",
+      "content_hash": "sha256:40f07b6ad6b070fe5f19be3c264c6c5436713b576f70352d1776947c4a5fa144",
+      "stale": false
+    },
+    "CHEM 6A": {
+      "id": "CHEM 6A",
+      "department": "CHEM",
+      "title": "General Chemistry I",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "CHEM 4",
+          "<exam or placement>",
+          "MATH 3C"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CHEM.html#chem6a",
+      "content_hash": "sha256:d79e7ab3bf4de7895e481e1e6ec50988090ee87b31c64a1edc68adf890c830eb",
+      "stale": false
+    },
+    "CHEM 6B": {
+      "id": "CHEM 6B",
+      "department": "CHEM",
+      "title": "General Chemistry II",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "CHEM 6A",
+          "CHEM 6AH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CHEM.html#chem6b",
+      "content_hash": "sha256:4a3fec10c8843dc507e1214b72741f24e0858bfab2d3891d0e8da232b3eb11c0",
+      "stale": false
+    },
+    "CHEM 6C": {
+      "id": "CHEM 6C",
+      "department": "CHEM",
+      "title": "General Chemistry III",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "CHEM 6B",
+          "CHEM 6BH"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CHEM.html#chem6c",
+      "content_hash": "sha256:11d970ce9637eac631d77d97aa875401af9de7d16104f1914707daa59fa380b9",
+      "stale": false
+    },
+    "CHEM 11": {
+      "id": "CHEM 11",
+      "department": "CHEM",
+      "title": "The Periodic Table",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/CHEM.html#chem11",
+      "content_hash": "sha256:630306cfa1b76bcc9ac515db923e6bbaf1287bf428c2a5207eae80079e504499",
+      "stale": false
+    },
+    "BILD 1": {
+      "id": "BILD 1",
+      "department": "BIOL",
+      "title": "The Cell",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/BIOL.html#bild1",
+      "content_hash": "sha256:4471576d341c4cc4507022644b14f0d3fc6a0ad2f641b46016de8d6e035b97c7",
+      "stale": false
+    },
+    "BILD 2": {
+      "id": "BILD 2",
+      "department": "BIOL",
+      "title": "Multicellular Life",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "BILD 1"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/BIOL.html#bild2",
+      "content_hash": "sha256:82c74115231c7280c41fe81af2d8308eea8f77c981d56f5fb5bac253fedc1afc",
+      "stale": false
+    },
+    "BILD 3": {
+      "id": "BILD 3",
+      "department": "BIOL",
+      "title": "Organismic and Evolutionary Biology",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/BIOL.html#bild3",
+      "content_hash": "sha256:aab09222b1270e0faafbfafc0140e3d491fb869ad3eb0a9d905ff0b717d525f4",
+      "stale": false
+    },
+    "BIBC 100": {
+      "id": "BIBC 100",
+      "department": "BIOL",
+      "title": "Structural Biochemistry",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "BENG 120",
+          "CHEM 140A",
+          "CHEM 40A",
+          "CHEM 41A"
+        ],
+        [
+          "BENG 120",
+          "CHEM 140B",
+          "CHEM 40B",
+          "CHEM 41B"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/BIOL.html#bibc100",
+      "content_hash": "sha256:0ee0e4bddef9536f529eedfdeb5aaaa08e27a825172114740f74fbbc6b33c755",
+      "stale": false
+    },
+    "BIBC 102": {
+      "id": "BIBC 102",
+      "department": "BIOL",
+      "title": "Metabolic Biochemistry",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [
+        [
+          "BENG 120",
+          "CHEM 140A",
+          "CHEM 40A",
+          "CHEM 41A"
+        ],
+        [
+          "BENG 120",
+          "CHEM 140B",
+          "CHEM 40B",
+          "CHEM 41B"
+        ]
+      ],
+      "concurrent_ok": false,
+      "conditions": [
+        "credit exclusion"
+      ],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/BIOL.html#bibc102",
+      "content_hash": "sha256:b25cbfc38da28048097c69054e9a8bbf188a0141479e443c6a3bda3ff0d03f49",
+      "stale": false
+    },
+    "COGS 9": {
+      "id": "COGS 9",
+      "department": "COGS",
+      "title": "Introduction to Data Science",
+      "units": 4.0,
+      "units_max": 4.0,
+      "units_text": "4",
+      "prereq_groups": [],
+      "concurrent_ok": false,
+      "conditions": [],
+      "ambiguities": [],
+      "catalog_url": "https://catalog.ucsd.edu/courses/COGS.html#cogs9",
+      "content_hash": "sha256:1126eeb5140cb30dd13fb8e06ecdcb2228c17dfa4239aeb46190bef88751ecf7",
+      "stale": false
+    }
+  },
+  "referenced": {
+    "MATH 4C": {
+      "defined": true
+    },
+    "MATH 10A": {
+      "defined": true
+    },
+    "MATH 10B": {
+      "defined": true
+    },
+    "MATH 10C": {
+      "defined": true
+    },
+    "MATH 31BH": {
+      "defined": true
+    },
+    "MATH 20F": {
+      "defined": false
+    },
+    "MATH 31AH": {
+      "defined": true
+    },
+    "BENG 134": {
+      "defined": false
+    },
+    "ECON 120A": {
+      "defined": false
+    },
+    "MAE 108": {
+      "defined": false
+    },
+    "MATH 186": {
+      "defined": true
+    },
+    "SE 125": {
+      "defined": false
+    },
+    "CSE 29": {
+      "defined": true
+    },
+    "MATH 180B": {
+      "defined": true
+    },
+    "ECON 5": {
+      "defined": false
+    },
+    "POLI 170A": {
+      "defined": false
+    },
+    "POLI 171": {
+      "defined": false
+    },
+    "POLI 30": {
+      "defined": false
+    },
+    "POLI 30D": {
+      "defined": false
+    },
+    "POLI 5": {
+      "defined": false
+    },
+    "POLI 5D": {
+      "defined": false
+    },
+    "DSC 152": {
+      "defined": false
+    },
+    "CSE 158R": {
+      "defined": true
+    },
+    "CSE 8B": {
+      "defined": false
+    },
+    "CSE 21": {
+      "defined": true
+    },
+    "MATH 154": {
+      "defined": true
+    },
+    "MATH 158": {
+      "defined": true
+    },
+    "MATH 184": {
+      "defined": true
+    },
+    "MATH 188": {
+      "defined": true
+    },
+    "ECE 15": {
+      "defined": true
+    },
+    "COGS 118D": {
+      "defined": true
+    },
+    "COGS 118A": {
+      "defined": true
+    },
+    "COGS 118B": {
+      "defined": true
+    },
+    "ECE 175A": {
+      "defined": true
+    },
+    "BENG 100": {
+      "defined": false
+    },
+    "ECE 45": {
+      "defined": true
+    },
+    "CSE 8A": {
+      "defined": true
+    },
+    "COGS 18": {
+      "defined": true
+    },
+    "MAE 8": {
+      "defined": false
+    },
+    "COGS 109": {
+      "defined": true
+    },
+    "CHEM 4": {
+      "defined": true
+    },
+    "MATH 3C": {
+      "defined": true
+    },
+    "CHEM 6AH": {
+      "defined": true
+    },
+    "CHEM 6BH": {
+      "defined": true
+    },
+    "BENG 120": {
+      "defined": false
+    },
+    "CHEM 140A": {
+      "defined": false
+    },
+    "CHEM 40A": {
+      "defined": true
+    },
+    "CHEM 41A": {
+      "defined": true
+    },
+    "CHEM 140B": {
+      "defined": false
+    },
+    "CHEM 40B": {
+      "defined": true
+    },
+    "CHEM 41B": {
+      "defined": true
+    }
+  }
+}

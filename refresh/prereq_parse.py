@@ -1,0 +1,220 @@
+"""Parse a catalog prerequisite clause into AND-of-OR groups. Pure functions."""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass, field
+
+from refresh.ids import scan_ids
+
+# Requirements the catalog phrases in prose, and the courses it names as
+# acceptable ways to satisfy them.
+ABSTRACT_SATISFIERS: dict[str, list[str]] = {
+    "<probability>": ["MATH 180A", "MATH 183", "CSE 103", "ECE 109"],
+    "<programming>": ["DSC 20", "DSC 30", "CSE 11", "CSE 12", "DSC 10"],
+    "<upper-division standing>": [],   # standing, not a course
+    "<instructor approval>": [],       # administrative
+    "<qualifying elective>": [],       # depends on the student's track
+    "<high school chemistry>": [],     # external
+    "<exam or placement>": [],         # test score or placement: not checkable here
+}
+
+ABSTRACT_PATTERNS: list[tuple[re.Pattern, str]] = [
+    (re.compile(r"placement|\b(?:AP|IB|SAT|ACT)\b|\bscores?\b|\bequivalent\b|"
+                r"\bexam\b", re.I), "<exam or placement>"),
+    (re.compile(r"probability(\s+course)?", re.I), "<probability>"),
+    (re.compile(r"programming(\s+(course|background))?", re.I), "<programming>"),
+    (re.compile(r"upper-division standing", re.I), "<upper-division standing>"),
+    (re.compile(r"instructor approval", re.I), "<instructor approval>"),
+    (re.compile(r"qualifying elective", re.I), "<qualifying elective>"),
+    (re.compile(r"high school chemistry", re.I), "<high school chemistry>"),
+]
+
+# Sentences that restrict who may enrol rather than naming courses.
+CONDITION_PATTERNS: list[tuple[re.Pattern, str]] = [
+    (re.compile(r"upper[- ]division standing", re.I), "upper-division standing"),
+    (re.compile(r"restricted to .*\bmajors?\b|within the .*\bmajors?\b|\bmajors? only\b",
+                re.I), "major restriction"),
+    (re.compile(r"consent of (?:the )?instructor|instructor(?:'s)? (?:consent|permission)",
+                re.I), "instructor consent"),
+    (re.compile(r"(?:approval|consent) of (?:the )?department|department(?:al)? "
+                r"(?:approval|consent)", re.I), "department approval"),
+    (re.compile(r"\bGPA\b|grade point average", re.I), "gpa"),
+    (re.compile(r"\d+\s+units\b|units completed", re.I), "units completed"),
+]
+
+# Sentences that exclude students who already hold other credit (no groups).
+_EXCLUSION_RE = re.compile(
+    r"receive\s+credit\s+for|credit\s+for\s+both|credit\s+(?:is\s+)?not\s+(?:allowed|given|granted|awarded)"
+    r"|not\s+open\s+to\s+students|may\s+not\s+enroll", re.I)
+
+# Sentences that carry no requirement at all.
+_IGNORED_RE = re.compile(r"coscheduled|co-scheduled|space\s+permits", re.I)
+# Enrolment restrictions: conditions, never course options.
+_RESTRICTION_RE = re.compile(r"^(?:restricted|limited|open)\s+(?:only\s+)?to\b", re.I)
+_MAJOR_CODE_RE = re.compile(r"\b[A-Z]{2}\d{2}\b")
+# Subject codes seen in catalog text; matched case-insensitively before a number.
+KNOWN_SUBJECTS = ("DSC", "MATH", "CSE", "PHYS", "BILD", "BIOL", "CHEM", "COGS", "ECE",
+                  "ECON", "BENG", "MAE", "POLI", "SE", "SIO", "MGT", "LING", "PSYC",
+                  "STAT", "CENG", "NANO", "COMM", "TDGE")
+_SUBJECT_RE = re.compile(r"\b(" + "|".join(KNOWN_SUBJECTS) + r")(?=[\s-]*\d)", re.I)
+_OR_BETTER_RE = re.compile(r"\s+or\s+(?:better|higher)\b", re.I)
+_ONE_OF_RE = re.compile(r"\bone\s+of\s+([^;.]*?)[.;\s]*$", re.I)
+_SCORE_RE = re.compile(r"\bscores?\s+of\s+\d+(?:\s+or\s+\d+)?", re.I)
+_WORD_AND_RE = re.compile(r"\s+and\s+", re.I)
+_SEQUENCE_RE = re.compile(r"\d+[A-Z]?(?:/[A-Z])?-[A-Z]\b")
+_COMMA_OR_RE = re.compile(r",\s*or\s+", re.I)
+_ADVISORY_RE = re.compile(r"encouraged|recommended|not\s+required", re.I)
+# Abstract tokens that are conditions, never prerequisite groups.
+_TOKEN_CONDITIONS = {
+    "<upper-division standing>": "upper-division standing",
+    "<instructor approval>": "instructor consent",
+    "<high school chemistry>": "external requirement",
+}
+
+_CONCURRENT_RE = re.compile(r"[,;]?\s*(?:which\s+)?(?:(?:may|can|must)\s+)?(?:be\s+)?"
+                            r"(?:taken\s+)?concurrent(?:ly)?\b", re.I)
+_DANGLING_RE = re.compile(r"^[\s,;]*(?:(?:and|or)\b[\s,;]*)?|[\s,;]*(?:\b(?:and|or)[\s,;]*)?$", re.I)
+_NONE_RE = re.compile(r"^(?:none|no prerequisites?)\W*$", re.I)
+_PREFIX_RE = re.compile(r"^\s*(?:required\s+)?prerequisites?\s*:\s*", re.I)
+_AND_RE = re.compile(r",\s*and\s+|,\s*|\s+and\s+", re.I)
+_OR_RE = re.compile(r"\s+or\s+", re.I)
+_MAX_FRAGMENT_WORDS = 10
+
+
+@dataclass
+class ParsedPrereq:
+    groups: list[list[str]] = field(default_factory=list)
+    concurrent_ok: bool = False
+    conditions: list[str] = field(default_factory=list)
+    ambiguities: list[dict] = field(default_factory=list)
+
+
+def _split_depth0(text: str, sep: re.Pattern) -> list[str]:
+    """Split on `sep` only where parenthesis depth is 0."""
+    parts, depth, start, i = [], 0, 0, 0
+    while i < len(text):
+        ch = text[i]
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth = max(0, depth - 1)
+        elif depth == 0:
+            m = sep.match(text, i)
+            if m and m.end() > i:
+                parts.append(text[start:i])
+                start = i = m.end()
+                continue
+        i += 1
+    parts.append(text[start:])
+    return [p.strip() for p in parts if p.strip()]
+
+
+def _strip_outer_parens(text: str) -> str:
+    text = text.strip()
+    while text.startswith("(") and text.endswith(")"):
+        depth = 0
+        for i, ch in enumerate(text):
+            depth += (ch == "(") - (ch == ")")
+            if depth == 0 and i < len(text) - 1:
+                return text  # the first paren closes early: not a wrapper
+        text = text[1:-1].strip()
+    return text
+
+
+def _fragment(text: str) -> str:
+    return " ".join(text.split()[:_MAX_FRAGMENT_WORDS])
+
+
+def parse_prereq_clause(text: str, subject: str) -> ParsedPrereq:
+    out = ParsedPrereq()
+    requirement: list[str] = []
+    for sent in re.split(r"(?<=[.;])\s+", text or ""):
+        sent = _PREFIX_RE.sub("", sent).strip()
+        if not sent or _NONE_RE.match(sent.rstrip(".; ")):
+            continue
+        if _IGNORED_RE.search(sent):
+            continue
+        if _EXCLUSION_RE.search(sent):
+            if "credit exclusion" not in out.conditions:
+                out.conditions.append("credit exclusion")
+            continue
+        if _ADVISORY_RE.search(sent):
+            out.ambiguities.append({"kind": "advisory", "fragment": _fragment(sent.rstrip(".; "))})
+            continue
+        if _RESTRICTION_RE.match(sent):
+            conds = [t for pat, t in CONDITION_PATTERNS if pat.search(sent)] \
+                or ["enrollment restriction"]
+            out.conditions.extend(c for c in conds if c not in out.conditions)
+            continue
+        sent = _SUBJECT_RE.sub(lambda m: m.group(1).upper(), sent)
+        sent = _OR_BETTER_RE.sub("", sent)
+        sent = _SCORE_RE.sub("score", sent)
+        if re.search(r"\bmajors?\b|restricted", sent, re.I):
+            sent = _MAJOR_CODE_RE.sub(" ", sent)
+        sent = _ONE_OF_RE.sub(lambda m: "(" + re.sub(
+            r",\s*(?:or\s+)?|\s+or\s+", " or ", m.group(1).strip()) + ")", sent)
+        sent = _COMMA_OR_RE.sub(" or ", sent)
+        hits = [tok for pat, tok in CONDITION_PATTERNS if pat.search(sent)]
+        out.conditions.extend(t for t in hits if t not in out.conditions)
+        is_condition = bool(hits)
+        for pat, _ in CONDITION_PATTERNS:
+            sent = pat.sub(" ", sent)
+        if _CONCURRENT_RE.search(sent):
+            out.concurrent_ok = True
+            sent = _CONCURRENT_RE.sub(" ", sent)
+        # A condition sentence keeps only what still names courses.
+        if is_condition and not scan_ids(sent, subject)[0]:
+            continue
+        sent = _DANGLING_RE.sub("", sent.strip(" .;,")).strip(" .;,")
+        if sent:
+            requirement.append(sent)
+
+    carried = subject
+    for sent in requirement:
+        for part in _split_depth0(sent, _AND_RE):
+            alts: list[list[str]] = []        # each alternative is a conjunction
+            for opt in _split_depth0(_strip_outer_parens(part), _OR_RE):
+                opt = _strip_outer_parens(opt)
+                ids, carried = scan_ids(opt, carried)
+                token = None if ids else next(
+                    (t for pat, t in ABSTRACT_PATTERNS if pat.search(opt)), None)
+                if ids:
+                    if len(_split_depth0(opt, _WORD_AND_RE)) > 1:
+                        alts.append(ids)      # "A and B" inside an OR: distribute later
+                        out.ambiguities.append(
+                            {"kind": "nested-and", "fragment": _fragment(opt)})
+                    elif len(ids) > 1 and _SEQUENCE_RE.search(opt):
+                        alts.append(ids)      # "MATH 20A-B": every member is needed
+                    else:
+                        alts.extend([i] for i in ids)
+                    if re.search(r"\([^)]*\sand\s", opt, re.I) and not any(
+                            a["kind"] == "nested-and" and a["fragment"] == _fragment(opt)
+                            for a in out.ambiguities):
+                        out.ambiguities.append(
+                            {"kind": "nested-and", "fragment": _fragment(opt)})
+                elif token in _TOKEN_CONDITIONS:
+                    cond = _TOKEN_CONDITIONS[token]
+                    if cond not in out.conditions:
+                        out.conditions.append(cond)
+                elif token:
+                    alts.append([token])
+                else:
+                    out.ambiguities.append(
+                        {"kind": "unresolved", "fragment": _fragment(opt)})
+            for group in _to_groups(alts):
+                if group not in out.groups:
+                    out.groups.append(group)
+    return out
+
+
+def _to_groups(alts: list[list[str]]) -> list[list[str]]:
+    """AND-of-OR groups for an OR of conjunctions (one pick from each conjunction)."""
+    if not alts:
+        return []
+    if len(alts) == 1:
+        return [[i] for i in alts[0]]           # a lone sequence: AND of its members
+    groups: list[list[str]] = [[]]
+    for conj in alts:
+        groups = [g + [i] for g in groups for i in conj]
+    return [list(dict.fromkeys(g)) for g in groups]

@@ -1,7 +1,7 @@
 """Retrieval over the course catalog.
 
 The first version of this app pasted the entire catalog (~32 KB of JSON) into
-every request. That works at 68 courses and stops working well before the full
+every request. That works at 69 courses and stops working well before the full
 UCSD catalog, and it spends the model's attention on 60-odd courses that have
 nothing to do with the question.
 
@@ -39,7 +39,7 @@ load_dotenv(Path(__file__).with_name(".env"))
 
 CACHE_PATH = Path(__file__).with_name(".embedding_cache.json")
 EMBED_MODEL = "gemini-embedding-001"
-# 3072 dims per vector is more than 68 short documents need; 768 keeps the
+# 3072 dims per vector is more than 69 short documents need; 768 keeps the
 # on-disk cache small with no measurable loss in ranking here.
 EMBED_DIMS = 768
 
@@ -62,13 +62,15 @@ def _tokens(text: str) -> list[str]:
     return [t for t in _TOKEN_RE.findall(text.lower()) if t not in _STOP and len(t) > 1]
 
 
-def build_documents(cg: CourseGraph) -> dict[str, str]:
+def build_documents(cg: CourseGraph, offerings=None) -> dict[str, str]:
     """One retrieval document per course.
 
     The prerequisite expression and the list of courses a course unlocks are
     folded into the text, so "what do I need before DSC 100" and "what does
     DSC 80 open up" both retrieve the right rows instead of relying on the
-    model to already know the structure.
+    model to already know the structure. Catalog descriptions are not stored,
+    so the topic keywords stand in for them. `offerings` is reserved for later
+    and ignored for now.
     """
     docs: dict[str, str] = {}
     for cid, course in cg.courses.items():
@@ -85,7 +87,8 @@ def build_documents(cg: CourseGraph) -> dict[str, str]:
             f"Prerequisites: {prereq_text}. "
             f"Leads to: {', '.join(unlocked) if unlocked else 'nothing further'}. "
             + (f"May be replaced by: {', '.join(subs)}. " if subs else "")
-            + (course.get("description") or "")
+            + ("Topics: " + ", ".join(course.get("keywords") or []) + "."
+               if course.get("keywords") else "")
         )
     return docs
 

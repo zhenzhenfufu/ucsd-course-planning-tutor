@@ -45,9 +45,23 @@ def test_backward_statement_points_the_right_way(cg):
 
 
 def test_forward_statement_points_the_right_way(cg):
-    # "MATH 20B ... Prerequisite for MATH 20C"
+    # MATH 20B -> MATH 20C is a reviewed ordering (add_edges) and must bind.
     assert cg.graph.has_edge("MATH 20B", "MATH 20C")
     assert not cg.graph.has_edge("MATH 20C", "MATH 20B")
+    assert ["MATH 20A"] in cg.requirements["MATH 20B"].groups
+    assert cg.missing_groups("MATH 20B", set()) == [["MATH 20A"]]
+    assert cg.missing_groups("MATH 20B", {"MATH 20A"}) == []
+    assert cg.missing_groups("MATH 20C", set()) == [["MATH 20B"]]
+
+
+def test_validator_enforces_the_add_edges_ordering(cg):
+    wrong = [{"term": "F", "courses": ["MATH 20B", "DSC 10", "CSE 11"]},
+             {"term": "W", "courses": ["MATH 20A", "DSC 20", "CSE 12"]}]
+    bad = [v for v in validate(wrong, cg) if v.code == "PREREQ_MISSING"]
+    assert any(v.course == "MATH 20B" for v in bad)
+    plan = [{"term": "F", "courses": ["MATH 20B", "DSC 10", "CSE 11"]}]
+    assert not any(v.code == "PREREQ_MISSING" and v.course == "MATH 20B"
+                   for v in validate(plan, cg, completed=["MATH 20A"]))
 
 
 def test_substitution_is_not_a_prerequisite(cg):
@@ -88,11 +102,20 @@ def test_substitute_satisfies_a_group(cg):
 
 
 def test_out_of_catalog_references_are_reported_not_dropped(cg):
-    texts = {a["text"] for a in cg.ambiguities}
-    # MATH 31AH is an honours alternative the catalog names for several courses
-    # and the dataset does not carry. It must be reported, not silently dropped.
-    assert "MATH 31AH" in texts
+    # MATH 31AH is an honours alternative the catalog names but the scope omits.
+    assert "MATH 31AH" in cg.referenced
+    options = {o for g in cg.requirements["DSC 40A"].groups for o in g}
+    assert "MATH 31AH" in options
     assert all(a["kind"] for a in cg.ambiguities)
+
+
+def test_dsc_180a_accepts_dsc_152(cg):
+    assert ["DSC 152", "MATH 189"] in [sorted(g) for g in cg.requirements["DSC 180A"].groups]
+
+
+def test_completed_out_of_scope_option_satisfies(cg):
+    assert "ECON 120A" not in cg.courses
+    assert cg.satisfied(["ECON 120A", "MATH 180A"], {"ECON 120A"})
 
 
 def test_topological_layers_cover_everything(cg):
@@ -188,6 +211,18 @@ def test_documents_include_structure(cg):
     assert "Leads to:" in docs["DSC 80"]
 
 
+def test_documents_have_keywords_not_descriptions(cg):
+    docs = build_documents(cg)
+    assert "Topics:" in docs["DSC 100"] and "SQL" in docs["DSC 100"]
+    assert all(d.count("Prerequisites:") == 1 for d in docs.values())
+
+
+def test_tfidf_finds_sql(cg):
+    index = TfidfIndex(build_documents(cg))
+    hits = [h.course_id for h in index.search("SQL", k=3)]
+    assert "DSC 100" in hits
+
+
 def test_tfidf_finds_an_obvious_match(cg):
     index = TfidfIndex(build_documents(cg))
     hits = [h.course_id for h in index.search("machine learning", k=5)]
@@ -213,3 +248,13 @@ def test_retrieval_context_is_much_smaller_than_the_catalog(cg):
     ctx = context_for("what do I need before DSC 100", index, k=6, cg=cg)
     full = json.dumps(cg.courses, ensure_ascii=False)
     assert len(ctx) < 0.25 * len(full)
+
+
+def test_current_data_needs_no_dropped_edges(cg):
+    assert [a for a in cg.ambiguities if a["kind"] == "cycle-edge-dropped"] == []
+    assert check_acyclic(cg.graph) == []
+
+
+def test_cse_158_has_only_its_real_prerequisites(cg):
+    flat = {o for g in cg.requirements["CSE 158"].groups for o in g}
+    assert not flat & {"CSE 258", "CSE 158R", "DSC 148"}

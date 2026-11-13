@@ -1,0 +1,680 @@
+{
+  "_comment": "Hand-maintained. keywords are written by the owner; never copy catalog or department text.",
+  "by_arrangement": [
+    "DSC 197",
+    "DSC 198",
+    "DSC 199"
+  ],
+  "courses": {
+    "MATH 20A": {
+      "department": "MATH",
+      "keywords": [
+        "limits",
+        "derivatives",
+        "optimization",
+        "intro to integration",
+        "calculus sequence"
+      ]
+    },
+    "MATH 20B": {
+      "department": "MATH",
+      "keywords": [
+        "integration techniques",
+        "infinite series",
+        "Taylor series",
+        "polar coordinates"
+      ]
+    },
+    "MATH 20C": {
+      "department": "MATH",
+      "keywords": [
+        "multivariable calculus",
+        "partial derivatives",
+        "multiple integrals",
+        "vector calculus"
+      ]
+    },
+    "MATH 18": {
+      "department": "MATH",
+      "keywords": [
+        "linear systems",
+        "matrices",
+        "determinants",
+        "vector spaces",
+        "eigenvalues"
+      ]
+    },
+    "MATH 180A": {
+      "department": "MATH",
+      "keywords": [
+        "probability",
+        "random variables",
+        "expectation",
+        "central limit theorem"
+      ]
+    },
+    "MATH 181A": {
+      "department": "MATH",
+      "keywords": [
+        "estimation",
+        "hypothesis testing",
+        "regression",
+        "experimental design"
+      ]
+    },
+    "MATH 181B": {
+      "department": "MATH",
+      "keywords": [
+        "ANOVA",
+        "nonparametric methods",
+        "multiple regression",
+        "categorical data"
+      ]
+    },
+    "MATH 183": {
+      "department": "MATH",
+      "keywords": [
+        "applied statistics",
+        "hypothesis testing",
+        "regression",
+        "ANOVA"
+      ]
+    },
+    "MATH 189": {
+      "department": "MATH",
+      "keywords": [
+        "exploratory analysis",
+        "visualization",
+        "statistical inference",
+        "bootstrapping",
+        "Python and R"
+      ]
+    },
+    "MATH 173A": {
+      "department": "MATH",
+      "keywords": [
+        "convex optimization",
+        "linear programming",
+        "duality",
+        "support vector machines"
+      ]
+    },
+    "MATH 173B": {
+      "department": "MATH",
+      "keywords": [
+        "unconstrained optimization",
+        "gradient methods",
+        "conjugate gradient",
+        "ADMM"
+      ]
+    },
+    "MATH 182": {
+      "department": "MATH",
+      "keywords": [
+        "PCA",
+        "SVD",
+        "random matrices",
+        "data visualization"
+      ]
+    },
+    "DSC 10": {
+      "department": "DSC",
+      "keywords": [
+        "Python",
+        "pandas",
+        "visualization",
+        "statistical inference",
+        "prediction"
+      ],
+      "links": {
+        "Course Site": "https://dsc10.com"
+      }
+    },
+    "DSC 20": {
+      "department": "DSC",
+      "keywords": [
+        "recursion",
+        "object-oriented programming",
+        "interpreters",
+        "linked lists",
+        "Python"
+      ]
+    },
+    "DSC 30": {
+      "department": "DSC",
+      "keywords": [
+        "Java",
+        "data structures",
+        "heaps and trees",
+        "hash tables",
+        "complexity analysis"
+      ]
+    },
+    "DSC 40A": {
+      "department": "DSC",
+      "keywords": [
+        "empirical risk minimization",
+        "optimization",
+        "regression",
+        "classification",
+        "probability"
+      ],
+      "links": {
+        "Course Site": "https://dsc40a.com"
+      }
+    },
+    "DSC 40B": {
+      "department": "DSC",
+      "keywords": [
+        "runtime analysis",
+        "graph algorithms",
+        "dynamic programming",
+        "combinatorics"
+      ],
+      "links": {
+        "Course Site": "https://dsc40b.com"
+      }
+    },
+    "DSC 80": {
+      "department": "DSC",
+      "keywords": [
+        "data cleaning",
+        "feature engineering",
+        "predictive modeling",
+        "pandas",
+        "scikit-learn"
+      ],
+      "links": {
+        "Course Site": "https://dsc80.com"
+      }
+    },
+    "DSC 100": {
+      "department": "DSC",
+      "keywords": [
+        "SQL",
+        "relational databases",
+        "normalization",
+        "transactions",
+        "NoSQL"
+      ]
+    },
+    "DSC 102": {
+      "department": "DSC",
+      "keywords": [
+        "scalable analytics",
+        "distributed systems",
+        "MapReduce",
+        "Spark",
+        "memory hierarchy"
+      ]
+    },
+    "DSC 104": {
+      "department": "DSC",
+      "keywords": [
+        "NoSQL",
+        "graph databases",
+        "array databases",
+        "data models",
+        "parallel programming"
+      ]
+    },
+    "DSC 106": {
+      "department": "DSC",
+      "keywords": [
+        "data visualization",
+        "D3",
+        "HCI",
+        "statistical graphics",
+        "cognitive psychology"
+      ]
+    },
+    "DSC 120": {
+      "department": "DSC",
+      "keywords": [
+        "sampling",
+        "Fourier analysis",
+        "compression",
+        "filters",
+        "wavelets"
+      ]
+    },
+    "DSC 123A": {
+      "department": "DSC",
+      "keywords": [
+        "convex optimization",
+        "linear programming",
+        "duality",
+        "support vector machines",
+        "interior-point methods"
+      ]
+    },
+    "DSC 123B": {
+      "department": "DSC",
+      "keywords": [
+        "gradient descent",
+        "conjugate gradient",
+        "stochastic gradient",
+        "ADMM"
+      ]
+    },
+    "DSC 140A": {
+      "department": "DSC",
+      "keywords": [
+        "Bayesian networks",
+        "Markov models",
+        "hidden Markov models",
+        "online learning"
+      ]
+    },
+    "DSC 140B": {
+      "department": "DSC",
+      "keywords": [
+        "deep learning",
+        "clustering",
+        "PCA",
+        "autoencoders",
+        "CNNs",
+        "RNNs"
+      ]
+    },
+    "DSC 148": {
+      "department": "DSC",
+      "keywords": [
+        "pattern mining",
+        "classification",
+        "clustering",
+        "association rules",
+        "data mining"
+      ]
+    },
+    "DSC 155": {
+      "department": "DSC",
+      "keywords": [
+        "PCA",
+        "SVD",
+        "random matrix theory",
+        "community detection"
+      ]
+    },
+    "DSC 160": {
+      "department": "DSC",
+      "keywords": [
+        "data and the arts",
+        "authorship",
+        "representation",
+        "data provenance"
+      ]
+    },
+    "DSC 161": {
+      "department": "DSC",
+      "keywords": [
+        "text analysis",
+        "tokenization",
+        "sentiment analysis",
+        "topic modeling",
+        "word embeddings"
+      ]
+    },
+    "DSC 167": {
+      "department": "DSC",
+      "keywords": [
+        "algorithmic fairness",
+        "bias",
+        "ethics",
+        "auditing",
+        "equitable systems"
+      ]
+    },
+    "DSC 170": {
+      "department": "DSC",
+      "keywords": [
+        "spatial data",
+        "GIS",
+        "geostatistics",
+        "GeoPandas",
+        "QGIS"
+      ]
+    },
+    "DSC 180A": {
+      "department": "DSC",
+      "keywords": [
+        "capstone",
+        "research project",
+        "proposal",
+        "data collection"
+      ],
+      "links": {
+        "Course Site": "https://dsc-capstone.org"
+      }
+    },
+    "DSC 180B": {
+      "department": "DSC",
+      "keywords": [
+        "capstone",
+        "implementation",
+        "evaluation",
+        "poster session"
+      ],
+      "links": {
+        "Course Site": "https://dsc-capstone.org"
+      }
+    },
+    "DSC 190": {
+      "department": "DSC",
+      "keywords": [
+        "special topics",
+        "LLMs",
+        "causal inference",
+        "time series"
+      ]
+    },
+    "DSC 191": {
+      "department": "DSC",
+      "keywords": [
+        "seminar",
+        "guest speakers",
+        "industry talks"
+      ]
+    },
+    "DSC 197": {
+      "department": "DSC",
+      "keywords": [
+        "internship",
+        "academic credit",
+        "faculty supervision"
+      ]
+    },
+    "DSC 198": {
+      "department": "DSC",
+      "keywords": [
+        "directed group study",
+        "reading",
+        "research",
+        "special studies"
+      ]
+    },
+    "DSC 199": {
+      "department": "DSC",
+      "keywords": [
+        "independent study",
+        "faculty research",
+        "graduate school prep"
+      ]
+    },
+    "CSE 11": {
+      "department": "CSE",
+      "keywords": [
+        "Python",
+        "Java",
+        "accelerated intro",
+        "object-oriented programming",
+        "software design"
+      ]
+    },
+    "CSE 12": {
+      "department": "CSE",
+      "keywords": [
+        "Java",
+        "data structures",
+        "linked lists",
+        "trees",
+        "design patterns"
+      ]
+    },
+    "CSE 15L": {
+      "department": "CSE",
+      "keywords": [
+        "Unix",
+        "shell scripting",
+        "git",
+        "debugging",
+        "Vim"
+      ]
+    },
+    "CSE 100": {
+      "department": "CSE",
+      "keywords": [
+        "balanced trees",
+        "heaps",
+        "tries",
+        "union-find",
+        "graph algorithms"
+      ]
+    },
+    "CSE 101": {
+      "department": "CSE",
+      "keywords": [
+        "divide and conquer",
+        "dynamic programming",
+        "greedy algorithms",
+        "network flow",
+        "NP-completeness"
+      ]
+    },
+    "CSE 103": {
+      "department": "CSE",
+      "keywords": [
+        "probability",
+        "Markov chains",
+        "information theory",
+        "computability"
+      ]
+    },
+    "CSE 151A": {
+      "department": "CSE",
+      "keywords": [
+        "machine learning",
+        "regression",
+        "classification",
+        "neural networks",
+        "clustering"
+      ]
+    },
+    "CSE 151B": {
+      "department": "CSE",
+      "keywords": [
+        "deep learning",
+        "CNNs",
+        "RNNs",
+        "transformers",
+        "PyTorch"
+      ]
+    },
+    "CSE 158": {
+      "department": "CSE",
+      "keywords": [
+        "recommender systems",
+        "collaborative filtering",
+        "matrix factorization",
+        "web mining"
+      ]
+    },
+    "ECE 101": {
+      "department": "ECE",
+      "keywords": [
+        "signals and systems",
+        "convolution",
+        "Fourier transform",
+        "Laplace transform",
+        "filter design"
+      ]
+    },
+    "ECE 109": {
+      "department": "ECE",
+      "keywords": [
+        "probability",
+        "random variables",
+        "distributions",
+        "random processes"
+      ]
+    },
+    "COGS 108": {
+      "department": "COGS",
+      "keywords": [
+        "data science projects",
+        "data wrangling",
+        "visualization",
+        "team project",
+        "Python"
+      ]
+    },
+    "COGS 188": {
+      "department": "COGS",
+      "keywords": [
+        "machine learning",
+        "regression",
+        "classification",
+        "neural networks"
+      ]
+    },
+    "PHYS 2A": {
+      "department": "PHYS",
+      "keywords": [
+        "kinematics",
+        "Newton's laws",
+        "energy",
+        "rotational motion",
+        "gravitation"
+      ]
+    },
+    "PHYS 2B": {
+      "department": "PHYS",
+      "keywords": [
+        "electrostatics",
+        "circuits",
+        "magnetism",
+        "Maxwell's equations"
+      ]
+    },
+    "PHYS 2C": {
+      "department": "PHYS",
+      "keywords": [
+        "waves",
+        "optics",
+        "special relativity",
+        "quantum intro"
+      ]
+    },
+    "PHYS 4A": {
+      "department": "PHYS",
+      "keywords": [
+        "mechanics",
+        "Newton's laws",
+        "momentum",
+        "oscillations",
+        "calculus-based"
+      ]
+    },
+    "PHYS 4B": {
+      "department": "PHYS",
+      "keywords": [
+        "electrostatics",
+        "Gauss's law",
+        "circuits",
+        "Faraday's law"
+      ]
+    },
+    "PHYS 4C": {
+      "department": "PHYS",
+      "keywords": [
+        "wave mechanics",
+        "optics",
+        "special relativity",
+        "quantum intro"
+      ]
+    },
+    "CHEM 6A": {
+      "department": "CHEM",
+      "keywords": [
+        "atomic theory",
+        "bonding",
+        "stoichiometry",
+        "thermochemistry",
+        "gas laws"
+      ]
+    },
+    "CHEM 6B": {
+      "department": "CHEM",
+      "keywords": [
+        "equilibrium",
+        "acid-base chemistry",
+        "electrochemistry",
+        "kinetics"
+      ]
+    },
+    "CHEM 6C": {
+      "department": "CHEM",
+      "keywords": [
+        "thermodynamics",
+        "coordination chemistry",
+        "organic intro",
+        "biological molecules"
+      ]
+    },
+    "CHEM 11": {
+      "department": "CHEM",
+      "keywords": [
+        "general chemistry survey",
+        "atomic structure",
+        "bonding",
+        "reactions"
+      ]
+    },
+    "BILD 1": {
+      "department": "BIOL",
+      "keywords": [
+        "cell structure",
+        "biochemistry",
+        "metabolism",
+        "genetics",
+        "molecular biology"
+      ]
+    },
+    "BILD 2": {
+      "department": "BIOL",
+      "keywords": [
+        "development",
+        "physiology",
+        "body systems",
+        "multicellular organisms"
+      ]
+    },
+    "BILD 3": {
+      "department": "BIOL",
+      "keywords": [
+        "evolution",
+        "ecology",
+        "population genetics",
+        "biodiversity"
+      ]
+    },
+    "BIBC 100": {
+      "department": "BIOL",
+      "keywords": [
+        "protein structure",
+        "enzymes",
+        "membranes",
+        "metabolic pathways"
+      ]
+    },
+    "BIBC 102": {
+      "department": "BIOL",
+      "keywords": [
+        "glycolysis",
+        "TCA cycle",
+        "oxidative phosphorylation",
+        "fatty acid metabolism"
+      ]
+    },
+    "COGS 9": {
+      "department": "COGS",
+      "keywords": [
+        "data science survey",
+        "data collection",
+        "visualization",
+        "statistical reasoning",
+        "social context"
+      ]
+    }
+  }
+}
