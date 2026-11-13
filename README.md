@@ -289,6 +289,9 @@ its path and the biology page has no documented feed, so neither is fetched.
 the owner fills their `courses` (course ID to quarters such as `["FA", "WI"]`,
 plus `entered_by` and `entered_at`), those departments count as no coverage and
 produce no `NOT_OFFERED` findings. Fetched department data wins over manual data.
+Write quarters as a list of `FA`, `WI`, `SP`: the tests fail on anything else so
+a bad edit is caught in CI, and the app itself reads `Fall`/`Winter`/`Spring` in
+any case and ignores any other value instead of crashing.
 
 **One-time repository setting (owner only).** Settings, Actions, General,
 "Allow GitHub Actions to create and approve pull requests" must be enabled, or

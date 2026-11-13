@@ -1,9 +1,12 @@
+import json
 from pathlib import Path
 
 import pytest
 
 from offerings import load_offerings
+from prereq_graph import build
 from terms import Term
+from validator import validate
 
 FIX = Path(__file__).parent / "fixtures"
 
@@ -105,3 +108,72 @@ def test_summary_no_quarter_planned(off):
     assert "listed, no quarter planned" in s
     assert "not listed" not in s
     assert "not listed" in off.summary("DSC 20", "DSC")
+
+
+# ---- hand-entered quarters (offerings_manual.json) -------------------------
+
+REAL = Path(__file__).resolve().parent.parent / "data"
+VALID_QUARTERS = {"FA", "WI", "SP"}
+
+
+def _manual(tmp_path, courses):
+    off = tmp_path / "off.json"
+    off.write_text(json.dumps({"generated_at": "2026-11-01T00:00:00Z",
+                               "scheduled": {}, "tentative": {}}))
+    man = tmp_path / "man.json"
+    man.write_text(json.dumps({"2026-27": {"CHEM": {
+        "entered_at": "2026-11-02", "source_url": "https://example.test/chem",
+        "courses": courses}}}))
+    return load_offerings(off, man)
+
+
+def _chem(off):
+    return off.tentative["2026-27"]["CHEM"]["courses"]
+
+
+def test_manual_full_names_any_case_are_normalised(tmp_path):
+    off = _manual(tmp_path, {"CHEM 6A": ["Fall", "winter"], "CHEM 6B": ["sp", "FA"]})
+    assert _chem(off) == {"CHEM 6A": ["FA", "WI"], "CHEM 6B": ["FA", "SP"]}
+    s = off.lookup("CHEM 6A", "CHEM", Term("SP", 2027))
+    assert s.kind == "tentative_other_quarters" and s.quarters == ["FA", "WI"]
+
+
+def test_manual_string_value_is_dropped_not_split(tmp_path):
+    off = _manual(tmp_path, {"CHEM 6A": ["FA"], "CHEM 6B": "WI"})
+    assert _chem(off) == {"CHEM 6A": ["FA"]}
+
+
+def test_manual_garbage_quarters_are_dropped(tmp_path):
+    off = _manual(tmp_path, {"CHEM 6A": ["Fall", "Autumn", 3, None, "SU"], "CHEM 6B": None})
+    assert _chem(off) == {"CHEM 6A": ["FA"]}
+
+
+def test_validator_survives_bad_manual_entries(tmp_path):
+    off = _manual(tmp_path, {"CHEM 6A": ["Fall"], "CHEM 6B": "WI", "CHEM 6C": ["Fall", "Winter"]})
+    plan = [{"term": "Spring 2027", "courses": ["CHEM 6A", "CHEM 6B", "CHEM 6C"]}]
+    msgs = [v.message for v in validate(plan, build(), offerings=off)
+            if v.code == "NOT_OFFERED"]
+    assert any("CHEM 6A is listed for Fall only" in m for m in msgs)
+
+
+def test_offerings_json_quarters_are_normalised(tmp_path):
+    off = tmp_path / "off.json"
+    off.write_text(json.dumps({"generated_at": "x", "scheduled": {}, "tentative": {"2026-27": {
+        "DSC": {"source_url": "u", "fetched_at": "t",
+                "courses": {"DSC 10": ["Winter", "fa", "bogus"], "DSC 20": "FA"}}}}}))
+    o = load_offerings(off, tmp_path / "missing.json")
+    assert o.tentative["2026-27"]["DSC"]["courses"] == {"DSC 10": ["FA", "WI"]}
+
+
+@pytest.mark.parametrize("name", ["offerings.json", "offerings_manual.json"])
+def test_committed_quarter_lists_are_canonical(name):
+    """CI blocks a hand edit (or adapter change) that writes anything but FA/WI/SP lists."""
+    data = json.loads((REAL / name).read_text(encoding="utf-8"))
+    years = data["tentative"] if name == "offerings.json" else data
+    for ay, depts in years.items():
+        for dept, entry in depts.items():
+            courses = entry["courses"]
+            assert isinstance(courses, dict), (name, ay, dept)
+            for cid, qs in courses.items():
+                assert isinstance(qs, list), (name, ay, dept, cid, qs)
+                assert set(qs) <= VALID_QUARTERS, (name, ay, dept, cid, qs)

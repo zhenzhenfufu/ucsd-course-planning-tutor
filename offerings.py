@@ -50,6 +50,34 @@ def _qsort(qs):
     return sorted(qs, key=lambda q: _ORDER.index(q) if q in _ORDER else 9)
 
 
+_QUARTER_ALIASES = {"fa": "FA", "fall": "FA", "wi": "WI", "winter": "WI",
+                    "sp": "SP", "spring": "SP"}
+
+
+def _norm_quarters(value) -> list[str] | None:
+    """A quarters list as FA/WI/SP in that order; None if `value` is not a list.
+
+    Accepts Fall/Winter/Spring or FA/WI/SP in any case and drops anything else,
+    so a typo in the hand-entered file cannot reach the validator.
+    """
+    if not isinstance(value, list):
+        return None
+    out = {_QUARTER_ALIASES.get(q.strip().lower()) for q in value if isinstance(q, str)}
+    return _qsort(out - {None})
+
+
+def _norm_courses(courses) -> dict[str, list[str]]:
+    """{course: quarters} with every quarters list normalised; non-list values dropped."""
+    if not isinstance(courses, dict):
+        return {}
+    out = {}
+    for cid, qs in courses.items():
+        norm = _norm_quarters(qs)
+        if norm is not None:
+            out[cid] = norm
+    return out
+
+
 class Offerings:
     def __init__(self, generated_at=None, available=False, scheduled=None, tentative=None):
         self.generated_at = generated_at
@@ -129,14 +157,15 @@ def _merge_manual(tentative: dict, manual) -> None:
         if not isinstance(depts, dict):
             continue
         for dept, entry in depts.items():
-            if not isinstance(entry, dict) or not entry.get("courses"):
+            courses = _norm_courses(entry.get("courses")) if isinstance(entry, dict) else {}
+            if not courses:
                 continue  # unfilled placeholder: not coverage
             existing = tentative.setdefault(ay, {}).get(dept)
             if isinstance(existing, dict) and existing.get("courses"):
                 continue  # official adapter data wins
             tentative[ay][dept] = {"source_url": entry.get("source_url"),
                                    "fetched_at": entry.get("entered_at"),
-                                   "status": "manual", "courses": entry["courses"]}
+                                   "status": "manual", "courses": courses}
 
 
 def load_offerings(path: Path = DATA / "offerings.json",
@@ -147,6 +176,9 @@ def load_offerings(path: Path = DATA / "offerings.json",
     scheduled, tentative = data.get("scheduled", {}), data.get("tentative", {})
     if not isinstance(scheduled, dict) or not isinstance(tentative, dict):
         return Offerings()
-    tentative = {ay: dict(d) if isinstance(d, dict) else {} for ay, d in tentative.items()}
+    tentative = {ay: {dept: ({**entry, "courses": _norm_courses(entry.get("courses"))}
+                             if isinstance(entry, dict) else entry)
+                      for dept, entry in d.items()} if isinstance(d, dict) else {}
+                 for ay, d in tentative.items()}
     _merge_manual(tentative, _read(manual_path))
     return Offerings(data.get("generated_at"), True, scheduled, tentative)

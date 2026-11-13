@@ -146,7 +146,7 @@ def validate(plan: Iterable[dict], cg: CourseGraph | None = None,
                         f"{course} is not on the published {t.name} Schedule of Classes "
                         f"(Class Planner, refreshed {st.as_of})."))
                 elif st.kind == "tentative_other_quarters":
-                    only = ", ".join(_QNAME[q] for q in st.quarters)
+                    only = ", ".join(_QNAME.get(q, q) for q in st.quarters)
                     violations.append(Violation(
                         "NOT_OFFERED", "warning", name, course,
                         f"{course} is listed for {only} only in the {dept} "
