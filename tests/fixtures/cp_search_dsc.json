@@ -1,0 +1,45 @@
+{
+  "term_code": "WI99",
+  "query": "",
+  "total": 3,
+  "offset": 0,
+  "limit": 48,
+  "courses": [
+    {
+      "term_code": "WI99",
+      "subject_code": "DSC",
+      "course_code": "080",
+      "module_code": "DSC-080",
+      "module_name": "Invented Course",
+      "course_title": null,
+      "subject_name": "Data Science",
+      "section_count": 1,
+      "instructors": [],
+      "sections": []
+    },
+    {
+      "term_code": "WI99",
+      "subject_code": "DSC",
+      "course_code": "040A",
+      "module_code": "DSC-040A",
+      "module_name": "Invented Course",
+      "course_title": null,
+      "subject_name": "Data Science",
+      "section_count": 1,
+      "instructors": [],
+      "sections": []
+    },
+    {
+      "term_code": "WI99",
+      "subject_code": "DSC",
+      "course_code": "100",
+      "module_code": "DSC-100",
+      "module_name": "Invented Course",
+      "course_title": null,
+      "subject_name": "Data Science",
+      "section_count": 1,
+      "instructors": [],
+      "sections": []
+    }
+  ]
+}

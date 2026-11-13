@@ -26,6 +26,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from offerings import load_offerings  # noqa: E402
 from prereq_graph import build            # noqa: E402
 from retrieval import get_index           # noqa: E402
 from validator import validate            # noqa: E402
@@ -57,13 +58,23 @@ VALIDATOR_FIXTURES = [
         {"term": "W", "courses": ["DSC 10", "MATH 20B", "MATH 18"]}]),
     ("unknown-course", False, [], [
         {"term": "F", "courses": ["DSC 999", "MATH 20A", "CSE 11"]}]),
+    ("not-offered-scheduled", False, ["DSC 10", "DSC 20", "MATH 20A"], [
+        {"term": "Winter 2027", "courses": ["DSC 30", "MATH 20B", "CSE 11"]}]),
+    ("not-offered-tentative-is-legal", True, [], [
+        {"term": "Spring 2027", "courses": ["DSC 10", "MATH 20A", "CSE 11"]}]),
 ]
+
+
+_FIX = Path(__file__).resolve().parent.parent / "tests" / "fixtures"
+# Fixed snapshot so the self-test never changes with live data.
+_FIXTURE_OFFERINGS = load_offerings(_FIX / "offerings_small.json", _FIX / "no_manual.json")
 
 
 def run_validator_fixtures(cg) -> tuple[int, int, list[str]]:
     passed, failures = 0, []
     for name, expect_legal, completed, plan in VALIDATOR_FIXTURES:
-        errors = [v for v in validate(plan, cg, completed) if v.severity == "error"]
+        errors = [v for v in validate(plan, cg, completed, offerings=_FIXTURE_OFFERINGS)
+                  if v.severity == "error"]
         got_legal = not errors
         if got_legal == expect_legal:
             passed += 1
