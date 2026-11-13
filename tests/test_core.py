@@ -282,8 +282,25 @@ def test_not_offered_scheduled_error(cg, off):
     (v,) = _no([{"term": "Winter 2027", "courses": ["DSC 30"]}], cg, off)
     assert v.severity == "error" and v.term == "Winter 2027" and v.course == "DSC 30"
     assert v.message == ("DSC 30 is not on the published Winter 2027 Schedule of Classes "
-                         "(Class Planner, refreshed 2026-11-12T00:00:00Z).")
+                         "(Class Planner, refreshed 2026-11-12).")
     assert not is_legal([{"term": "Winter 2027", "courses": ["DSC 30"]}], cg, offerings=off)
+
+
+@pytest.mark.parametrize("last_full, expected", [
+    ("2026-11-01T08:30:00Z", "refreshed 2026-11-01)."),   # Class Planner's own refresh date
+    (None, "refreshed 2026-11-12T09:00:00Z)."),         # else our fetch time
+])
+def test_not_offered_cites_class_planner_refresh(cg, tmp_path, last_full, expected):
+    import json
+    p = tmp_path / "off.json"
+    p.write_text(json.dumps({"generated_at": "2026-11-12T09:00:00Z", "tentative": {},
+                             "scheduled": {"WI27": {"last_full_refresh_at": last_full,
+                                                    "fetched_at": "2026-11-12T09:00:00Z",
+                                                    "subjects": {"DSC": 1},
+                                                    "courses": ["DSC 10"]}}}))
+    o = load_offerings(p, tmp_path / "none.json")
+    (v,) = _no([{"term": "Winter 2027", "courses": ["DSC 30"]}], cg, o)
+    assert v.message.endswith(expected)
 
 
 def test_not_offered_other_quarters_warning(cg, off):

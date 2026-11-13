@@ -29,6 +29,8 @@ class OfferingStatus:
     quarters: list[str] = field(default_factory=list)
     academic_year: str | None = None
     source_url: str | None = None
+    # Scheduled: Class Planner's last_full_refresh_at date, else our fetch time.
+    # Tentative: when the department plan was fetched (or entered by hand).
     as_of: str | None = None
 
 
@@ -104,8 +106,11 @@ class Offerings:
         block = self._scheduled_block(course_id, term)
         if block is not None:
             kind = "scheduled_offered" if course_id in (block.get("courses") or []) else "scheduled_absent"
-            return OfferingStatus(kind, [term.quarter], term.academic_year,
-                                  None, block.get("fetched_at"))
+            # Class Planner's own refresh date says how current the schedule
+            # is; our fetch time is only the fallback.
+            last_full = block.get("last_full_refresh_at")
+            as_of = last_full[:10] if isinstance(last_full, str) and last_full else block.get("fetched_at")
+            return OfferingStatus(kind, [term.quarter], term.academic_year, None, as_of)
         ay = term.academic_year
         entry = (self.tentative.get(ay) or {}).get(department)
         courses = entry.get("courses") if isinstance(entry, dict) else None
