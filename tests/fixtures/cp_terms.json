@@ -1,0 +1,24 @@
+{
+  "terms": [
+    {
+      "term_code": "WI99",
+      "term_name": "Winter",
+      "calendar_year": "2099",
+      "course_count": 3,
+      "section_count": 5,
+      "meeting_count": 9,
+      "last_full_refresh_at": "2098-11-06 01:38:11+00",
+      "configured": true
+    },
+    {
+      "term_code": "SP99",
+      "term_name": "Spring",
+      "calendar_year": "2099",
+      "course_count": 0,
+      "section_count": 0,
+      "meeting_count": 0,
+      "last_full_refresh_at": "2098-11-06 01:38:11+00",
+      "configured": false
+    }
+  ]
+}
