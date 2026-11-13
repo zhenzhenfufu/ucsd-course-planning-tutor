@@ -19,7 +19,8 @@ DATA = Path(__file__).parent / "data"
 _ORDER = ["FA", "WI", "SP"]
 
 Kind = Literal["exempt", "scheduled_offered", "scheduled_absent", "tentative_offered",
-               "tentative_other_quarters", "tentative_unlisted", "unknown"]
+               "tentative_other_quarters", "tentative_unlisted", "tentative_no_quarter",
+               "unknown"]
 
 
 @dataclass
@@ -86,6 +87,8 @@ class Offerings:
         quarters = courses.get(course_id)
         if quarters is None:
             return OfferingStatus("tentative_unlisted", [], **meta)
+        if not quarters:
+            return OfferingStatus("tentative_no_quarter", [], **meta)
         kind = "tentative_offered" if term.quarter in quarters else "tentative_other_quarters"
         return OfferingStatus(kind, _qsort(quarters), **meta)
 
@@ -99,7 +102,9 @@ class Offerings:
             if not courses:
                 continue
             qs = courses.get(course_id)
-            parts.append(f"{ay} tentative: {', '.join(_qsort(qs)) if qs else 'not listed'}")
+            text = "not listed" if qs is None else (
+                ", ".join(_qsort(qs)) if qs else "listed, no quarter planned")
+            parts.append(f"{ay} tentative: {text}")
         for code in sorted(self.scheduled, key=lambda c: (term_from_code(c).year, _ORDER.index(term_from_code(c).quarter))
                            if _valid(c) else (9999, 9)):
             block = self._scheduled_block(course_id, term_from_code(code)) if _valid(code) else None

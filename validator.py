@@ -17,7 +17,22 @@ from __future__ import annotations
 from dataclasses import dataclass, asdict
 from typing import Iterable, Literal
 
+from offerings import Offerings, load_offerings
 from prereq_graph import ABSTRACT_SATISFIERS, CourseGraph, build
+from terms import parse_term
+
+_QNAME = {"FA": "Fall", "WI": "Winter", "SP": "Spring", "SU": "Summer"}
+_default_offerings: Offerings | None = None
+
+
+def _get_offerings(offerings: Offerings | None) -> Offerings:
+    """The given snapshot, else the default file (loaded once per process)."""
+    global _default_offerings
+    if offerings is not None:
+        return offerings
+    if _default_offerings is None:
+        _default_offerings = load_offerings()
+    return _default_offerings
 
 Severity = Literal["error", "warning"]
 
@@ -53,12 +68,14 @@ def _norm(plan: Iterable[dict]) -> list[dict]:
 
 
 def validate(plan: Iterable[dict], cg: CourseGraph | None = None,
-             completed: Iterable[str] = ()) -> list[Violation]:
+             completed: Iterable[str] = (),
+             offerings: Offerings | None = None) -> list[Violation]:
     """Check one plan and return every violation found, most severe first.
 
     `completed` lists courses already finished before the plan starts.
     """
     cg = cg or build()
+    offerings = _get_offerings(offerings)
     terms = _norm(plan)
     violations: list[Violation] = []
 
@@ -113,6 +130,38 @@ def validate(plan: Iterable[dict], cg: CourseGraph | None = None,
                     "PREREQ_MISSING", "error", name, course,
                     f"{course} in {name} requires {readable}, {why}."))
 
+        # --- offered in that term ---------------------------------------------
+        # Terms the validator cannot place (labels like "Term 1", Summer, or a
+        # year with no data) produce no finding.
+        t = parse_term(name)
+        if t is not None:
+            for course in courses:
+                if not cg.known(course):
+                    continue
+                dept = cg.courses[course].get("department") or ""
+                st = offerings.lookup(course, dept, t, cg.by_arrangement)
+                if st.kind == "scheduled_absent":
+                    violations.append(Violation(
+                        "NOT_OFFERED", "error", name, course,
+                        f"{course} is not on the published {t.name} Schedule of Classes "
+                        f"(Class Planner, refreshed {st.as_of})."))
+                elif st.kind == "tentative_other_quarters":
+                    only = ", ".join(_QNAME[q] for q in st.quarters)
+                    violations.append(Violation(
+                        "NOT_OFFERED", "warning", name, course,
+                        f"{course} is listed for {only} only in the {dept} "
+                        f"{st.academic_year} tentative plan, not {_QNAME[t.quarter]}."))
+                elif st.kind == "tentative_unlisted":
+                    violations.append(Violation(
+                        "NOT_OFFERED", "warning", name, course,
+                        f"{course} is not on the {dept} {st.academic_year} tentative "
+                        f"course list; check the Schedule of Classes."))
+                elif st.kind == "tentative_no_quarter":
+                    violations.append(Violation(
+                        "NOT_OFFERED", "warning", name, course,
+                        f"{course} is on the {dept} {st.academic_year} tentative plan "
+                        f"with no quarter planned; check the Schedule of Classes."))
+
         # --- unit load -------------------------------------------------------
         units = sum(cg.units(c) for c in courses if cg.known(c))
         if courses and units < MIN_UNITS_PER_TERM:
@@ -142,9 +191,10 @@ def validate(plan: Iterable[dict], cg: CourseGraph | None = None,
 
 
 def is_legal(plan: Iterable[dict], cg: CourseGraph | None = None,
-             completed: Iterable[str] = ()) -> bool:
+             completed: Iterable[str] = (),
+             offerings: Offerings | None = None) -> bool:
     """True when a plan has no errors. Warnings do not make a plan illegal."""
-    return not any(v.severity == "error" for v in validate(plan, cg, completed))
+    return not any(v.severity == "error" for v in validate(plan, cg, completed, offerings))
 
 
 def repair_hint(violations: list[Violation]) -> str:

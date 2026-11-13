@@ -90,3 +90,18 @@ def test_corrupt_file_is_unknown(tmp_path, text):
     o = load_offerings(p, tmp_path / "none.json")
     assert not o.available
     assert o.lookup("DSC 10", "DSC", Term("WI", 2027)).kind == "unknown"
+
+
+def test_tentative_listed_with_no_quarter(off):
+    s = off.lookup("DSC 80", "DSC", Term("SP", 2027))
+    assert s.kind == "tentative_no_quarter"
+    assert s.academic_year == "2026-27"
+    assert off.lookup("DSC 80", "DSC", Term("FA", 2026)).kind == "tentative_no_quarter"
+    assert off.lookup("DSC 80", "DSC", Term("SP", 2027), {"DSC 80"}).kind == "exempt"
+
+
+def test_summary_no_quarter_planned(off):
+    s = off.summary("DSC 80", "DSC")
+    assert "listed, no quarter planned" in s
+    assert "not listed" not in s
+    assert "not listed" in off.summary("DSC 20", "DSC")

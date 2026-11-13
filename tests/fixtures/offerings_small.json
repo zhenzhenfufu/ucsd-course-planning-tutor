@@ -4,6 +4,6 @@
                         "subjects": {"DSC": 2, "MATH": 0}, "courses": ["DSC 10", "DSC 20"]}},
  "tentative": {"2026-27": {
    "DSC": {"source_url": "https://example.test/dsc", "fetched_at": "2026-11-12T00:00:00Z", "content_hash": "abc", "status": "tentative",
-           "courses": {"DSC 10": ["FA", "WI", "SP"], "DSC 30": ["FA"]}},
+           "courses": {"DSC 10": ["FA", "WI", "SP"], "DSC 30": ["FA"], "DSC 80": []}},
    "MATH": {"source_url": "https://example.test/math", "fetched_at": "2026-11-12T00:00:00Z", "content_hash": "def", "status": "tentative",
             "courses": {"MATH 18": ["FA", "WI", "SP"]}}}}}

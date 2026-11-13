@@ -258,3 +258,68 @@ def test_current_data_needs_no_dropped_edges(cg):
 def test_cse_158_has_only_its_real_prerequisites(cg):
     flat = {o for g in cg.requirements["CSE 158"].groups for o in g}
     assert not flat & {"CSE 258", "CSE 158R", "DSC 148"}
+
+
+# --------------------------------------------------------------------------
+# NOT_OFFERED
+# --------------------------------------------------------------------------
+
+from offerings import load_offerings  # noqa: E402
+
+_FIX = Path(__file__).resolve().parent / "fixtures"
+
+
+@pytest.fixture(scope="module")
+def off():
+    return load_offerings(_FIX / "offerings_small.json", _FIX / "no_manual.json")
+
+
+def _no(plan, cg, off):
+    return [v for v in validate(plan, cg, offerings=off) if v.code == "NOT_OFFERED"]
+
+
+def test_not_offered_scheduled_error(cg, off):
+    (v,) = _no([{"term": "Winter 2027", "courses": ["DSC 30"]}], cg, off)
+    assert v.severity == "error" and v.term == "Winter 2027" and v.course == "DSC 30"
+    assert v.message == ("DSC 30 is not on the published Winter 2027 Schedule of Classes "
+                         "(Class Planner, refreshed 2026-11-12T00:00:00Z).")
+    assert not is_legal([{"term": "Winter 2027", "courses": ["DSC 30"]}], cg, offerings=off)
+
+
+def test_not_offered_other_quarters_warning(cg, off):
+    plan = [{"term": "Spring 2027", "courses": ["DSC 30"]}]
+    (v,) = _no(plan, cg, off)
+    assert v.severity == "warning"
+    assert v.message == ("DSC 30 is listed for Fall only in the DSC 2026-27 tentative plan, "
+                         "not Spring.")
+    assert not any(x.code == "NOT_OFFERED" and x.severity == "error"
+                   for x in validate(plan, cg, offerings=off))
+
+
+def test_not_offered_unlisted_warning(cg, off):
+    (v,) = _no([{"term": "Spring 2027", "courses": ["DSC 20"]}], cg, off)
+    assert v.severity == "warning"
+    assert v.message == ("DSC 20 is not on the DSC 2026-27 tentative course list; "
+                         "check the Schedule of Classes.")
+
+
+def test_not_offered_no_quarter_warning(cg, off):
+    (v,) = _no([{"term": "Spring 2027", "courses": ["DSC 80"]}], cg, off)
+    assert v.severity == "warning"
+    assert v.message == ("DSC 80 is on the DSC 2026-27 tentative plan with no quarter "
+                         "planned; check the Schedule of Classes.")
+
+
+@pytest.mark.parametrize("label,course", [
+    ("Term 1", "DSC 30"), ("F", "DSC 30"), ("fall 2026", "DSC 30"),
+    ("Summer 2027", "DSC 30"), ("Fall 2030", "DSC 30"),
+    ("Winter 2027", "DSC 199"), ("Spring 2027", "DSC 10"),
+])
+def test_not_offered_silent_cases(cg, off, label, course):
+    assert _no([{"term": label, "courses": [course]}], cg, off) == []
+
+
+def test_not_offered_silent_when_unavailable(cg, tmp_path):
+    gone = load_offerings(tmp_path / "missing.json", tmp_path / "missing2.json")
+    assert not gone.available
+    assert _no([{"term": "Winter 2027", "courses": ["DSC 30"]}], cg, gone) == []
