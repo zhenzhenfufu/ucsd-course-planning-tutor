@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import time
+from http.cookiejar import CookiePolicy
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
@@ -22,6 +23,33 @@ SSO_HOST = "a5.ucsd.edu"
 TIMEOUT = 30
 MAX_REDIRECTS = 5
 BACKOFFS = (2, 4)
+
+
+class _NoCookies(CookiePolicy):
+    """Refuse to store or return any cookie."""
+
+    netscape = True
+    rfc2965 = hide_cookie2 = False
+
+    def set_ok(self, cookie, request):
+        return False
+
+    def return_ok(self, cookie, request):
+        return False
+
+    def domain_return_ok(self, domain, request):
+        return False
+
+    def path_return_ok(self, path, request):
+        return False
+
+
+def _default_session() -> requests.Session:
+    """A session with no cookie jar, and no ~/.netrc or proxy env credentials."""
+    session = requests.Session()
+    session.trust_env = False
+    session.cookies.set_policy(_NoCookies())
+    return session
 
 
 class FetchError(Exception):
@@ -53,7 +81,7 @@ class PoliteSession:
     def __init__(self, transport=None, min_interval: float = 1.0, clock=time.monotonic,
                  sleep=time.sleep, cache_dir: Path | None = None,
                  allowed_prefixes: dict[str, tuple[str, ...]] | None = None):
-        self.transport = transport if transport is not None else requests.Session()
+        self.transport = transport if transport is not None else _default_session()
         self.min_interval = min_interval
         self.clock = clock
         self.sleep = sleep
@@ -140,6 +168,8 @@ class PoliteSession:
                 target = urljoin(current, location)
                 if urlsplit(target).netloc == SSO_HOST:
                     raise SSORedirect(f"{current} redirected to {SSO_HOST}")
+                self._check_allowed(target)
+                self._check_robots(target)
                 current = target
                 continue
             return resp

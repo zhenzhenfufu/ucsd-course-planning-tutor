@@ -169,3 +169,54 @@ def test_post_json_returns_parsed_body(clock):
     assert s.post_json(url, {"term": "FA26"}) == {"courses": []}
     call = [c for c in t.calls if c["url"] == url][0]
     assert call["method"] == "POST" and call["json"] == {"term": "FA26"}
+
+
+def test_redirect_into_disallowed_path_is_blocked(clock):
+    allowed = {"classplanner.apps.ucsd.edu": ("/api/v1/public/",)}
+    base = "https://classplanner.apps.ucsd.edu"
+    routes = {f"{base}/api/v1/public/x": FakeResponse(302, headers={"Location": "/api/v1/planner/x"}),
+              f"{base}/api/v1/planner/x": FakeResponse(text="private")}
+    s, t = make(routes, clock, allowed_prefixes=allowed)
+    with pytest.raises(PathNotAllowed):
+        s.get(f"{base}/api/v1/public/x")
+    assert all("planner/x" not in c["url"] for c in t.calls)
+
+
+def test_redirect_to_robots_disallowed_url_is_blocked(clock):
+    routes = {f"https://{HOST}/robots.txt": FakeResponse(text="User-agent: *\nDisallow: /private\n"),
+              f"https://{HOST}/page": FakeResponse(302, headers={"Location": "/private/a"}),
+              f"https://{HOST}/private/a": FakeResponse(text="no")}
+    s, t = make(routes, clock)
+    with pytest.raises(RobotsDisallowed):
+        s.get(f"https://{HOST}/page")
+    assert all(c["url"] != f"https://{HOST}/private/a" for c in t.calls)
+
+
+def test_default_session_keeps_no_cookies_and_ignores_env(monkeypatch):
+    import requests
+    from requests.adapters import BaseAdapter
+    from refresh.http import _default_session
+
+    seen = []
+
+    class Adapter(BaseAdapter):
+        def send(self, request, **kw):
+            seen.append(request.headers.get("Cookie"))
+            resp = requests.Response()
+            resp.status_code = 200
+            resp.url = request.url
+            resp._content = b"ok"
+            resp.headers["Set-Cookie"] = "sid=secret; Path=/"
+            resp.raw = __import__("io").BytesIO(b"")
+            return resp
+
+        def close(self):
+            pass
+
+    session = _default_session()
+    assert session.trust_env is False
+    session.mount("https://", Adapter())
+    session.request("GET", "https://catalog.ucsd.edu/a")
+    session.request("GET", "https://catalog.ucsd.edu/b")
+    assert seen == [None, None]
+    assert len(session.cookies) == 0
