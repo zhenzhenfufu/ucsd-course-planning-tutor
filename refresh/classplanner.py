@@ -34,6 +34,8 @@ def fetch_terms(session: PoliteSession) -> list[dict]:
     for t in terms:
         if not isinstance(t, dict) or any(k not in t for k in TERM_KEYS):
             raise SchemaError(f"term missing one of {TERM_KEYS}")
+        if not isinstance(t["configured"], bool):
+            raise SchemaError("term 'configured' is not a bool")
     return terms
 
 
@@ -55,5 +57,7 @@ def fetch_term_courses(session: PoliteSession, term_code: str, subject: str) -> 
                 raise SchemaError(f"unparseable course code {raw!r}")
             ids.add(cid)
         offset += len(courses)
-        if not courses or offset >= page["total"]:
+        if offset >= page["total"]:
             return ids
+        if not courses:
+            raise SchemaError(f"empty page at offset {offset} before total {page['total']}")

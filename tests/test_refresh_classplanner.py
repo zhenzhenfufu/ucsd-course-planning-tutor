@@ -58,8 +58,9 @@ def test_fetch_terms_missing_key_or_status():
     bad = json.dumps({"terms": [{"term_code": "WI99"}]})
     with pytest.raises(SchemaError):
         fetch_terms(FakeSession(ok(bad)))
+    valid = (FIX / "cp_terms.json").read_text()
     with pytest.raises(SchemaError):
-        fetch_terms(FakeSession(ok("{}", 401)))
+        fetch_terms(FakeSession(ok(valid, 401)))
     with pytest.raises(SchemaError):
         fetch_terms(FakeSession(ok("not json")))
 
@@ -98,3 +99,23 @@ def test_missing_total_raises():
 def test_http_error_propagates_not_empty():
     with pytest.raises(FetchError):
         fetch_term_courses(FakeSession(pages=[FetchError("401")]), "WI99", "DSC")
+
+
+def test_configured_must_be_bool():
+    doc = load("cp_terms.json")
+    doc["terms"][0]["configured"] = "true"
+    with pytest.raises(SchemaError):
+        fetch_terms(FakeSession(ok(json.dumps(doc))))
+
+
+def test_empty_page_before_total_raises():
+    p1 = {"total": 5, "offset": 0, "courses": [{"module_code": "DSC-001"}]}
+    p2 = {"total": 5, "offset": 1, "courses": []}
+    with pytest.raises(SchemaError):
+        fetch_term_courses(FakeSession(pages=[p1, p2]), "WI99", "DSC")
+
+
+def test_short_final_page_succeeds():
+    p1 = {"total": 3, "offset": 0, "courses": [{"module_code": "DSC-001"}, {"module_code": "DSC-010"}]}
+    p2 = {"total": 3, "offset": 2, "courses": [{"module_code": "DSC-020"}]}
+    assert len(fetch_term_courses(FakeSession(pages=[p1, p2]), "WI99", "DSC")) == 3
