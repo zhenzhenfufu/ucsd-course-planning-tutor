@@ -118,3 +118,17 @@ def test_concurrent_removes_only_its_phrase():
     p = parse_prereq_clause("DSC 40A may be taken concurrently, and DSC 20", "DSC")
     assert p.groups == [["DSC 40A"], ["DSC 20"]]
     assert p.concurrent_ok
+
+
+def test_credit_exclusion_sentences_yield_no_groups():
+    p = parse_prereq_clause(
+        "(MATH 20C or MATH 31BH) and (MATH 18 or MATH 31 AH). Students may not receive "
+        "credit for both DSC 123A and MATH 173A. Students who have not completed listed "
+        "prerequisites may enroll with consent of instructor.", "DSC")
+    assert p.groups == [["MATH 20C", "MATH 31BH"], ["MATH 18", "MATH 31AH"]]
+    assert p.conditions == ["credit exclusion", "instructor consent"]
+    for s in ("Credit not allowed for both DSC 10 and DSC 20.",
+              "Not open to students who have completed DSC 20.",
+              "Students may not enroll in this course if they have completed DSC 30."):
+        q = parse_prereq_clause("DSC 10. " + s, "DSC")
+        assert q.groups == [["DSC 10"]] and q.conditions == ["credit exclusion"], s

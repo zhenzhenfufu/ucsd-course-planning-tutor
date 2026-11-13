@@ -40,6 +40,11 @@ CONDITION_PATTERNS: list[tuple[re.Pattern, str]] = [
     (re.compile(r"\d+\s+units\b|units completed", re.I), "units completed"),
 ]
 
+# Sentences that exclude students who already hold other credit (no groups).
+_EXCLUSION_RE = re.compile(
+    r"credit\s+for\s+both|credit\s+(?:is\s+)?not\s+(?:allowed|given|granted|awarded)"
+    r"|not\s+open\s+to\s+students|may\s+not\s+enroll", re.I)
+
 _CONCURRENT_RE = re.compile(r"[,;]?\s*(?:which\s+)?(?:(?:may|can|must)\s+)?(?:be\s+)?"
                             r"(?:taken\s+)?concurrent(?:ly)?\b", re.I)
 _DANGLING_RE = re.compile(r"^[\s,;]*(?:(?:and|or)\b[\s,;]*)?|[\s,;]*(?:\b(?:and|or)[\s,;]*)?$", re.I)
@@ -100,6 +105,10 @@ def parse_prereq_clause(text: str, subject: str) -> ParsedPrereq:
     for sent in re.split(r"(?<=[.;])\s+", text or ""):
         sent = _PREFIX_RE.sub("", sent).strip()
         if not sent or _NONE_RE.match(sent.rstrip(".; ")):
+            continue
+        if _EXCLUSION_RE.search(sent):
+            if "credit exclusion" not in out.conditions:
+                out.conditions.append("credit exclusion")
             continue
         hits = [tok for pat, tok in CONDITION_PATTERNS if pat.search(sent)]
         out.conditions.extend(t for t in hits if t not in out.conditions)

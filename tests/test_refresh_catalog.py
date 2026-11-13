@@ -86,3 +86,14 @@ def test_no_description_text_is_stored():
     blob = json.dumps(snap)
     for word in ("Zorblax", "Flumox", "Snarfle", "Plonk", "wibble", "Restricted to students"):
         assert word not in blob
+
+
+def test_own_id_is_dropped_from_prereq_groups():
+    html = ('<p class="course-name">DSC 77. Invented Title (4)</p>'
+            '<p class="course-descriptions">Zzz. <strong>Prerequisites:</strong> '
+            'DSC 10 and (DSC 77 or DSC 20). DSC 77. </p>'
+            '<p class="course-name">DSC 78. Other Invented (4)</p>'
+            '<p class="course-descriptions"><strong>Prerequisites:</strong> DSC 78.</p>')
+    c = {x.id: x for x in parse_course_page(html, "DSC", DSC_URL)}
+    assert c["DSC 77"].prereq_groups == [["DSC 10"], ["DSC 20"]]
+    assert c["DSC 78"].prereq_groups == []

@@ -104,12 +104,13 @@ def parse_course_page(html: str, department: str, page_url: str) -> list[Catalog
         text = _squash(" ".join(body))
         label = _PREREQ_LABEL_RE.search(text)
         parsed = parse_prereq_clause(text[label.end():] if label else "", subject)
+        groups = [g for g in ([o for o in grp if o != cid] for grp in parsed.groups) if g]
 
         unique = [a for a in _anchors_before(name_p) if anchor_counts[a] == 1]
         courses.append(CatalogCourse(
             id=cid, department=department, title=title, units=units,
             units_max=units_max, units_text=units_text,
-            prereq_groups=parsed.groups, concurrent_ok=parsed.concurrent_ok,
+            prereq_groups=groups, concurrent_ok=parsed.concurrent_ok,
             conditions=parsed.conditions, ambiguities=parsed.ambiguities,
             catalog_url=f"{page_url}#{unique[0]}" if unique else page_url,
             content_hash="sha256:" + hashlib.sha256(
