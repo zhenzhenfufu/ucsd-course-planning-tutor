@@ -45,7 +45,7 @@ that cost:
 | DSC 180A | DSC 102, MATH 189 | also DSC 106 and a machine-learning elective |
 
 Every sentence is now regenerated from `catalog.ucsd.edu`, for every department
-the graph touches, which took the graph from **74 edges to 143**. Three habits
+the graph touches, which took the graph from **74 edges to 142** (now 143). Three habits
 of the catalog had to be handled before the rest fell out:
 
 - the department is carried over rather than repeated — `DSC 20/R and 40A/R`
@@ -72,12 +72,12 @@ shim kept only so an existing deployment pointed at the old path keeps working.
 ## Architecture
 
 ```
-data/catalog.json         catalog snapshot: 69 courses, prerequisites as prose
+data/catalog.json         catalog snapshot: 69 courses, parsed prerequisite groups
 data/scope.json           which courses are in scope, topic keywords, course sites
 data/offerings.json       quarters each course runs (tentative plans + Class Planner)
         |                 (refresh/ regenerates both snapshots every week)
         v
-prereq_graph.py           parse prose -> prerequisite DAG (AND of OR-groups)
+prereq_graph.py           catalog snapshot -> prerequisite DAG (AND of OR-groups)
         |                 + substitution rules, abstract requirements
         |                 + prereq_overrides.json (reviewed corrections)
         v
@@ -129,7 +129,7 @@ What the parser produces:
 |---|---|
 | courses | 69 |
 | prerequisite edges | 143 |
-| substitution rules found in prose | 7 |
+| substitution rules (carried over from the old dataset in `prereq_overrides.json`, marked "Owner to confirm") | 7 |
 | OR-groups (two or more alternatives) | 74 |
 | abstract requirement atoms | 5 |
 | cycles | **0** (verified DAG) |
@@ -213,15 +213,15 @@ Violations the checker caught in arm A: 12 × `PREREQ_MISSING`,
 3 × `UNITS_BELOW_FULL_TIME`, 1 × `DUPLICATE_COURSE`.
 
 The checker is itself checked: 11 hand-built plans with known verdicts
-(`VALIDATOR_FIXTURES`), 11/11 correct. 201 unit tests cover the graph, the
-validator, retrieval, offerings and the refresh code, and run without network access. Both the tests and
+(`VALIDATOR_FIXTURES`), 11/11 correct. 222 unit tests cover the graph, the
+validator, retrieval, offerings, the app's plan view and the refresh code, and run without network access. Both the tests and
 the validator self-test run in CI on every push and pull request
 (`.github/workflows/tests.yml`).
 
 ```bash
 python eval/run_eval.py            # full run
 python eval/run_eval.py --offline  # validator self-test only, no API key
-pytest tests/ -q                   # 201 tests
+pytest tests/ -q                   # 222 tests
 ```
 
 ### What this does not do
@@ -317,14 +317,14 @@ retrieval layer falls back to TF-IDF and the generative tabs are disabled.
 |---|---|
 | `data/` | `catalog.json`, `offerings.json` (derived facts), `scope.json` (course scope, keywords), `sources.json` (department plan URLs), `offerings_manual.json` (hand-entered) |
 | `refresh/` | fetches and parses the catalog, department plans and Class Planner terms |
-| `prereq_graph.py` | prose → prerequisite DAG |
+| `prereq_graph.py` | catalog snapshot + `prereq_overrides.json` → prerequisite DAG |
 | `prereq_overrides.json` | reviewed corrections, and rejections with reasons |
 | `retrieval.py` | documents, embeddings/TF-IDF, graph expansion |
 | `validator.py` | deterministic plan checking |
 | `planner.py` | generate → validate → repair, both strategies |
 | `app.py` | Streamlit UI |
 | `eval/` | 20 planning tasks, harness, results |
-| `tests/` | 201 offline tests |
+| `tests/` | 222 offline tests |
 | `.github/workflows/refresh.yml` | weekly data refresh that opens a pull request |
 | `.github/workflows/tests.yml` | offline tests on every push and pull request |
 | `.github/workflows/keepalive.yml` | keeps the hosted demo from sleeping |
