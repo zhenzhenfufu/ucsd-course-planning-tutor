@@ -14,8 +14,10 @@ from refresh.catalog import (CATALOG_BASE, build_catalog_snapshot, parse_course_
 from refresh import classplanner
 from refresh.http import FetchError, PoliteSession
 from refresh.offerings import ADAPTERS
+from refresh.report import diff_catalog, diff_offerings, render_report
 
 SOURCES = ("catalog", "offerings", "classplanner")
+CACHE_DIR = Path(__file__).resolve().parent.parent / ".refresh_cache"
 
 
 class ShapeError(Exception):
@@ -152,20 +154,30 @@ def main(argv: list[str] | None = None, session: PoliteSession | None = None) ->
     ap = argparse.ArgumentParser(prog="refresh.run")
     ap.add_argument("--only", nargs="+", choices=SOURCES, default=None)
     ap.add_argument("--data-dir", default="data")
-    ap.add_argument("--report", default="refresh_report.md")  # written by a later task
+    ap.add_argument("--report", default="refresh_report.md")
+    ap.add_argument("--tests-summary", default=None, help="one line for the report's Tests section")
     args = ap.parse_args(argv)
     data_dir = Path(args.data_dir)
-    dept_session = session or PoliteSession()
-    cp_session = session or PoliteSession(allowed_prefixes=classplanner.ALLOWED)
+    dept_session = session or PoliteSession(cache_dir=CACHE_DIR)
+    cp_session = session or PoliteSession(allowed_prefixes=classplanner.ALLOWED,
+                                          cache_dir=CACHE_DIR)
     failures = 0
     selected = args.only or ("catalog",)
     offerings_path = data_dir / "offerings.json"
     out = _read_json(offerings_path) or {}
+    old_offerings = json.loads(json.dumps(out))
+    old_catalog = _read_json(data_dir / "catalog.json") or {}
+    catalog_status: dict = {}
     touched = False
     for name in selected:
         try:
             if name == "catalog":
-                refresh_catalog(dept_session, data_dir)
+                try:
+                    refresh_catalog(dept_session, data_dir)
+                    _record(catalog_status, "catalog", True, CATALOG_BASE, None)
+                except Exception as e:  # noqa: BLE001
+                    _record(catalog_status, "catalog", False, CATALOG_BASE, _err(e))
+                    raise
             elif name == "offerings":
                 touched = True
                 failures += not refresh_offerings(dept_session, data_dir, out)
@@ -180,6 +192,13 @@ def main(argv: list[str] | None = None, session: PoliteSession | None = None) ->
         out.setdefault("scheduled", {})
         out.setdefault("tentative", {})
         _write_json(offerings_path, out)
+    new_catalog = _read_json(data_dir / "catalog.json") or {}
+    sources = {**(out.get("sources") or {}), **catalog_status.get("sources", {})}
+    sources_plan = _read_json(data_dir / "sources.json")
+    report = render_report(diff_catalog(old_catalog, new_catalog),
+                           diff_offerings(old_offerings, out), sources,
+                           args.tests_summary, sources_plan=sources_plan)
+    Path(args.report).write_text(report, encoding="utf-8")
     return 1 if failures == len(selected) else 0
 
 
