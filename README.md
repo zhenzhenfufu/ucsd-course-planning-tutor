@@ -74,7 +74,8 @@ shim kept only so an existing deployment pointed at the old path keeps working.
 ```
 data/catalog.json         catalog snapshot: 69 courses, prerequisites as prose
 data/scope.json           which courses are in scope, topic keywords, course sites
-        |                 (refresh/ regenerates catalog.json from catalog.ucsd.edu)
+data/offerings.json       quarters each course runs (tentative plans + Class Planner)
+        |                 (refresh/ regenerates both snapshots every week)
         v
 prereq_graph.py           parse prose -> prerequisite DAG (AND of OR-groups)
         |                 + substitution rules, abstract requirements
@@ -133,10 +134,10 @@ What the parser produces:
 | abstract requirement atoms | 5 |
 | cycles | **0** (verified DAG) |
 | depth | 9 topological layers |
-| sentences it flagged as unresolved | 11, listed rather than dropped |
+| sentences it flagged as ambiguous | 20, listed rather than dropped |
 
-Those 11 are reported, not silently discarded — they are references the prose
-makes that the parser cannot place on a course in scope.
+Those 20 are reported, not silently discarded — advisory wording, nested
+AND/OR clauses and references the parser cannot place on a course in scope.
 
 ### 2. One source of truth
 
@@ -175,7 +176,7 @@ run offline.
 `validator.py` takes a plan and returns typed violations. No API calls, so the
 same plan always gets the same verdict:
 
-`PREREQ_MISSING` · `UNITS_BELOW_FULL_TIME` · `UNITS_OVER_CAP` ·
+`PREREQ_MISSING` · `NOT_OFFERED` · `UNITS_BELOW_FULL_TIME` · `UNITS_OVER_CAP` ·
 `DUPLICATE_COURSE` · `DUPLICATE_IN_TERM` · `UNKNOWN_COURSE` ·
 `UNITS_HEAVY` (warning) · `EMPTY_TERM` (warning)
 
@@ -211,16 +212,16 @@ Earlier measurement, taken before the October 2026 rebuild (74-edge graph; not r
 Violations the checker caught in arm A: 12 × `PREREQ_MISSING`,
 3 × `UNITS_BELOW_FULL_TIME`, 1 × `DUPLICATE_COURSE`.
 
-The checker is itself checked: 9 hand-built plans with known verdicts
-(`VALIDATOR_FIXTURES`), 9/9 correct. 90 unit tests cover the graph, the
-validator and retrieval, and run without network access. Both the tests and
+The checker is itself checked: 11 hand-built plans with known verdicts
+(`VALIDATOR_FIXTURES`), 11/11 correct. 200 unit tests cover the graph, the
+validator, retrieval, offerings and the refresh code, and run without network access. Both the tests and
 the validator self-test run in CI on every push and pull request
 (`.github/workflows/tests.yml`).
 
 ```bash
 python eval/run_eval.py            # full run
 python eval/run_eval.py --offline  # validator self-test only, no API key
-pytest tests/ -q                   # 90 tests
+pytest tests/ -q                   # 200 tests
 ```
 
 ### What this does not do
@@ -232,6 +233,66 @@ currently returns a legal plan rather than saying so. Detecting *unreachable*
 goals from the DAG and reporting them is the obvious next step.
 
 ---
+
+## Keeping the data current
+
+There is no public UCSD API for courses, so a GitHub Actions job
+(`.github/workflows/refresh.yml`) refreshes the data **every Monday at 15:00 UTC**
+and can also be started by hand (Actions tab, "data-refresh", Run workflow).
+It opens or updates one pull request, `data-refresh`, whose body is a readable
+report of what changed; a person reviews and merges it.
+
+| Source | What it gives | Written to |
+|---|---|---|
+| General Catalog (`catalog.ucsd.edu`) | course IDs, titles, units, prerequisite sentences | `data/catalog.json` |
+| Department tentative plans (DSC, CSE, MATH, COGS, PHYS, ECE) | which quarters a course is planned for the year | `data/offerings.json` |
+| UCSD Class Planner public API (`/api/v1/public/*` only) | which courses are on the published schedule for a term | `data/offerings.json` |
+
+The fetcher identifies itself as `ucsd-course-planning-tutor (student project)`,
+makes at most one request per second to a host, honors `robots.txt`, uses
+conditional requests, sends no cookies and refuses to follow a redirect into
+UCSD single sign-on. A source that fails its shape check keeps its previous
+data. The job runs the offline tests itself and puts their summary in the pull
+request, because a pull request opened with the default token does not trigger
+`tests.yml`. To run it locally:
+
+```bash
+python -m refresh.run --only catalog offerings classplanner --report refresh_report.md
+```
+
+(`refresh.run` refreshes only the catalog unless `--only` names more sources.)
+
+**What is stored.** Derived facts only: course IDs, titles, units, prerequisite
+groups, condition tokens, which quarters a course runs, `source_url`,
+`fetched_at` and a content hash. No catalog or department prose is copied, and
+the topic keywords in `data/scope.json` are written by the owner.
+
+**What the app shows.** The sidebar caption reads "Catalog as of DATE ·
+Offerings as of DATE", or "Offerings unavailable" if `data/offerings.json`
+cannot be read (the planner and validator still run). A banner states that
+quarter offerings are tentative department plans unless marked scheduled.
+
+**`NOT_OFFERED` severity.** The validator checks each course against the quarter
+it is planned in:
+
+| Evidence | Finding |
+|---|---|
+| Class Planner lists the term for that subject and the course is absent | error |
+| Department plan lists the course only in other quarters | warning |
+| Department plan does not list the course | warning |
+| Department plan lists the course with no quarter | warning |
+| By-arrangement courses, Summer, terms with no data | no finding |
+
+**CHEM and BIOL are entered by hand.** The chemistry page disallows robots in
+its path and the biology page has no documented feed, so neither is fetched.
+`data/offerings_manual.json` has empty `CHEM` and `BIOL` blocks for 2026-27; until
+the owner fills their `courses` (course ID to quarters such as `["FA", "WI"]`,
+plus `entered_by` and `entered_at`), those departments count as no coverage and
+produce no `NOT_OFFERED` findings. Fetched department data wins over manual data.
+
+**One-time repository setting (owner only).** Settings, Actions, General,
+"Allow GitHub Actions to create and approve pull requests" must be enabled, or
+the workflow cannot open its pull request. It is off by default.
 
 ## Running it
 
@@ -248,8 +309,8 @@ retrieval layer falls back to TF-IDF and the generative tabs are disabled.
 
 | Path | |
 |---|---|
-| `data/` | `catalog.json` (derived facts from the catalog) and `scope.json` (course scope, keywords) |
-| `refresh/` | fetches and parses the catalog into `data/catalog.json` |
+| `data/` | `catalog.json`, `offerings.json` (derived facts), `scope.json` (course scope, keywords), `sources.json` (department plan URLs), `offerings_manual.json` (hand-entered) |
+| `refresh/` | fetches and parses the catalog, department plans and Class Planner terms |
 | `prereq_graph.py` | prose → prerequisite DAG |
 | `prereq_overrides.json` | reviewed corrections, and rejections with reasons |
 | `retrieval.py` | documents, embeddings/TF-IDF, graph expansion |
@@ -257,5 +318,7 @@ retrieval layer falls back to TF-IDF and the generative tabs are disabled.
 | `planner.py` | generate → validate → repair, both strategies |
 | `app.py` | Streamlit UI |
 | `eval/` | 20 planning tasks, harness, results |
-| `tests/` | 90 offline tests |
+| `tests/` | 200 offline tests |
+| `.github/workflows/refresh.yml` | weekly data refresh that opens a pull request |
+| `.github/workflows/tests.yml` | offline tests on every push and pull request |
 | `.github/workflows/keepalive.yml` | keeps the hosted demo from sleeping |
