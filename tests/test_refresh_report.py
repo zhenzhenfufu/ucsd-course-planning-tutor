@@ -91,3 +91,74 @@ def test_run_writes_report(tmp_path):
     assert main(["--only", "catalog", "--data-dir", str(d), "--report", str(rep)], session=s) == 0
     md = rep.read_text()
     assert "## Sources" in md and "| catalog | ok |" in md and "DSC 30" in md
+
+
+def _g(groups):
+    n = copy.deepcopy(C)
+    n["courses"]["DSC 180A"]["prereq_groups"] = groups
+    return n
+
+
+def _old(groups):
+    return _g(groups)
+
+
+def test_group_reorder_is_silent():
+    assert diff_catalog(_old([["X"], ["Y", "Z"]]), _g([["Z", "Y"], ["X"]])) == []
+
+
+def test_option_added_to_group():
+    t = "\n".join(diff_catalog(_old([["X"], ["Y", "Z"]]), _g([["X"], ["Y", "Z", "W"]])))
+    assert "DSC 180A" in t and "W" in t and "became" in t and t.count("\n") == 0
+
+
+def test_group_split_is_one_line():
+    lines = diff_catalog(_old([["X"], ["Y", "Z"]]), _g([["X"], ["Y"], ["Z"]]))
+    assert len(lines) == 1 and "Y or Z" in lines[0] and "became" in lines[0]
+
+
+def test_group_removed_and_added():
+    assert "no longer requires one of A, B" in "\n".join(diff_catalog(_old([["A", "B"]]), _g([])))
+    assert "now requires one of A, B" in "\n".join(diff_catalog(_old([]), _g([["B", "A"]])))
+
+
+def test_only_offerings_run_marks_catalog_not_run(tmp_path):
+    import json
+    from tests.test_refresh_run import _setup
+    from refresh.run import main
+    d = _setup(tmp_path)
+    (d / "catalog.json").write_text(json.dumps(
+        {"fetched_at": "2026-11-01T00:00:00Z", "courses": {}, "status": {"ok": True, "error": None}}))
+    (d / "sources.json").write_text("{}")
+    rep = tmp_path / "r.md"
+    main(["--only", "offerings", "--data-dir", str(d), "--report", str(rep)], session=object())
+    row = [l for l in rep.read_text().splitlines() if l.startswith("| catalog")][0]
+    assert "not run this time" in row and "2026-11-01" in row
+
+
+def test_classplanner_only_marks_departments_not_run(tmp_path):
+    import json
+    from tests.test_refresh_run import _setup
+    from refresh.run import main
+    d = _setup(tmp_path)
+    (d / "offerings.json").write_text(json.dumps({"sources": {"cse": {
+        "ok": True, "fetched_at": "2026-11-02T01:00:00Z", "source_url": "https://x.edu/a", "error": None}}}))
+
+    class Boom:
+        def get(self, url):
+            raise RuntimeError("down")
+    rep = tmp_path / "r.md"
+    main(["--only", "classplanner", "--data-dir", str(d), "--report", str(rep)], session=Boom())
+    lines = rep.read_text().splitlines()
+    cse = [l for l in lines if l.startswith("| cse")][0]
+    assert "not run this time" in cse and "2026-11-02" in cse
+    assert [l for l in lines if l.startswith("| classplanner")][0].split("|")[2].strip() == "FAILED"
+
+
+def test_sources_table_labels_and_hosts():
+    src = {"cse": {"ok": True, "fetched_at": "2026-11-02T01:00:00Z",
+                   "source_url": "https://docs.google.com/spreadsheets/" + "x" * 150, "error": None}}
+    md = render_report([], [], src, None, today=date(2026, 11, 13), ran={"cse"})
+    assert "docs.google.com" in md and "x" * 50 not in md and "2026-11-02" in md
+    md2 = render_report([], [], src, None, today=date(2026, 11, 13), ran=set())
+    assert "not run this time" in md2

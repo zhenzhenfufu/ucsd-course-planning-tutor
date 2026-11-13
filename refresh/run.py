@@ -36,6 +36,15 @@ def _write_json(path: Path, data: dict) -> None:
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def _set_catalog_status(data_dir: Path, ok: bool, error: str | None) -> None:
+    """Persist the last catalog attempt next to fetched_at; nothing else changes."""
+    path = data_dir / "catalog.json"
+    snap = _read_json(path)
+    if snap is not None:
+        snap["status"] = {"ok": ok, "error": error}
+        _write_json(path, snap)
+
+
 def refresh_catalog(session: PoliteSession, data_dir: Path) -> None:
     scope = json.loads((data_dir / "scope.json").read_text(encoding="utf-8"))
     scope_ids = list(scope["courses"])
@@ -72,6 +81,7 @@ def _err(exc: Exception) -> str:
 
 
 def _record(out: dict, name: str, ok: bool, source_url: str | None, error: str | None) -> None:
+    out.setdefault("_ran", set()).add(name)
     out.setdefault("sources", {})[name] = {"ok": ok, "fetched_at": _now(),
                                            "source_url": source_url, "error": error}
 
@@ -167,16 +177,17 @@ def main(argv: list[str] | None = None, session: PoliteSession | None = None) ->
     out = _read_json(offerings_path) or {}
     old_offerings = json.loads(json.dumps(out))
     old_catalog = _read_json(data_dir / "catalog.json") or {}
-    catalog_status: dict = {}
+    catalog_ran, catalog_error = False, None
     touched = False
     for name in selected:
         try:
             if name == "catalog":
+                catalog_ran = True
                 try:
                     refresh_catalog(dept_session, data_dir)
-                    _record(catalog_status, "catalog", True, CATALOG_BASE, None)
+                    _set_catalog_status(data_dir, True, None)
                 except Exception as e:  # noqa: BLE001
-                    _record(catalog_status, "catalog", False, CATALOG_BASE, _err(e))
+                    catalog_error = _err(e)  # catalog.json stays untouched: last good wins
                     raise
             elif name == "offerings":
                 touched = True
@@ -187,17 +198,25 @@ def main(argv: list[str] | None = None, session: PoliteSession | None = None) ->
         except Exception as e:  # noqa: BLE001 - one source must not stop the others
             failures += 1
             print(f"{name}: FAILED, keeping previous data ({_err(e)})", file=sys.stderr)
+    ran = set(out.pop("_ran", set()))
+    if catalog_ran:
+        ran.add("catalog")
     if touched:
         out["generated_at"] = _now()
         out.setdefault("scheduled", {})
         out.setdefault("tentative", {})
         _write_json(offerings_path, out)
     new_catalog = _read_json(data_dir / "catalog.json") or {}
-    sources = {**(out.get("sources") or {}), **catalog_status.get("sources", {})}
+    cstat = ({"ok": False, "error": catalog_error} if catalog_error
+             else new_catalog.get("status") or {})
+    sources = {**(out.get("sources") or {}),
+               "catalog": {"ok": cstat.get("ok", True), "error": cstat.get("error"),
+                           "fetched_at": new_catalog.get("fetched_at"),
+                           "source_url": new_catalog.get("source") or CATALOG_BASE}}
     sources_plan = _read_json(data_dir / "sources.json")
     report = render_report(diff_catalog(old_catalog, new_catalog),
                            diff_offerings(old_offerings, out), sources,
-                           args.tests_summary, sources_plan=sources_plan)
+                           args.tests_summary, sources_plan=sources_plan, ran=ran)
     Path(args.report).write_text(report, encoding="utf-8")
     return 1 if failures == len(selected) else 0
 
