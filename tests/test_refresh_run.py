@@ -293,3 +293,21 @@ def test_status_only_change_does_not_rewrite(tmp_path, monkeypatch):
                     d / "r2.md") == 0
     assert (d / "offerings.json").read_bytes() == before
     assert "| cse | FAILED |" in (d / "r2.md").read_text()
+
+
+def test_irrelevant_markup_changes_leave_data_byte_identical(tmp_path, monkeypatch):
+    """A nonce, an ad or reworded description prose is not a data change."""
+    d = _setup2(tmp_path)
+    _tick(monkeypatch)
+    assert _run_all(d, FakeSession3(_pages(), _catalog_pages()), d / "r1.md") == 0
+    before = {n: (d / n).read_bytes() for n in ("catalog.json", "offerings.json")}
+    pages = _pages()
+    pages["https://dsc.example/o"] = pages["https://dsc.example/o"].replace(
+        "<body>", "<body><!-- nonce=4f2a --><div class='ad'>Apply now</div>").replace(
+        "Sample page text that is not part of the table.", "Different intro text.")
+    cat = _catalog_pages()
+    cat["DSC"] = cat["DSC"].replace("<body>", "<body><!-- build 8f3a -->").replace(
+        "Zorblax quuxes the wibble frames.", "A reworded description.")
+    assert _run_all(d, FakeSession3(pages, cat), d / "r2.md") == 0
+    after = {n: (d / n).read_bytes() for n in ("catalog.json", "offerings.json")}
+    assert after == before

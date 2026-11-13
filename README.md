@@ -267,8 +267,11 @@ python -m refresh.run --report refresh_report.md
 
 **What is stored.** Derived facts only: course IDs, titles, units, prerequisite
 groups, condition tokens, which quarters a course runs, `source_url`,
-`fetched_at` and a content hash. No catalog or department prose is copied, and
-the topic keywords in `data/scope.json` are written by the owner.
+`fetched_at` and a content hash. The hash is taken over the parsed result (a
+course's record, or a department's course-to-quarters table), not the page, so
+a page whose markup or wording changes while the data does not leaves the files
+unchanged. No catalog or department prose is copied, and the topic keywords in
+`data/scope.json` are written by the owner.
 
 **What the app shows.** The sidebar caption reads "Catalog as of DATE ·
 Offerings as of DATE", or "Offerings unavailable" if `data/offerings.json`

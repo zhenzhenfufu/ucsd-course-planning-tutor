@@ -99,6 +99,18 @@ def refresh_catalog(session: PoliteSession, data_dir: Path) -> dict:
 
 
 COGS_GID = "gid=866922720"
+_QORDER = {"FA": 0, "WI": 1, "SP": 2}
+
+
+def courses_hash(courses: dict) -> str:
+    """Hash of a department's parsed course -> quarters mapping.
+
+    Taken over the normalised result, not the page bytes, so a nonce, an ad or
+    reworded page text leaves it (and offerings.json) unchanged.
+    """
+    norm = {cid: sorted(qs, key=lambda q: (_QORDER.get(q, 9), q)) for cid, qs in courses.items()}
+    blob = json.dumps(norm, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
 
 def _err(exc: Exception) -> str:
@@ -132,7 +144,7 @@ def refresh_offerings(session, data_dir: Path, out: dict) -> bool:
                     raise ShapeError(f"{url} returned {res.status}")
                 courses = ADAPTERS[dept].parse(res.text, year)
                 new_blocks[year] = {"source_url": url, "fetched_at": _now(),
-                                    "content_hash": hashlib.sha256(res.text.encode("utf-8")).hexdigest(),
+                                    "content_hash": courses_hash(courses),
                                     "status": "tentative", "courses": courses}
             except Exception as exc:  # noqa: BLE001 - any failure keeps the previous block
                 errors.append(f"{year}: {_err(exc)}")

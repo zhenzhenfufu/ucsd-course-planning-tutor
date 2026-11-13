@@ -4,7 +4,7 @@
       "COGS": {
         "source_url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-pFK5zou3FdqmceGomf_NC47wKhhVhQxe5uwp18Kw32AyJGG3-Bfk-cJPac5YjW26rcCN-wVYWLj0/pub?gid=866922720&single=true&output=csv",
         "fetched_at": "2026-11-13T15:18:01Z",
-        "content_hash": "cf94ba8dfd2574f6cd9f44be2b3faf1b64ede44b7c4ea6f763b2b50708a51bcf",
+        "content_hash": "b6348ee6944bdc23cb42dbcf8aaf5dc73c78324ce3af169d9da5fc85421100ce",
         "status": "tentative",
         "courses": {
           "COGS 1": [
@@ -260,7 +260,7 @@
       "CSE": {
         "source_url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYc7qv9lyLh-F8EzlVcE2td3jObRp2B88ZIru9XQw0_G70kfDCjVRo64EWWDdEEkzyc_s1sX2JMfqb/pub?gid=684727614&single=true&output=csv",
         "fetched_at": "2026-11-13T15:18:03Z",
-        "content_hash": "c9a7048d8f0740fd625a290e566a935e584d0beef656e366fb714ad243882e2d",
+        "content_hash": "8303879a2597d4752b28663f6367e12e8bbbfd14dfe40f0f147632dc9370f647",
         "status": "tentative",
         "courses": {
           "CSE 3": [
@@ -542,7 +542,7 @@
       "DSC": {
         "source_url": "https://datascience.ucsd.edu/current-students/course-offerings/",
         "fetched_at": "2026-11-13T15:18:07Z",
-        "content_hash": "ecdb8f6c7c1051e5338ac1bad75bc4c6e8ce4525b1cddc98fb72e83ffe4c7d29",
+        "content_hash": "85153f68e687ba55f51bf9ef3f915f0813db77dfb43e28878ae047c58f3b8420",
         "status": "tentative",
         "courses": {
           "DSC 10": [
@@ -628,7 +628,7 @@
       "ECE": {
         "source_url": "https://ece.ucsd.edu/ece-tentative-course-list",
         "fetched_at": "2026-11-13T15:18:08Z",
-        "content_hash": "784f41123de6d36b072a549324b0731bba9a91dfe0b1d84406d5b4aa726866cf",
+        "content_hash": "496034666447fa775a4ae07baa2b99fee104dcecf92f28312513492ca9ad0365",
         "status": "tentative",
         "courses": {
           "ECE 5": [
@@ -1115,7 +1115,7 @@
       "MATH": {
         "source_url": "https://math.ucsd.edu/students/planned-course-offerings?year=2026-2027",
         "fetched_at": "2026-11-13T15:18:10Z",
-        "content_hash": "33b669b5d62ee083aa57befd9b6deb795a7f0ac2e3b6c93ea1345b1f4eed7673",
+        "content_hash": "88d5ada3c4390570a0f01013390ee1a0cfed60ea666efc34d3d7889b59a0c329",
         "status": "tentative",
         "courses": {
           "MATH 2": [
@@ -1732,7 +1732,7 @@
       "PHYS": {
         "source_url": "https://physics.ucsd.edu/students/courseofferings",
         "fetched_at": "2026-11-13T15:18:11Z",
-        "content_hash": "6720ba5598d358603648c15102ae119becd21314a598a9e1e50182ac489dec13",
+        "content_hash": "ed3a4ceeb8e1c76fbab116149cb71cc140f27a96155f6115cc1709117ad7553f",
         "status": "tentative",
         "courses": {
           "PHYS 1A": [

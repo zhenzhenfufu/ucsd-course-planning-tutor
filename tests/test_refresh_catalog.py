@@ -107,3 +107,39 @@ def test_referenced_never_lists_abstract_tokens():
     snap = build_catalog_snapshot(pages, ["DSC 77"], None, "t", None)
     assert snap["courses"]["DSC 77"]["prereq_groups"] == [["<probability>"], ["DSC 10"]]
     assert list(snap["referenced"]) == ["DSC 10"]
+
+
+# ---- content_hash covers the parsed record, not the page text ----------------
+
+def test_hash_ignores_description_prose_and_markup():
+    from refresh.catalog import course_hash
+    noisy = (DSC_HTML.replace("Zorblax quuxes the wibble frames.", "Rewritten blurb, new words.")
+             .replace("<body>", "<body><!-- build 8f3a nonce=xyz --><div class='ad'>ad</div>"))
+    a, b = _dsc()["DSC 30"], {c.id: c for c in parse_course_page(noisy, "DSC", DSC_URL)}["DSC 30"]
+    assert a.content_hash == b.content_hash
+    from dataclasses import asdict
+    assert a.content_hash == course_hash(asdict(a))
+
+
+def test_hash_changes_when_parsed_record_changes():
+    changed = DSC_HTML.replace("DSC 30 and DSC 40B/R and", "DSC 30 and DSC 40A/R and")
+    old = _dsc()["DSC 80"].content_hash
+    new = {c.id: c for c in parse_course_page(changed, "DSC", DSC_URL)}["DSC 80"].content_hash
+    assert old != new
+
+
+def test_hash_survives_snapshot_round_trip():
+    from refresh.catalog import course_hash
+    pages = {"DSC": parse_course_page(DSC_HTML, "DSC", DSC_URL)}
+    snap = build_catalog_snapshot(pages, ["DSC 30", "DSC 80"], None, "t", "e")
+    back = json.loads(json.dumps(snap, indent=2, ensure_ascii=False))
+    for rec in back["courses"].values():
+        assert course_hash(rec) == rec["content_hash"]
+
+
+def test_committed_catalog_hashes_match_records():
+    from refresh.catalog import course_hash
+    snap = json.loads((Path(__file__).resolve().parent.parent / "data" / "catalog.json")
+                      .read_text(encoding="utf-8"))
+    bad = [cid for cid, rec in snap["courses"].items() if course_hash(rec) != rec["content_hash"]]
+    assert bad == []

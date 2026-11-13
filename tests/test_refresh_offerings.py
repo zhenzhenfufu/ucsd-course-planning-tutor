@@ -117,3 +117,24 @@ def test_ece_uses_href_fragment():
 def test_ece_wrong_year_header():
     with pytest.raises(ShapeError):
         ece.parse(load("offer_ece.html"), "2025-26")
+
+
+# ---- content_hash covers the parsed course->quarters mapping -----------------
+
+def test_offerings_hash_is_order_insensitive_and_content_sensitive():
+    from refresh.run import courses_hash
+    a = courses_hash({"DSC 10": ["FA", "WI"], "DSC 20": []})
+    assert a == courses_hash({"DSC 20": [], "DSC 10": ["WI", "FA"]})
+    assert a != courses_hash({"DSC 10": ["FA"], "DSC 20": []})
+
+
+def test_committed_offerings_hashes_match_courses():
+    import json as _json
+    from pathlib import Path as _P
+
+    from refresh.run import courses_hash
+    data = _json.loads((_P(__file__).resolve().parent.parent / "data" / "offerings.json")
+                       .read_text(encoding="utf-8"))
+    bad = [(ay, d) for ay, depts in data["tentative"].items() for d, b in depts.items()
+           if b.get("content_hash") != courses_hash(b["courses"])]
+    assert bad == []
