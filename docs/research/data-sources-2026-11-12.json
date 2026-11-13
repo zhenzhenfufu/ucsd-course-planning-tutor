@@ -1,0 +1,1060 @@
+[
+ {
+  "found": {
+   "key": "ucsd_general_catalog",
+   "sources": [
+    {
+     "name": "UCSD General Catalog: per-department course pages (current, '2026-27 Catalog Interim Update: Fall')",
+     "url": "https://catalog.ucsd.edu/courses/{CODE}.html  (fetched DSC, MATH, CSE, PHYS, BIOL, CHEM, COGS, ECE)",
+     "what_it_gives": "For every course: course ID, title, units, and one description paragraph. Prerequisites, restrictions, credit exclusions, cross-listings, 'Recommended preparation' and 'Formerly/Renumbered from' all sit inside that paragraph as prose. Live counts of p.course-name: DSC 84, MATH 224, CSE 212, PHYS 141, BIOL 247 (one page covers BILD/BICD/BIBC/BIEB/BIMM/BIPN), CHEM 170, COGS 134, ECE 204. It does NOT say which quarters a course is offered. The only offering hints are free text such as 'offered every year' (CHEM, 19 times), 'offered in alternate years' (PHYS) and 'Offered as faculty resources permit' (CSE).",
+     "format": "Static HTML (Apache, served as text/html UTF-8; DSC page is about 96 KB). No JSON, no API, no per-course URLs. Every course has an anchor (#dsc40a). The site offers no PDF version of the course pages (/pdf/DSC.pdf returned 404).",
+     "access": "public (no login)",
+     "robots_terms": "https://catalog.ucsd.edu/robots.txt returns HTTP 404, so no robots rules are published for this host. Each page has the meta tag `<meta content=\"index,follow,noarchive\" name=\"robots\"/>`. The parent host's https://ucsd.edu/robots.txt has `Disallow: /catalog/`, but that covers the ucsd.edu/catalog/ path, not the catalog.ucsd.edu host. The site-wide Terms of Use (https://ucsd.edu/about/terms-of-use.html, linked from every catalog page footer) say, quoted from the page: 'No material from any official UC San Diego website may be copied, reproduced, republished, ... without explicit permission, except that you may download one copy ... for your personal, non-commercial home use only'. A public Streamlit app that republishes description text goes beyond that clause, so permission should be sought, or the app should store only derived facts (IDs, units, parsed prerequisite edges) and link to the catalog.",
+     "freshness": "The page header and the disclaimer name the edition: 'UC San Diego General Catalog 2026–27', and the homepage says '2026-27 Catalog Interim Update: Fall'. Every page fetched on 2026-11-12, including the archived 2025-26 pages, had Last-Modified on 2026-11-04 (about 18:09 to 18:31 GMT). That means the whole site is republished in one batch, so Last-Modified does not show whether a page's content changed. ETag is supported: a conditional GET with If-None-Match returned 304. The cadence is inferred, not confirmed: one official edition per year, plus term-labelled 'Interim Update' releases (Fall seen).",
+     "parse_notes": "Verified structure: `<p class=\"anchor-parent\"><a class=\"anchor\" id=\"dsc40a\">` (sometimes 2 per course, e.g. dsc10 + dsc10r), then `<p class=\"course-name\">DSC 10/R. Principles of Data Science (4)</p>`, then `<p class=\"course-descriptions\">...</p>`. Section headings are `<h2>Lower Division</h2>`, `<h2>Upper Division</h2>`, `<h2>Graduate</h2>`; BIOL also has subject h2s such as 'Biochemistry'. PITFALLS FOUND: (1) The description `<p>` sometimes has no class: DSC 40B/R, PHYS 11 entries (incl. PHYS 1A, 1AL, 1BL), BIOL 6, CHEM 2, COGS 3 (incl. COGS 18), ECE 1. The repo's scraper.py pairs `find_all('p','course-name')[i]` with `find_all('p','course-descriptions')[i]` by index, so on today's DSC page every description from DSC 40B/R onward is shifted onto the wrong course. Instead, take the next sibling `<p>` that is not an anchor-parent. (2) The units are the last parenthesised group of the title. Forms seen: '4', '2 or 4', '1–4' (en dash), '1 to 12', '4-4-4' (sequence), '2, 4, 6, 8, 10, or 12', '0–1'. On CSE, 61 titles end with a tag after the units, e.g. `CSE 105. Theory of Computability (4)&#160;<strong><em>Tag: Theory/Abstraction</em></strong>`, so strip the strong/Tag before matching units. (3) The prerequisite label markup varies widely: `<strong class=\"italic\"><em>Prerequisites:</em></strong>`, `<strong><em><em>Prerequisites:</em></em></strong>`, `<strong>Prerequisites:</strong>`, `<span class=\"italic\"><strong><em>Prerequisites:</em></strong></span>` (MATH 18), `<strong><em>Prerequisites</em></strong>` with no colon, and `<strong>:</strong>` split labels (BIOL). Split on the regex /Prerequisites?\\s*:/ over get_text(), not on tags. Some descriptions have no prerequisite sentence at all (CSE 39, PHYS 47, BIOL 83). (4) IDs carry suffixes: DSC lower-division courses are now 'DSC 10/R', '20/R', '30/R', '40A/R', '40B/R', '80/R', and the prereq prose uses forms like 'DSC 20/R and 40A/R' (the subject is implied after the first course). dsc_courses.json still uses 'DSC 10' etc. One anchor id is wrong: 'dsc40r' for 40B/R. (5) Cross-listings appear in prose: '(Cross-listed with MUS 20.)'. (6) Descriptions contain almost no links (DSC 0 of 83; BIOL 12 links), so course references must be parsed as text.",
+     "verified": true
+    },
+    {
+     "name": "UCSD Catalog: Data Science undergraduate curriculum (major requirements)",
+     "url": "https://catalog.ucsd.edu/curric/DSC-ug.html",
+     "what_it_gives": "Requirements for 'The Data Science Major (DSC-BS-001)', the Business Data Science Major (DSC-BS-002) and the DSC minor, plus transfer-preparation and continuing-student policies. DS major: 112 units, 52 lower-division and 60 upper-division. Lower division: Data Science 28 units (COGS 9, DSC 10/R, 20/R, 30/R, 40A/R, 40B/R, 80/R); Mathematics 16 units ('MATH 18 or MATH 31AH', 20A, 20B, '20C or 31BH'); one of five Subject Domain sequences. Upper division: Core 32 units (e.g. 'ECON 120A or MATH 183 or MATH 181A', 'DSC 148 or CSE 158 or CSE 158R'), Senior Project (DSC 180A, 180B), and Electives 20 units. Grade rule stated: C– minimum, letter grade.",
+     "format": "Static HTML. Requirements are nested `<ul><li>` lists under `<h2>`/`<h3>` (h2 'The Data Science Major (DSC-BS-001)', then h3 'Lower Division' and 'Upper Division'). Group labels are inside `<em>`, e.g. `<li><em>Mathematics (sixteen units): </em><ul>...`. There are no tables, no data attributes, and only 1 course link in the main content.",
+     "access": "public",
+     "robots_terms": "Same host as the course pages: robots.txt 404 and meta 'index,follow,noarchive'. The ucsd.edu Terms of Use apply, with the same reproduction restriction.",
+     "freshness": "Last-Modified is 2026-11-04 (batch republish). It carries the same 2026-27 Fall interim-update content, e.g. it already uses the 'DSC 10/R' IDs.",
+     "parse_notes": "Partly machine-parsable. The required-course list items ('DSC 100', 'MATH 18 or MATH 31AH', 'DSC 140A or CSE 150A') can be parsed reliably into AND-of-OR groups. Unit totals are spelled out as words in the group labels ('twenty-eight units'). These parts are hard to parse: Subject Domain options mix and/or with parentheses ('(POLI 5 or POLI 5D or ECON 5) or (POLI 30 or POLI 30D)'); the elective list is one prose `<li>` that uses ranges and implied subjects ('COGS 108, 109, 118C-D, 120 (cross-listed with CSE 170)', 'MATH ... 181A-B-C-D-E-F') plus petition rules. Some requirements name courses that are not on the department course page: 'MATH 189 or DSC 152' appears in the requirements, but DSC 152 is absent from courses/DSC.html. The section header carries the program code, which makes a stable key. Recommendation: parse the core and lower-division lists automatically, and keep the elective and subject-domain rules as a hand-reviewed JSON that is re-checked against a hash of the section's HTML.",
+     "verified": true
+    },
+    {
+     "name": "UCSD Catalogs of Record archive (year-versioned snapshots)",
+     "url": "https://catalog.ucsd.edu/archive/index.html  (e.g. /archive/2026-27/courses/DSC.html, /archive/2025-26/courses/DSC.html, /archive/2025-26/curric/DSC-ug.html)",
+     "what_it_gives": "The year selector for the catalog. Archived editions 2026–27 back to 2021–22 are on catalog.ucsd.edu/archive/{YYYY-YY}/ with the same paths and HTML structure as the live site. 2020–21 and earlier link to http://registrar.ucsd.edu/catalog/{YY-YY}/ (not fetched). The page states: 'The Official Catalog of Record is an archival document of record and does not reflect interim updates.' This lets the planner pin requirements to a student's catalog year and diff editions.",
+     "format": "Static HTML, identical classes (p.course-name / p.course-descriptions / p.course-disclaimer).",
+     "access": "public",
+     "robots_terms": "Same as catalog.ucsd.edu: no robots.txt, and the ucsd.edu Terms of Use apply.",
+     "freshness": "Archive snapshots also show Last-Modified 2026-11-04, so that header is a republish date, not a content date. Measured diffs: the live DSC page against archive/2026-27 (the record) differs in 56 of 83 shared courses and adds DSC 234. The changes are mostly restriction wording ('DS25' replaced by 'data science' / 'data science or business data science') and 'DSC 10' replaced by 'DSC 10/R'. The live page against 2025-26 renames DSC 10/20/30/40A/40B/80 to the '/R' forms and adds DSC 123A, 123B, 234 and 270.",
+     "parse_notes": "Read the edition from `p.course-disclaimer` ('...UC San Diego General Catalog 2026–27...'). The live root shows 'Catalog Interim Update: Fall' on index.html and in the archive's 'Current catalog' entry. The live site reflects the latest interim update, while /archive/{year}/ is the frozen record. A diff-based refresh should compare normalized text, not Last-Modified.",
+     "verified": true
+    },
+    {
+     "name": "Catalog department index (Courses, Curricula, and Faculty)",
+     "url": "https://catalog.ucsd.edu/front/courses.html",
+     "what_it_gives": "The master list of departments and programs, each with links to its '../curric/X.html', '../courses/X.html', '../faculty/X.html' and '../pdf/X.pdf' pages (471 links in main). Needed because page code is not equal to subject code: BIOL.html holds BILD/BICD/BIBC/BIEB/BIMM/BIPN courses, and the DSC curriculum is split into DSC-ug.html and DSC-gr.html. It also states the course-number conventions (1–99 lower division, 100–199 upper division, 200–299 graduate).",
+     "format": "Static HTML, link list grouped by letter anchors (#A, #C, ...)",
+     "access": "public",
+     "robots_terms": "Same as above. Note that https://catalog.ucsd.edu/courses/index, which is linked from the breadcrumb, returns 404; use front/courses.html.",
+     "freshness": "Last-Modified is 2026-11-04 (batch republish).",
+     "parse_notes": "Collect `a[href^='../courses/']` to discover course pages and `a[href^='../curric/']` for program pages. The listed '../pdf/X.pdf' links were not verified, and /pdf/DSC.pdf returned 404.",
+     "verified": true
+    }
+   ],
+   "recommendation": "Use catalog.ucsd.edu as the source of truth for course existence, IDs, titles, units and prerequisite prose, and for the DS major's required core lists. Do NOT use it for quarter offerings: it has no term data beyond occasional prose like 'offered every year' or 'alternate years', so offerings must come from the department projected-offerings pages and the Schedule of Classes. Implementation for a GitHub Actions cron (weekly is ample, since content changes per interim update, i.e. per term):\n(1) Discover department pages from front/courses.html and fetch only the ~8 needed course pages plus curric/DSC-ug.html. Use conditional GET with a stored ETag (304 verified), a descriptive User-Agent, and at least 1 s between requests.\n(2) Parse with a sibling-based pairing, not the index-zip in scraper.py: for each p.course-name, take the next non-anchor `<p>`. Strip the trailing `<strong>Tag:…</strong>`, read units from the last parenthesised group (handle ranges, 'or' and 4-4-4), and split prerequisites with a regex on text.\n(3) Normalize IDs: add an alias table for the '/R' suffix (DSC 10 = DSC 10/R) and expand implied subjects ('DSC 20/R and 40A/R').\n(4) Store a hash of each course's normalized text and open a PR (not an auto-commit) when anything changes, so prereq_overrides.json and the graph tests are re-reviewed before deploy.\n(5) Record the edition string from p.course-disclaimer plus the interim-update label in the data file. Optionally load /archive/{year}/ snapshots to support a student's catalog-year requirements.\n(6) Parse the major requirements partly automatically: the lower-division and core `<li>` lists can be parsed into AND-of-OR groups, but keep the elective and subject-domain rules hand-curated and alarm when the section's HTML hash changes.\n(7) Mind the Terms of Use: copying or republishing catalog text needs explicit permission beyond personal non-commercial use. The public app should therefore store derived structured data and link back to the catalog anchor (e.g. courses/DSC.html#dsc40a) rather than redisplaying full descriptions, or the owner should ask the Registrar for permission. The existing dataset already stores full descriptions.",
+   "open_questions": [
+    "How often are interim updates published (Fall seen; are there Winter/Spring updates?) and on what dates? Last-Modified cannot answer this, because every page, archives included, was republished on 2026-11-04.",
+    "What does the '/R' suffix (DSC 10/R etc., new in the 2026-27 interim update) mean, and are /R sections a distinct offering in the Schedule of Classes? No explanatory note was found on the DSC course page.",
+    "Is there an official machine-readable catalog feed (e.g. a Registrar or ITS course API) behind catalog.ucsd.edu? None is linked from the pages fetched; this is UNVERIFIED.",
+    "registrar.ucsd.edu catalog archives for 2020–21 and earlier were not fetched. Their structure and robots rules are UNVERIFIED.",
+    "Would the UCSD Registrar grant permission to redistribute catalog descriptions in a public student app, given the ucsd.edu Terms of Use reproduction clause?",
+    "DSC 152 is named in the major requirements ('MATH 189 or DSC 152') but has no entry on courses/DSC.html. Is it a new or pending course, or is it listed elsewhere?",
+    "The 'pdf' links on front/courses.html: /pdf/DSC.pdf returned 404. Whether other department PDFs exist was not checked."
+   ]
+  },
+  "verdict": {
+   "key": "ucsd_general_catalog",
+   "checks": [
+    {
+     "url": "https://catalog.ucsd.edu/courses/{DSC,MATH,CSE,PHYS,BIOL,CHEM,COGS,ECE}.html",
+     "claim": "Live counts of p.course-name: DSC 84, MATH 224, CSE 212, PHYS 141, BIOL 247, CHEM 170, COGS 134, ECE 204. Static Apache HTML, text/html UTF-8, DSC page about 96 KB, anchors such as #dsc40a, no per-course URLs.",
+     "status": "confirmed",
+     "evidence": "Re-fetched 2026-11-12. All 8 return HTTP/2 200 and the counts match exactly. p.course-descriptions counts are DSC 83, MATH 224, CSE 212, PHYS 131, BIOL 245, CHEM 168, COGS 131, ECE 203. Headers: 'server: Apache/2.4.62 (Red Hat Enterprise Linux)', 'content-type: text/html; charset=UTF-8', and DSC content-length is 95923."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/courses/DSC.html",
+     "claim": "Some description <p> tags have no class: DSC 40B/R, 11 PHYS entries (incl. 1A, 1AL, 1BL), 6 BIOL, 2 CHEM, 3 COGS (incl. COGS 18), 1 ECE. scraper.py pairs names and descriptions by index, so every DSC description from 40B/R onward lands on the wrong course.",
+     "status": "confirmed",
+     "evidence": "A sibling walk finds classless descriptions in the same counts: DSC 1 (40B/R), PHYS 11 (1A, 1AL, 1BL, 1C, 1CL, 2B, 2C, 4E, 105B, 200A, 264), BIOL 6 (BILD 12, 26, 28, 92, BIBC 194, BIMM 134), CHEM 2 (123, 258), COGS 3 (18, 201, 219), ECE 1 (124). The raw HTML after the 40B/R name is a bare '<p>The sequence DSC 40A/R-B/R introduces...'. scraper.py lines 27-33 zip find_all('p','course-name')[i] with find_all('p','course-descriptions')[i], so the shift is real. Caveat: scraper.py already strips '/R' from IDs (.replace('/R','')) and drops DSC 90-99 and 200+."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/courses/DSC.html",
+     "claim": "Section headings are h2 'Lower Division' / 'Upper Division' / 'Graduate', and BIOL also has subject h2s such as 'Biochemistry'.",
+     "status": "partly",
+     "evidence": "On DSC the headings are h2 'Courses', h2 'Lower Division', h2 'Upper Division' and h3 'Graduate', so Graduate is an h3. On BIOL, 'Biochemistry', 'Ecology, Behavior, and Evolution', 'Special Courses' and the other subject headings are h3, not h2. Code that assigns course level by h2 alone would put DSC graduate courses under Upper Division."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/courses/DSC.html",
+     "claim": "One anchor id is wrong: 'dsc40r' for 40B/R.",
+     "status": "partly",
+     "evidence": "The anchor sequence is dsc10, dsc10r, dsc20, dsc20r, dsc30, dsc30r, dsc40a, dsc40r, dsc40b, dsc40r, dsc80, dsc80r. The id 'dsc40r' appears twice, once for 40A/R and once for 40B/R, so it is a duplicate id. A dict keyed on anchor ids will drop one of the two."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/courses/CSE.html",
+     "claim": "On CSE, 61 titles end with a 'Tag:' after the units, e.g. 'CSE 105 ... (4) <strong><em>Tag: Theory/Abstraction</em></strong>'.",
+     "status": "partly",
+     "evidence": "The tag pattern exists, but I count 55 occurrences of 'Tag:' in the raw HTML and 55 course-name <p> elements containing 'Tag:', not 61."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/courses/*.html",
+     "claim": "Units come from the last parenthesised group, in forms like '4', '2 or 4', '1–4', '1 to 12', '4-4-4', '2, 4, 6, 8, 10, or 12', '0–1'.",
+     "status": "confirmed",
+     "evidence": "After stripping Tag text, all 1416 titles end in a parenthesised group. Shapes across the 8 pages: N 1305, N–N (en dash) 59, N or N 32, N-N-N 12, N to N 4. Single occurrences: N-N, N or N or N, 'N, N, N, N, N, or N', 'N, N, N, or N'. The last three are not in the claimed list, but a general parser covers them."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/courses/MATH.html",
+     "claim": "Prerequisite label markup varies a lot, e.g. MATH 18 uses <span class=\"italic\"><strong><em>Prerequisites:</em></strong></span>. Split on regex over get_text(). CSE 39, PHYS 47 and BIOL 83 descriptions have no prerequisite sentence.",
+     "status": "partly",
+     "evidence": "The variety is real: I found 20+ label variants. The most common are '<strong class=\"italic\"><em>Prerequisites:' (811) and '<strong><em><em>Prerequisites:' (161), plus split-colon forms such as '<strong><em>Prerequisites</em></strong><em><strong>:' (10). The MATH 18 example is wrong: MATH 18 uses '<strong class=\"italic\"><em>Prerequisites:</em></strong>'. The span.italic form occurs 40 times on other courses. With a text regex I count no-prerequisite descriptions as CSE 39, PHYS 48, BIOL 84, CHEM 35, COGS 44, MATH 3, ECE 6, DSC 0, which is close to the claim."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/courses/DSC.html",
+     "claim": "The prereq prose uses implied subjects ('DSC 20/R and 40A/R'). Cross-listings appear as prose ('(Cross-listed with MUS 20.)'). Descriptions have almost no links (DSC 0, BIOL 12). dsc_courses.json uses 'DSC 10'.",
+     "status": "confirmed",
+     "evidence": "The 40B/R prerequisite reads 'DSC 20/R and 40A/R'. The prose also has forms like 'DSC 40A/R-B/R'. Both suffixed and unsuffixed IDs appear: DSC 97/98/99 prereqs say 'DSC 20 and DSC 40A', while DSC 100 says 'DSC 40B/R and DSC 80/R'. The MUS 20 cross-listing is on COGS 20 (courses/COGS.html). Description links: DSC 0, BIOL 15 (not 12), COGS 3, MATH 1. dsc_courses.json has key 'DSC 10'."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/courses/*.html",
+     "claim": "The pages give no quarter offerings. The only hints are 'offered every year' (CHEM 19), 'alternate years' (PHYS) and 'Offered as faculty resources permit' (CSE).",
+     "status": "confirmed",
+     "evidence": "Counts: 'offered every year' CHEM 19, PHYS 1, BIOL 1; 'alternate years' PHYS 1, BIOL 4; 'faculty resources permit' CSE 2. None of the pages has any term or quarter field."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/pdf/DSC.pdf",
+     "claim": "The site offers no PDF version of the course pages (/pdf/DSC.pdf returned 404).",
+     "status": "partly",
+     "evidence": "front/courses.html lists 96 '../pdf/X.pdf' links, but there is no DSC.pdf link at all, so testing DSC.pdf proves little. I tested listed links instead: /pdf/BIOL.pdf, /pdf/MATH.pdf and /pdf/CSE.pdf all return 404 (the same 39,045-byte HTML 404 page). The listed PDF links are broken; the PDFs are not simply absent from the index."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/robots.txt",
+     "claim": "catalog.ucsd.edu/robots.txt is 404. The pages carry meta robots 'index,follow,noarchive'. ucsd.edu/robots.txt has 'Disallow: /catalog/'.",
+     "status": "confirmed",
+     "evidence": "robots.txt returns HTTP/2 404 (an HTML error page). DSC.html has '<meta content=\"index,follow,noarchive\" name=\"robots\"/>'. https://ucsd.edu/robots.txt reads 'user-agent: *', 'Disallow: /*?_=*ga=', 'Disallow: /catalog/', which applies only to the ucsd.edu host."
+    },
+    {
+     "url": "https://ucsd.edu/about/terms-of-use.html",
+     "claim": "The Terms of Use (linked in the catalog footer) forbid copying or republishing without explicit permission, except one copy for personal, non-commercial home use.",
+     "status": "confirmed",
+     "evidence": "The quoted sentence is present verbatim, and the DSC page footer links href=\"https://ucsd.edu/about/terms-of-use.html\". Two things were missed: (1) the next sentence says use of such material 'on any other website or networked computer environment is prohibited', which bears directly on a Streamlit app; (2) the page names a permissions contact in Information Technology Services (Chuck Rose). The page says 'last updated on April 22, 2022'."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/courses/DSC.html",
+     "claim": "Every page, archives included, has Last-Modified 2026-11-04 between about 18:09 and 18:31 GMT. ETag conditional GET returns 304.",
+     "status": "confirmed",
+     "evidence": "Last-Modified ranges from 'Wed, 04 Nov 2026 18:09:50 GMT' (ECE) to '18:31:25' (curric/DSC-ug); archive/2025-26 pages show 18:17-18:18. If-None-Match with \"176b3-65f774a85b700\" returned 304, and If-Modified-Since also returned 304. The 404 page has its own Last-Modified of 30 Sep 2026."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/curric/DSC-ug.html",
+     "claim": "DS major (DSC-BS-001): 112 units (52 lower / 60 upper), DS 28 units, Math 16 units, one of five Subject Domain sequences, Core 32 units, Senior Project 180A/B, Electives 20 units, C– minimum with a letter grade. Nested ul/li with <em> group labels, no tables. MATH 189 or DSC 152 is listed, and DSC 152 is not on courses/DSC.html.",
+     "status": "confirmed",
+     "evidence": "Text: 'The major consists of 112 units, with fifty-two units from lower-division courses and sixty units from upper-division courses'. Markup: '<li><em>Mathematics (sixteen units): </em><ul><li>MATH 18 or MATH 31AH</li>...<li>MATH 20C <em>or</em> MATH 31BH</li>'. There are 5 subject domains (Business Analytics and Econometrics, ML and AI, Science, Social Sciences I, Social Sciences II). The page has 0 tables. h2 'The Data Science Major (DSC-BS-001)' sits above h3 'Lower Division' and h3 'Upper Division'. main#main-content has 11 links, only one of them to courses/DSC.html. DSC 152 has no course-name entry, although it appears in the DSC 180A prerequisite text. Watch for an inline '<em>or</em>' inside li elements and '<li><span>DSC 148 or MATH 189</span></li>' (BDS section)."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/curric/DSC-ug.html",
+     "claim": "Freshness: it carries the same 2026-27 Fall interim content.",
+     "status": "partly",
+     "evidence": "Missed: the interim requirements differ from the catalog of record. archive/2026-27/curric/DSC-ug.html lists core 'MATH 189' alone; the live interim page lists 'MATH 189 or DSC 152'. archive/2025-26 grouped the core differently ('<li>DSC 140B or CSE 151A or DSC 148 or CSE 158 or CSE 158R</li>'), while the live page has separate 'DSC 140B or CSE 151A' and 'DSC 148 or CSE 158 or CSE 158R' items. So requirements really do depend on the catalog year, and also change between interim updates."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/archive/index.html",
+     "claim": "Archives 2026-27 back to 2021-22 sit on catalog.ucsd.edu/archive/{YYYY-YY}/ with the same structure. 2020-21 and earlier link to registrar.ucsd.edu. The page says the Catalog of Record does not reflect interim updates.",
+     "status": "partly",
+     "evidence": "Confirmed: the links are '2026-27/index.html' through '2021-22/index.html', and the 2020-21 link is 'http://registrar.ucsd.edu/catalog/20-21/index.html'. That URL returns 302 to https://students.ucsd.edu/sponsor/registrar/ (the registrar homepage), so the pre-2021 archives are effectively unreachable. registrar.ucsd.edu/robots.txt also redirects 302. The quote is truncated: the page goes on to say UC San Diego 'may publish interim updates to the catalog for information and advising purposes only'. In other words, the live interim pages are advisory and the archive is the official record. That changes which source should govern degree requirements."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/archive/2026-27/courses/DSC.html",
+     "claim": "Live vs the 2026-27 record: 56 of 83 shared courses differ, DSC 234 is added, and the changes are mostly 'DS25' wording plus 'DSC 10' becoming 'DSC 10/R'. Live vs 2025-26: '/R' renames plus new DSC 123A, 123B, 234, 270. Open question: '/R' is new in the 2026-27 interim update.",
+     "status": "partly",
+     "evidence": "Confirmed: 56 of 83 shared courses differ, only DSC 234 is new on the live page, and the 2025-26 delta is {DSC 123A, DSC 123B, DSC 234, DSC 270}. Wrong: the 2026-27 record already uses 'DSC 10/R' ... 'DSC 80/R' as course IDs, so '/R' is not an interim change; it arrived between 2025-26 and 2026-27. The only '/R' prose change from record to live is DSC 90 ('DSC 10.' becoming 'DSC 10/R.'). Missed, and important: one substantive prerequisite change. The DSC 180A record reads 'DSC 102 and MATH 189 and DSC 140B or CSE 151A or ...'; the live page reads 'DSC 102 and (MATH 189 or DSC 152), and (DSC 140B or CSE 151A or ... and DSC 106)'. That changes a prerequisite edge the validator enforces. The other differences (DS25 wording, DSC 97/98/99 whitespace, DSC 191 'the sufficient') are cosmetic."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/front/courses.html",
+     "claim": "Master department index with 471 links in main to ../curric, ../courses, ../faculty and ../pdf. Page code differs from subject code (BIOL.html, DSC-ug/DSC-gr). It states the 1-99/100-199/200-299 numbering. courses/index (from the breadcrumb) is 404.",
+     "status": "partly",
+     "evidence": "Confirmed: main has 471 links (../curric 157, ../pdf 96, ../courses 88, ../faculty 79), including ../curric/DSC-ug.html, DSC-gr.html and ../courses/BIOL.html, plus the numbering text 'Courses numbered 1 through 99 are lower-division...'. https://catalog.ucsd.edu/courses/index does return 404, but the visible 'Courses/Curricula/Faculty' breadcrumb on DSC.html links to https://catalog.ucsd.edu/front/courses.html. The broken link I could confirm is '/curric/index' on the curriculum page (404)."
+    }
+   ],
+   "missed": [
+    "The interim update changes prerequisites, not just wording. DSC 180A changed between the 2026-27 record and the live Fall interim page: it gained '(MATH 189 or DSC 152)' and explicit parentheses. The diff summary called the changes 'mostly restriction wording' and missed this validator-relevant edge change.",
+    "The '/R' course IDs are already in the official 2026-27 Catalog of Record (archive/2026-27/courses/DSC.html). They are not an interim-update artifact, so that open question rests on a wrong premise.",
+    "The archive page says interim updates are published 'for information and advising purposes only' and that the Catalog of Record is the archival document. Requirements should be pinned to the student's catalog-year record, and live interim changes should be shown as advisory deltas.",
+    "Major requirements differ by edition: the 2025-26 record, the 2026-27 record and the 2026-27 Fall interim each have different core lists (MATH 189 alone vs 'MATH 189 or DSC 152'; a different grouping of the 140B/148/158 options). One live parse of curric/DSC-ug.html is therefore wrong for some students.",
+    "The Terms of Use also say that use of the material 'on any other website or networked computer environment is prohibited', and they name an ITS permissions contact. Both matter for asking permission and for storing descriptions in the public Streamlit app.",
+    "The catalog uses the same 'dsc40r' anchor for both DSC 40A/R and DSC 40B/R (a duplicate id). Deep links to '#dsc40r' are ambiguous.",
+    "The DSC page puts graduate courses under an h3 'Graduate', and BIOL subject groups are h3 too. Level detection should use the course number, not the h2.",
+    "The 96 '../pdf/X.pdf' links on front/courses.html are broken: BIOL, MATH and CSE PDFs all return 404, and DSC has no PDF link at all.",
+    "The pre-2021 catalog links (registrar.ucsd.edu/catalog/YY-YY/) redirect 302 to the registrar homepage, so those editions are not retrievable from the archive index.",
+    "Prerequisite prose mixes suffixed and unsuffixed IDs on the same page ('DSC 20 and DSC 40A' in DSC 97-99; 'DSC 40B/R' elsewhere) and uses hyphenated sequence forms ('DSC 40A/R-B/R', 'MATH 181A-B-C-D-E-F'). The ID normalizer must handle both.",
+    "Prerequisite sentences also carry non-course conditions ('Completion of thirty units ... GPA of 3.0', 'consent of the instructor', 'upper-division standing', major restrictions). The parser must keep these separate from course edges.",
+    "I found no official machine-readable catalog API linked from any fetched catalog page. Like the researcher, I could not verify that one exists; this stays UNVERIFIED.",
+    "Quarter-offering sources (department projected offerings, Schedule of Classes) are out of scope for this family, but they remain the only way to get term data. The catalog alone cannot drive the per-quarter planner."
+   ],
+   "corrected_recommendation": "Use catalog.ucsd.edu as the source of truth for course existence, IDs, titles, units and prerequisite text. Do not use it for quarter offerings; those must come from the department projected-offerings pages and the Schedule of Classes. Suggested implementation as a weekly GitHub Actions job:\n(1) Fetch front/courses.html to discover pages. Then fetch only the needed courses/{DSC,MATH,CSE,PHYS,BIOL,CHEM,COGS,ECE}.html and curric/DSC-ug.html. Send a descriptive User-Agent, wait at least 1 s between requests, and send If-None-Match / If-Modified-Since (both return 304). Because the whole site was republished in one batch on 2026-11-04, decide whether anything changed by hashing each course's normalized text, not by Last-Modified.\n(2) Parse by walking siblings: after each p.course-name, skip p.anchor-parent and take the next <p>, whatever its class. Do not zip the two lists by index; scraper.py does this and mis-assigns every DSC description from 40B/R on today. Drop the trailing 'Tag:' strong element (55 on CSE). Read units from the last parenthesised group and handle the forms N–N, N or N, N-N-N, 'N to N' and comma lists. Find the prerequisite clause with a text regex (/Prerequisites?\\s*:/) over get_text(), not with tag selectors. Separate course edges from non-course conditions (standing, GPA, consent, major restrictions). Get the course level from the course number, because Graduate and BIOL subject headings are h3, not h2. Do not key on anchor ids, since 'dsc40r' is duplicated.\n(3) Normalize IDs: map 'X/R' to the base ID, expand implied subjects and hyphen sequences ('20/R and 40A/R', '40A/R-B/R', '181A-B-C'), and accept both suffixed and unsuffixed forms in the same text.\n(4) Version requirements by catalog year. Parse the frozen record (archive/{YYYY-YY}/curric/DSC-ug.html and archive/{YYYY-YY}/courses/*.html, available from 2021-22 on) for each student's catalog year. Store the live interim page as a separate 'interim' layer and show its differences as advisory; the archive page calls interim updates 'for information and advising purposes only'. Today this matters concretely: the DS core changed from 'MATH 189' to 'MATH 189 or DSC 152', and the DSC 180A prerequisite gained '(MATH 189 or DSC 152)'. DSC 152 has no catalog entry yet, so the validator needs a rule for referenced-but-undefined courses (accept them as satisfiable, or flag them).\n(5) Parse the lower-division and core <li> lists automatically into AND-of-OR groups, allowing for an inline '<em>or</em>' and a <span> wrapper. Keep the subject-domain and elective rules hand-curated, with an alert when the hash of that section changes.\n(6) When the parse changes, open a PR rather than committing directly, so prereq_overrides.json and the graph tests are reviewed, and include a per-course diff of prerequisite edges, not only text. Record the edition string from p.course-disclaimer and the 'Catalog Interim Update: <term>' label from index.html.\n(7) Licensing: the ucsd.edu Terms of Use forbid reproducing the material, including use 'on any other website or networked computer environment', without explicit permission. The public app should store only derived structured facts (IDs, units, parsed edges) and link to courses/X.html#anchor, or the owner should ask for permission through the ITS contact named in the Terms. The existing dataset already stores full descriptions, so it should be reviewed against this.\n(8) Do not depend on the catalog PDF links (they 404) or on pre-2021 archives (they redirect to the registrar homepage)."
+  }
+ },
+ {
+  "found": {
+   "key": "ucsd_schedule_of_classes",
+   "sources": [
+    {
+     "name": "Legacy TritonLink Schedule of Classes: search form and term list",
+     "url": "https://act.ucsd.edu/scheduleOfClasses/scheduleOfClassesStudent.htm",
+     "what_it_gives": "The entry form and the authoritative list of terms the legacy system still serves. As of 2026-11-12 the newest term is SA26 (Summer 2026). The dropdown has no FA26, WI27 or SP27. The 20 options run from SA26 back to S224: SA26, SU26, S326, S226, S126, SP26, WI26, FA25, SA25 ... FA24, SA24, SU24, S324, S224.",
+     "format": "HTML (Spring MVC form; jQuery)",
+     "access": "public, no login (hidden field loggedIn=false)",
+     "robots_terms": "https://act.ucsd.edu/robots.txt in full: 'User-agent: * / Disallow: /cwp/tools/search'. /scheduleOfClasses/ is not disallowed. The footer 'Terms & Conditions' link redirects to https://ucsd.edu/about/terms-of-use.html, which allows downloading 'one copy ... for your personal, non-commercial home use only'. It forbids republishing or redistributing 'without explicit permission'. The page itself says 'Information is updated nightly' and 'is subject to change.'",
+     "freshness": "Frozen for new terms. UCSD moved the Schedule of Classes to the Triton Student System (TSS) starting with Fall 2026, so the legacy system ends at Summer 2026. The per-term 'As of' stamps I saw: FA25 '04/01/2026, 05:27:00'; WI26 '07/01/2026, 03:25:00'; SP26 '10/12/2026, 01:55:00'.",
+     "parse_notes": "The form is <form id=\"socFacSearch\" action=\"scheduleOfClassesStudentResult.htm\" method=\"POST\">. Fields: selectedTerm (e.g. SP26), hidden xsoc_term, loggedIn=false, tabNum, selectedSubjects (multi), selectedDepartments (multi), courses (textarea), and the course-number range checkboxes schedOption1=true (1-99), schedOption2 (100-198), schedOption11 (87&90s), schedOption12 (99s), schedOption4 (195s), schedOption5 (199s), schedOption3 (200-297), schedOption7, schedOption8, schedOption13, schedOption10, schedOption9. Also schDay=M/T/W/R/F/S and schStartTime/schEndTime. The tabs are #tabs-sub, #tabs-dept, #tabs-crs, #tabs-sec and #tabs-ins. JS files: /scheduleOfClasses/js/sch.js, submit_form.js, tab_views.js.",
+     "verified": true
+    },
+    {
+     "name": "Legacy SoC subject and department lists (JSON)",
+     "url": "https://act.ucsd.edu/scheduleOfClasses/subject-list.json?selectedTerm=SP26",
+     "what_it_gives": "The subject codes offered in a term. sch.js calls it with jQuery.getJSON('subject-list.json?selectedTerm='+term). The sibling https://act.ucsd.edu/scheduleOfClasses/department-list.json?selectedTerm=SP26 gives the department list. An empty array means the term has no data, and the UI then shows 'Schedule Not Avaliable for the Selected Term.' This is the only public JSON on the legacy SoC that I found.",
+     "format": "JSON array of {code, value}",
+     "access": "public GET, no login, no cookie",
+     "robots_terms": "Same as the act.ucsd.edu row above: not disallowed by robots.txt. The UCSD terms of use apply.",
+     "freshness": "SP26 returned 187 subjects (11,969 bytes), e.g. {\"code\":\"MATH\",\"value\":\"MATH - Mathematics                   \"}. FA26 returned [] (HTTP 200). SP27 returned []. WI27 returned an HTTP 500 Apache error page. This confirms the legacy system has no Fall 2026 or later terms.",
+     "parse_notes": "Codes are right-padded to 4 characters ('DSC ', 'AAS ', 'AIP '), so strip them before comparing. The department list has the same shape, e.g. {\"code\":\"ANTH\",\"value\":\"Anthropology ...\"}. Content-Type is application/json;charset=UTF-8.",
+     "verified": true
+    },
+    {
+     "name": "Legacy SoC search results (POST) + printer-friendly full view",
+     "url": "https://act.ucsd.edu/scheduleOfClasses/scheduleOfClassesStudentResult.htm",
+     "what_it_gives": "For each course in a term: course number, title, units, and every section. Each section gives meeting type (LE/DI/LA/SE...), section code (A00/A01...), the numeric section ID (enrollable sections only), days, time, building and room, instructor, seats Available and Limit, and the final exam date and time. Each course also links to a prerequisite page.",
+     "format": "HTML table (paginated); printer view is unpaginated HTML",
+     "access": "public, no login. Results come only from a POST (form-urlencoded). Later pages and the print view need the session cookie that the POST sets.",
+     "robots_terms": "Not disallowed by robots.txt (only /cwp/tools/search is). UCSD terms of use: personal, non-commercial copy only; republishing needs explicit permission.",
+     "freshness": "Historical terms up to SA26 only. 'Information is updated nightly' applied while terms were live. The stamps now look like final snapshots (see the first row).",
+     "parse_notes": "These POST bodies worked:\n1. Subject search: 'selectedTerm=SP26&tabNum=tabs-sub&selectedSubjects=DSC&schedOption1=true&schedOption2=true'. Returned 104 KB with 'Page  (1&nbsp;of&nbsp;3)'. Unpadded DSC works.\n2. Course-code search: 'selectedTerm=FA25&tabNum=tabs-crs&courses=DSC 80'. Returned 39 KB.\nPaging: a GET to '?page=2' works only with the session cookie from the POST. Without it you get the blank entry page.\nPrint view: a GET to /scheduleOfClasses/scheduleOfClassesStudentResultPrint.htm with the same cookie returns every page at once. For WI26 DSC it held 29 course headers and 74 sectxt rows, against 9 headers on page 1.\nGET search: building the same query as a GET timed out after 40 s with 0 bytes. I did not get it to work.\nStructure: <table class=\"tbrdr\">. Header cells are class=\"ubrdr\": Course Number, Section ID, Meeting Type, Section, Days, Time, Building & Room, Instructor, Seats (Available / Limit).\nCourse rows: <td class=\"crsheader\">10</td>, then <span class=\"boldtxt\">Principles of Data Science</span> '( 4 Units)'.\nSection rows: <tr class=\"sectxt\"> with <td class=\"brdr\"> cells. Meeting type is <span id=\"insTyp\" title=\"Discussion\">DI</span>. Example row: section ID '81873', A01, 'M', '3:00p-3:50p', PODEM 1A20, seats 14/90. Lecture rows have no section ID, and their seat cells are <span class=\"ertext\">&nbsp;</span>.\nFinal exam rows: <tr class=\"nonenrtxt\"> with insTyp FI, date '06/06/2026', 'S', '3:00p-5:59p'.\nThe subject header is <h2><span class=\"centeralign\">Data Science (DSC  )</span></h2> followed by 'As of: MM/DD/YYYY, HH:MM:SS'.\nThe prereq link is in an onclick: '/scheduleOfClasses/scheduleOfClassesPreReq.htm?termCode=SP26&courseId=DSC10    ' (courseId is padded).\nCatalog link: http://www.ucsd.edu/catalog/courses/DSC.html#dsc10. Evaluations link: academicaffairs.ucsd.edu/Modules/Evals/SET/Reports/Search.aspx?courseNumber=DSC+10.",
+     "verified": true
+    },
+    {
+     "name": "Legacy SoC per-term prerequisite page",
+     "url": "https://act.ucsd.edu/scheduleOfClasses/scheduleOfClassesPreReq.htm?termCode=SP26&courseId=DSC80",
+     "what_it_gives": "The prerequisites that were enforced for a course in a given term, in structured form. DSC80 in SP26 showed '1. DSC30 (DataStrc/Algrthms for Data Sci) 2. DSC40A (Theor Fndtns of Data Sci I)'. This matches the README's catalog correction for DSC 80, so it can cross-check prereq_overrides.json.",
+     "format": "HTML",
+     "access": "public GET, no login, no cookie",
+     "robots_terms": "Not disallowed by robots.txt. UCSD terms of use apply.",
+     "freshness": "Only for terms the legacy system still has (up to SA26).",
+     "parse_notes": "Items are <span class=\"bold_text\">DSC30    </span> (Title), as a numbered list under <span class=\"bold_text\">Prerequisites</span>. The response is about 3.4 KB. How OR/AND groups are shown was NOT verified; I only looked at DSC80, which is an AND list.",
+     "verified": true
+    },
+    {
+     "name": "Triton Student System (TSS) Schedule of Classes (SAP Fiori), the official SoC from Fall 2026",
+     "url": "https://tss.ucsd.edu/fiori#YSchedule-view",
+     "what_it_gives": "The official Schedule of Classes for FA26, WI27 and later terms. students.ucsd.edu/sponsor/registrar/ links 'Schedule of Classes' to this URL.",
+     "format": "SAP Fiori web app behind SAML SSO. I did not see any data format.",
+     "access": "SSO. An unauthenticated GET to https://tss.ucsd.edu/fiori returned HTTP 200 with a self-submitting form POSTing a SAMLRequest to https://tssproxy.ucsd.edu/idp/profile/SAML2/POST/SSO. Headers: 'sap-server: true' and 'sap-usercontext=sap-client=500'. I stopped there and did not log in.",
+     "robots_terms": "https://tss.ucsd.edu/robots.txt returned HTTP 503, an SAP Web Dispatcher error page ('Error code: ICMENOSYSTEMFOUND'), so there is no robots file. UCSD's ESR team said on 2026-07-14 that leaving out side-by-side section viewing 'was an intentional choice to protect the system from slowdowns and security risk from automated scraping' (https://esr.ucsd.edu/news/posts/sis-tss-schedule-of-classes-functionality-jul-26.html).",
+     "freshness": "Per the Blink 2026-27 enrollment calendar, 'Schedule of Classes and Booking times available' was Fall 2026: 7/10 (also listed as 7/20), Winter 2027: 11/5, Spring 2027: TBD, Summer 2027: TBD. So terms are published about 6-8 weeks before booking, one term ahead. On 2026-11-12 WI27 should exist in TSS and SP27 should not. I could not check this because of SSO. status.ucsd.edu/incidents/qzr8lnt799zd: the initial TSS SoC release 'provides the core functionality needed to search for and review Fall 2026 course offerings' (completed Jul 20, 2026).",
+     "parse_notes": "UNVERIFIED beyond the SSO redirect. I could not see any public guest view, OData endpoint or export. Do not scrape it: it needs SSO credentials, and UCSD explicitly designed it against automated scraping.",
+     "verified": true
+    },
+    {
+     "name": "Blink Enrollment and Registration Calendar 2026-2027",
+     "url": "https://blink.ucsd.edu/instructors/courses/enrollment/calendars/2026.html",
+     "what_it_gives": "When each term's Schedule of Classes is published, plus booking, waitlist, and quarter start and end dates. A refresh job can use these dates to know when new term data should appear.",
+     "format": "HTML table: columns Description | Fall 2026 | Winter 2027 | Spring 2027 | Summer 2027",
+     "access": "public",
+     "robots_terms": "I did not fetch robots.txt for blink.ucsd.edu. UCSD terms of use apply.",
+     "freshness": "The page says 'Dates are subject to change.' There is one page per academic year (…/calendars/2026.html).",
+     "parse_notes": "Rows I parsed from <table>: 'Schedule of Classes and Booking times available' = ['7/10 7/20','11/5','TBD','TBD']. 'Booking begins for all continuing students' = ['7/15 7/22','11/9','TBD','TBD']. 'Quarter begins' = ['9/21','1/4','3/24', ...]. Dates have no year, so take the year from the column header. Some cells hold a revised date next to the original ('7/10 7/20').",
+     "verified": true
+    },
+    {
+     "name": "api.ucsd.edu developer portal (WSO2 API Manager)",
+     "url": "https://api.ucsd.edu/devportal/",
+     "what_it_gives": "UCSD's API gateway portal. I could not see whether any course or schedule API exists on it.",
+     "format": "WSO2 devportal SPA",
+     "access": "credentials needed to list APIs. GET https://api.ucsd.edu/api/am/devportal/v2/apis returned 401 {\"code\":401,...,\"description\":\"Unauthenticated request\"}. v3, v1 and v0.17 returned 404. I stopped there.",
+     "robots_terms": "https://api.ucsd.edu/robots.txt returned 302 with no robots content. UNVERIFIED.",
+     "freshness": "unknown",
+     "parse_notes": "I found no public course or offerings JSON here. Neither a web search nor the portal surfaced any official public UCSD schedule API. Only unofficial third-party scrapers turned up (socsjs on npm, webweg, which uses WebReg session cookies). Do not use those.",
+     "verified": true
+    }
+   ],
+   "recommendation": "1. Treat the live Schedule of Classes as unavailable to the tutor from Fall 2026 on. UCSD moved it to the Triton Student System (TSS), an SAP Fiori app behind SAML SSO at tss.ucsd.edu. UCSD also says it deliberately limited TSS against automated scraping. Do not log in, reuse cookies, or scrape TSS from GitHub Actions or Streamlit.\n\n2. Use the legacy act.ucsd.edu Schedule of Classes as a one-time history of past offerings, not as a live feed. It is public, robots.txt does not block /scheduleOfClasses/, and it holds terms FA24 through SA26.\n   - Backfill with POST scheduleOfClassesStudentResult.htm (tabNum=tabs-sub, selectedSubjects=DSC/MATH/CSE/PHYS/BIOL/CHEM/COGS/ECE, schedOption1, 2 and 3 as needed). Then GET scheduleOfClassesStudentResultPrint.htm with the same cookie jar to get every page at once.\n   - That is about 2 requests per subject per term. For about 7 regular quarters (FA24, WI25, SP25, FA25, WI26, SP26, plus summers if wanted), it comes to roughly 100-150 requests at 1 request per second.\n   - Save a compact offerings_history.json: {course_id: [terms offered], sections, instructors}. The planner can derive 'usually offered in FA/WI/SP' from it to soft-check quarter placement.\n   - Optionally also fetch scheduleOfClassesPreReq.htm per course and term to cross-check prereq_overrides.json.\n   - Before calling a new term, check subject-list.json?selectedTerm=XXNN. An empty [] means no data.\n   - There is no point running this on a schedule: no new terms will appear. A rare manual workflow_dispatch is enough.\n\n3. For FA26 and later offerings, use the other source families: department projected or tentative course-offering pages, and the catalog. Optionally the owner can type the WI27 term in from TSS by hand. Use the Blink enrollment calendar, which is public, to know when a new term's schedule is published (WI27: 11/5/2026; SP27: TBD).\n\n4. If live data is truly needed, the sanctioned route is to ask the registrar or ESR (tss@ucsd.edu, esr-student@ucsd.edu) whether a data feed exists.\n\n5. Licensing: UCSD's terms of use allow personal, non-commercial copies only, and republishing needs explicit permission. A public Streamlit app showing derived 'offered in quarter X' facts is a grey area. Store derived facts only, not raw pages, and link to the official source.",
+   "open_questions": [
+    "Does TSS have any public guest or unauthenticated Schedule of Classes view or export, or an OData endpoint UCSD permits for students? Not verified: unauthenticated access redirects to SAML SSO, and I did not probe further.",
+    "Will the legacy act.ucsd.edu Schedule of Classes stay online, and for how long? It still serves FA24-SA26 today but gets no new terms. WI27 even returns HTTP 500 from subject-list.json.",
+    "Are the legacy 'As of' timestamps (SP26 stamped 10/12/2026, after the term ended) final snapshots? Do seat counts there reflect end-of-term enrollment? Not verified.",
+    "Does api.ucsd.edu (WSO2) offer any course or schedule API to students? Listing APIs requires authentication (401).",
+    "Does UCSD's terms of use allow a public Streamlit app to show offering patterns derived from the SoC? Explicit permission may be needed. Ask the Registrar.",
+    "Exactly why the GET form of the result URL failed is unknown. It timed out after 40 s with 0 bytes, so treat POST as the only working method.",
+    "How the legacy prerequisite page shows OR alternatives (e.g. 'MATH 18 or MATH 31AH') is not verified. I only checked DSC80, which is a plain AND list."
+   ]
+  },
+  "verdict": {
+   "key": "ucsd_schedule_of_classes",
+   "checks": [
+    {
+     "url": "https://act.ucsd.edu/scheduleOfClasses/scheduleOfClassesStudent.htm",
+     "claim": "Public legacy SoC form. Term dropdown has 20 options from SA26 back to S224 (no FA26/WI27/SP27). Form socFacSearch POSTs to scheduleOfClassesStudentResult.htm. Fields and tabs as listed. robots.txt only disallows /cwp/tools/search. Page says 'updated nightly' and 'subject to change'. Terms link leads to ucsd.edu terms of use (personal, non-commercial copy only).",
+     "status": "confirmed",
+     "evidence": "HTTP 200, 44,711 bytes. The options are exactly SA26, SU26, S326, S226, S126, SP26, WI26, FA25, SA25, SU25, S325, S225, S125, SP25, WI25, FA24, SA24, SU24, S324, S224. The page has <form id=\"socFacSearch\" action=\"scheduleOfClassesStudentResult.htm\" method=\"POST\">, the fields selectedTerm, xsoc_term, loggedIn, tabNum (hidden), selectedSubjects and selectedDepartments (multiple), courses, and schedOption1-13. It has tabs-sub, tabs-dept, tabs-crs, tabs-sec and tabs-ins, and loads the scripts sch.js, submit_form.js and tab_views.js. robots.txt in full: 'User-agent: * / Disallow: /cwp/tools/search'. The footer link is http://www.ucsd.edu/_about/legal/index.html, which goes 301 then 302 to https://ucsd.edu/about/terms-of-use.html. That page says no material may be 'republished, uploaded, posted, transmitted, or distributed in any way, without explicit permission', apart from one personal, non-commercial copy. The 'As of' stamps I saw match the claim: SP26 '10/12/2026, 01:55:00', WI26 '07/01/2026, 03:25:00', FA25 '04/01/2026, 05:27:00'."
+    },
+    {
+     "url": "https://act.ucsd.edu/scheduleOfClasses/subject-list.json?selectedTerm=SP26",
+     "claim": "Public JSON list of subjects per term, with a department-list.json sibling. SP26 has 187 subjects (11,969 bytes). FA26 and SP27 return []. WI27 returns an HTTP 500 Apache error page.",
+     "status": "partly",
+     "evidence": "SP26: HTTP 200, 11,969 bytes, application/json;charset=UTF-8, 187 entries such as {\"code\":\"DSC \",\"value\":\"DSC  - Data Science ...\"}. Codes are right-padded, as claimed. FA26 and SP27 return 200 with []. WI27 also returned 200 with [] for me, not a 500, so that part is wrong or was transient. department-list.json?selectedTerm=SP26 returned 200 and 6,263 bytes ({code, value}) on retry, but my first request hung past 120 s, so the endpoint can be slow at times. sch.js line 40 makes the getJSON('subject-list.json?selectedTerm=...') call. form.html line 334 has the text 'Schedule Not Avaliable for the Selected Term.'"
+    },
+    {
+     "url": "https://act.ucsd.edu/scheduleOfClasses/scheduleOfClassesStudentResult.htm",
+     "claim": "Results come only from a POST. Paging and the print view need the session cookie. A GET search times out, so POST is the only working method. Header cells are class ubrdr: Course Number ... Seats. Row classes are crsheader, sectxt and nonenrtxt. The example row is 81873 A01. The print view for WI26 DSC has 29 courses and 74 sectxt rows.",
+     "status": "partly",
+     "evidence": "Most of the structure is confirmed. The POST for SP26 DSC with schedOption1 and 2 returned 200, 104,502 bytes and 'Page  (1&nbsp;of&nbsp;3)'. Row 81873 reads DI A01 M 3:00p-3:50p PODEM 1A20, seats 14/90. The final-exam row is <tr class=\"nonenrtxt\"> with FI 06/06/2026 S 3:00p-5:59p. Course rows use <td class=\"crsheader\">10</td> and <span class=\"boldtxt\">. The prerequisite onclick, catalog link and CAPE link appear as described. ?page=2 with the cookie gives 'Page (2 of 3)'. Without the cookie it returns the 44,711-byte entry form. With the cookie jar, the print view gives 186,312 bytes for WI26 DSC, with 29 course numbers and 74 sectxt rows. A FA25 course search for 'DSC 80' returned 39,356 bytes. Two things are WRONG. (1) A plain GET works: ?selectedTerm=SP26&tabNum=tabs-sub&selectedSubjects=DSC&schedOption1=true&schedOption2=true returned 200 and 104,609 bytes ('Page 1 of 3', As of 10/12/2026), and ?selectedTerm=FA25&tabNum=tabs-crs&courses=DSC+80 returned 39,413 bytes, each in under 1 s. (2) The header list leaves out the first column, <td class=\"ubrdr\">R (restrictions), and 'Building & Room' spans two cells (colspan=2). Also, my one cold POST without cookies hung for 45 s with 0 bytes, but the next cold POST took 0.63 s. That points to intermittent slowness, not a need for cookies."
+    },
+    {
+     "url": "https://act.ucsd.edu/scheduleOfClasses/scheduleOfClassesPreReq.htm?termCode=SP26&courseId=DSC80",
+     "claim": "Public per-term prerequisite page. DSC80 SP26 lists 1. DSC30 and 2. DSC40A. How OR groups are shown was not verified.",
+     "status": "confirmed",
+     "evidence": "DSC80: 200, 3,406 bytes, '1. DSC30 (DataStrc/Algrthms for Data Sci) 2. DSC40A (Theor Fndtns of Data Sci I )'. I resolved the open OR question with DSC40A SP26. Each numbered row is one AND requirement. Alternatives inside a row are separated by <center><span class=\"ertext\">or</span></center>. Example: '2. MATH20C ... or MATH31BH ...' and '3. MATH18 or MATH20F or MATH31AH'. The MATH20C page also adds 'Prerequisites may also be satisfied with qualifying test scores on the following exams: AP-Math BC ...'."
+    },
+    {
+     "url": "https://tss.ucsd.edu/fiori#YSchedule-view",
+     "claim": "TSS (SAP Fiori) is the official SoC from FA26 and sits behind SAML SSO. Its robots.txt returns 503 ICMENOSYSTEMFOUND. On 7/14/2026 ESR said side-by-side viewing was left out to guard against scraping. The status page says the initial release covers Fall 2026. The registrar links its SoC here.",
+     "status": "confirmed",
+     "evidence": "GET /fiori returned 200, 3,151 bytes. The page has <form method=\"POST\" action=\"https://tssproxy.ucsd.edu/idp/profile/SAML2/POST/SSO\"> with a SAMLRequest field, plus the headers 'sap-server: true' and 'sap-usercontext=sap-client=500'. robots.txt returned 503 with 'Error code: ICMENOSYSTEMFOUND'. The ESR post is dated 'Posted on : 7/14/2026'. It says leaving out side-by-side viewing 'was an intentional choice to protect the system from slowdowns and security risk from automated scraping'. The status incident has the 'core functionality needed to search for and review Fall 2026 course offerings' text and was completed Jul 20, 2026. The students.ucsd.edu/sponsor/registrar/ 'Schedule of Classes' link points to https://tss.ucsd.edu/fiori#YSchedule-view. I did not log in. This row is accurate, but the recommendation built on it ('live SoC unavailable') is wrong. See the classplanner row below."
+    },
+    {
+     "url": "https://blink.ucsd.edu/instructors/courses/enrollment/calendars/2026.html",
+     "claim": "Public calendar table with columns Description | Fall 2026 | Winter 2027 | Spring 2027 | Summer 2027. SoC/booking available 7/10 (also listed as 7/20), 11/5, TBD, TBD. 'Dates are subject to change.' robots.txt not checked.",
+     "status": "partly",
+     "evidence": "The table and rows match: ['Schedule of Classes and Booking times available', '7/10 7/20', '11/5', 'TBD', 'TBD'] and 'Quarter begins' 9/21, 1/4, 3/24. 'subject to change' is present. But 7/10 is not an alternate date. It is in <span style=\"text-decoration: line-through;\">, so it was replaced by 7/20 and a parser must drop struck-through text. The researcher also missed that this row's 'Schedule of Classes' label links to https://classplanner.apps.ucsd.edu/search. I checked blink robots.txt myself: it disallows /_files, /_draft, /_archive, /_misc, /search, *.pdf and similar, but not /instructors/."
+    },
+    {
+     "url": "https://api.ucsd.edu/devportal/",
+     "claim": "WSO2 devportal. The API listing needs authentication (401). robots.txt returns a 302. No public course or offerings JSON was found, and no official public UCSD schedule API exists.",
+     "status": "partly",
+     "evidence": "Confirmed: GET /api/am/devportal/v2/apis returned 401 {\"code\":401,...,\"description\":\"Unauthenticated request\"}. /robots.txt returned 302 to https://api.ucsd.edu/carbon/admin/login.jsp. /devportal/ returned 200 (2,031-byte SPA shell). /api/am/devportal/v2/settings returned 200 without auth but lists no APIs. The broader claim that UCSD has no public schedule JSON is WRONG: classplanner.apps.ucsd.edu serves one (next row)."
+    },
+    {
+     "url": "https://classplanner.apps.ucsd.edu/api/v1/public/catalog/terms",
+     "claim": "(Implied by the recommendation) The live FA26+ Schedule of Classes cannot be reached without SSO, so the tutor should not try to get current offerings automatically.",
+     "status": "wrong",
+     "evidence": "An official UCSD 'Class Planner' (footer 'Copyright © 2026 Regents of the University of California', Terms of Use link to ucsd.edu/about/terms-of-use.html) is linked from the Blink calendar. It has a public, no-login Schedule of Classes at /search and unauthenticated JSON endpoints. GET /api/v1/public/catalog/terms returned 200 application/json, 'cache-control: public, max-age=300'. It lists two terms: {term_code:'WI27', course_count:2262, section_count:7552, last_full_refresh_at:'2026-11-06 01:38:11+00'} and {term_code:'FA26', course_count:2351, last_full_refresh_at:'2026-11-11 16:49:43+00'}. GET /api/v1/public/catalog/filters?term_code=WI27 returned 200, 146 KB, with the keys subjects, departments, instructors, academic_levels, units, instruction_types, delivery_modes and meeting_days. POST /api/v1/public/catalog/courses/search with JSON {term_code, subject_code:['DSC'], limit:48} returned 200 with keys {term_code, query, total, offset, limit, courses}. There are 40 DSC courses in WI27 (001, 010, 020, 030, 040A, 040B, 080, 100, ...). Each course has module_code 'DSC-080', module_name, units_display, prerequisites (e.g. 'DSC 30 (minimum grade D) or DSC 30R (minimum grade D)', 'DSC 40A ... or DSC 40AR ...'), restrictions ('Limited to major: Data Science'), and sections. Sections carry section_id, section_code '001-000-LE', capacity, enrolled, seats_available and status, plus meetings with day_code, start_minutes and final dates. limit must be 48 or less (a 422 error says so), and offset pages through results: MATH FA26 total 83, offset 48 returned 35. An unknown term (SP27) returns 404 {\"detail\":\"This term is not available in the public Schedule of Classes.\"}."
+    }
+   ],
+   "missed": [
+    "The biggest miss is classplanner.apps.ucsd.edu. It is an official UCSD Class Planner, and the Blink 2026-27 calendar links its 'Schedule of Classes' row there. It has a public Schedule of Classes (/search) with unauthenticated JSON endpoints: /api/v1/public/catalog/terms (GET), /api/v1/public/catalog/filters?term_code= (GET) and /api/v1/public/catalog/courses/search (POST JSON, limit 48 or less, offset). They currently serve FA26 and WI27, including prerequisites and restrictions. The non-'public' variants (/api/v1/catalog/*, /api/v1/planner/*, /api/v1/user-state) belong to the signed-in app. I did not call or try any of them.",
+    "classplanner robots.txt (and /about, /terms) return a 307 redirect to /auth/login?return_to=..., so the host has no public robots file. Its footer Terms of Use is the same ucsd.edu terms-of-use page: personal, non-commercial copy only, and republishing needs explicit permission. The JSON API is undocumented and versioned only as /api/v1, so it can change without notice.",
+    "classplanner freshness is a periodic full refresh, not real time. last_full_refresh_at was 2026-11-06 for WI27 and 2026-11-11 for FA26. The WI27 DSC 001 lecture still shows enrolled 0 / capacity 201 after booking began 11/9. So seat and enrolled counts may be stale, but offerings, sections and prerequisites are what the tutor needs.",
+    "classplanner serves only the current terms (no FA24-SA26 history). Its own /search page tells users to go to the 'previous Schedule of Classes' (act.ucsd.edu) for terms not listed, so the legacy backfill is still useful for 'usually offered in' history.",
+    "Prerequisite data includes 'R' variants (DSC 10R, DSC 30R, DSC 40AR, DSC 80R, DSC 40BR) and 'minimum grade D'. The planner's prereq graph and prereq_overrides.json should handle or normalize these. The legacy prereq page also shows test-score alternatives (e.g. AP Math BC for MATH20C).",
+    "Course codes in classplanner are zero-padded ('001', '010', '040A') and module_code uses a hyphen ('DSC-080'). The legacy SoC uses padded 'DSC  ' and 'DSC10    '. Both need normalizing to the planner's 'DSC 80' form.",
+    "The OR-group open question is resolvable. On the legacy prereq page each numbered row is an AND requirement, and alternatives within a row are separated by <span class=\"ertext\">or</span> (seen for DSC40A SP26). In classplanner each prerequisites[] string is an AND item with ' or ' alternatives.",
+    "In the Blink calendar, '7/10' is struck through (line-through span) and replaced by 7/20. It is not a second date, so a parser must strip <span style=\"text-decoration: line-through;\"> text.",
+    "The legacy results header has a leading 'R' (restrictions) column, and 'Building & Room' has colspan=2. A column-index parser built from the researcher's header list would be off by one.",
+    "The legacy act.ucsd.edu endpoints are intermittently slow. One cold POST and one department-list.json call each hung for 45-120 s, and retries succeeded in under 1 s. Use timeouts and retries."
+   ],
+   "corrected_recommendation": "1. Live source for current and next term: use the official UCSD Class Planner public API (classplanner.apps.ucsd.edu), not TSS. The legacy system and TSS do not provide this.\n   - Run a GitHub Actions cron about once a day. It calls GET /api/v1/public/catalog/terms (1 request) and compares term_code and last_full_refresh_at with the last saved snapshot.\n   - When a term is new or has been refreshed, POST /api/v1/public/catalog/courses/search per subject. Use {term_code, subject_code:[S], limit:48, offset} for the 8 subjects in the dataset (DSC, MATH, CSE, PHYS, BIOL, CHEM, COGS, ECE). That is about 15-25 requests at 1 request per second, with the descriptive User-Agent.\n   - Normalize codes ('040A' to 'DSC 40A'). Store only derived facts per course: terms offered, units, the prerequisites[] strings and restrictions. Commit them as offerings.json, with source URL and refresh time. Do not store raw responses or instructor and seat data.\n   - Do not overwrite prereq_overrides.json automatically. Diff the prerequisites against the parsed catalog graph and open a PR or issue so a person can review it, since R-variants and 'minimum grade D' need handling.\n   - Validate the response schema (keys term_code, total, offset, courses[].module_code, prerequisites, sections). If it fails, keep the last good snapshot and fail the workflow loudly, because the API is undocumented.\n   - Use only the /api/v1/public/* endpoints. Never use the signed-in /api/v1/catalog, /planner or /user-state endpoints. Never use TSS (SSO, and UCSD explicitly designed it against scraping).\n\n2. History: do a one-time manual backfill from legacy act.ucsd.edu for FA24-SA26, using a workflow_dispatch workflow.\n   - A plain GET to scheduleOfClassesStudentResult.htm?selectedTerm=..&tabNum=tabs-sub&selectedSubjects=..&schedOption1=true&schedOption2=true works. So does a POST. For every page at once, use the print view (scheduleOfClassesStudentResultPrint.htm) with the session cookie.\n   - Parse the leading 'R' column and the colspan=2 room cell correctly. Use timeouts and retries.\n   - From the combined history, derive 'typically offered in FA/WI/SP' as a soft constraint for the planner.\n\n3. Use the Blink calendar (public; robots allows /instructors/) only to know when to expect the next term, e.g. SP27 'TBD'. Drop the struck-through dates. The daily terms check above already detects new terms directly.\n\n4. Licensing: classplanner and act.ucsd.edu are both under ucsd.edu terms of use (personal, non-commercial, no republishing without explicit permission). For a public Streamlit app, show derived offering facts with a link to the official Class Planner or TSS, and say the data may be stale (refresh dates). Email the Registrar or the Class Planner team (via tss@ucsd.edu / ESR) to ask permission and whether a sanctioned feed exists.\n\nVerified on 2026-11-12. Working files are in /private/tmp/claude-501/-Users-allen-Desktop/a50b0c32-36b9-4f3d-9a23-f8832c6a6de7/scratchpad/skeptic_soc (classplanner responses under cp/)."
+  }
+ },
+ {
+  "found": {
+   "key": "dept_projected_offerings",
+   "sources": [
+    {
+     "name": "CSE Tentative Undergraduate Course Offerings (published Google Sheet behind cse.ucsd.edu page)",
+     "url": "https://cse.ucsd.edu/undergraduate/tentative-course-offerings  ->  data: https://docs.google.com/spreadsheets/d/e/2PACX-1vRYc7qv9lyLh-F8EzlVcE2td3jObRp2B88ZIru9XQw0_G70kfDCjVRo64EWWDdEEkzyc_s1sX2JMfqb/pub?gid=684727614&single=true&output=csv",
+     "what_it_gives": "Every CSE undergrad course number + title, with the planned instructor per quarter for Fall 2026 / Winter 2027 / Spring 2027. The page says that an empty cell means the course will not be offered that quarter, and 'Staff' means it is offered with the instructor not yet hired. Planner coverage: CSE 11, 12, 100, 101, 103, 151A, 151B, 158 are present. CSE 15L is NOT in the sheet.",
+     "format": "Drupal page that only embeds an iframe (no table in the page HTML). The data is a 'Publish to web' Google Sheet. The CSV export (output=csv) returned HTTP 200, text/csv, 105 rows plus a header.",
+     "access": "public",
+     "robots_terms": "cse.ucsd.edu/robots.txt is the stock Drupal file ('User-agent: *' ... 'Disallow: /admin/', '/search/', '/user/login'...), and the page path is not disallowed. docs.google.com/robots.txt has 'Crawl-delay: 1', 'Allow: /spreadsheet' (a prefix that covers /spreadsheets/...) and then 'Disallow: /'. The footer links https://ucsd.edu/about/terms-of-use.html, which says 'No material from any official UC San Diego website may be copied, reproduced, republished ... without explicit permission' except for one copy for personal non-commercial use.",
+     "freshness": "Page text says 'Updated: July 8th, 2026'. Covers AY 2026-27 (FA26/WI27/SP27). Summer is not included; the page points to the Summer Session preview instead.",
+     "parse_notes": "CSV header: 'Course #,Title,Fall 2026,Winter 2027,Spring 2027'. Course ids are zero-padded with a hyphen: 'CSE-008A', 'CSE-011', 'CSE-151A', so normalize with a regex like ^CSE-0*(\\d+[A-Z]*)$. Some cells hold several instructors separated by a newline inside quotes (e.g. \"Benjamin Ochoa\\nJoe Politz\"). Rows with an 'R' suffix exist (CSE-100R, CSE-158R), and some titles are just 'TBD'. Quarter column names are year-specific, so map them by regex (Fall|Winter|Spring) (\\d{4}), not by fixed names. The workbook has other published tabs: 'Main Sheet' gid=684727614 (the one to use), 'data' gid=0, 'Sheet3' gid=214089588. The page can be scraped for the iframe src to find the current key and gid if they change.",
+     "verified": true
+    },
+    {
+     "name": "MATH Planned Course Offerings",
+     "url": "https://math.ucsd.edu/students/planned-course-offerings  (other years: ?year=2025-2026, ?year=2027-2028)",
+     "what_it_gives": "Every MATH course (lower division, upper division and graduate tabs) with one row per lecture section (001, 002...) and the instructor per quarter. A non-empty cell means a planned offering. For AY 2026-27 the parse found 172 courses. Planner checks: MATH 18, 20A, 20B, 20C, 180A, 183 are FA/WI/SP. 181A is WI/SP. 181B is FA/SP. 189 is FA/WI. 173A is FA only. 173B is WI only. MATH 182 is ABSENT for 2026-27.",
+     "format": "Server-rendered HTML. There are 3 <table class=\"table table-bordered\"> elements inside Bootstrap tab panes (#lower-div, #upper-div, #grad). The page also links the current-quarter section PDFs (e.g. FA26-MATH-Undergrad-Courses-10-21-26.pdf).",
+     "access": "public",
+     "robots_terms": "math.ucsd.edu/robots.txt is the stock Drupal file, and /students/ is not disallowed. The UCSD terms-of-use republishing restriction applies (the footer has no ToU link of its own; the campus ToU applies).",
+     "freshness": "No 'updated' date on the page, and the response headers send no Last-Modified ('Cache-Control: must-revalidate, no-cache, private'; X-Drupal-Dynamic-Cache: UNCACHEABLE). ?year=2026-2027 (current) is populated, and ?year=2025-2026 is populated (175 courses). ?year=2027-2028 returns 200 with empty tables (headers only, 0 rows) as of 2026-11-12. The PDF filenames carry version dates (e.g. '10-21-26', 'v9').",
+     "parse_notes": "Header: <th>COURSE</th><th>COURSE NAME</th><th>LECT</th><th>FALL</th><th>WINTER</th><th>SPRING</th>. The first row of a course has 6 <td>s, and the first two use rowspan=N: <td rowspan=\"2\" class=\"no_break\"><a href=\"http://www.ucsd.edu/catalog/courses/MATH.html#math2\">MATH 2</a></td>. Continuation rows have 4 <td>s (LECT plus 3 quarters). Empty quarter = <td></td>. Parse: carry the current course across 4-td rows, then OR the quarter cells over its sections. Instructor values can be 'Staff, Staff'. Tested parser: /private/tmp/claude-501/-Users-allen-Desktop/a50b0c32-36b9-4f3d-9a23-f8832c6a6de7/scratchpad/parse_math.py",
+     "verified": true
+    },
+    {
+     "name": "HDSI (DSC) Course Offerings - undergraduate",
+     "url": "https://datascience.ucsd.edu/current-students/course-offerings/",
+     "what_it_gives": "A list of DSC courses and the quarter(s) each is planned in for AY 2026-27: 47 data rows (FA26: 15, WI27: 16, SP27: 16). DSC 10/20/30/40A/40B/80 run every quarter. DSC 100: WI27 and SP27. DSC 102, 106, 152: FA26 and SP27. DSC 140A: FA26 and WI27. DSC 140B: WI27 and SP27. DSC 148: SP27. DSC 123B: WI27. DSC 176: WI27. DSC 180A: FA26. DSC 180B: WI27. DSC 190 (several different topic titles per quarter) and 'DSC-190/291'. Planner courses ABSENT for 2026-27: DSC 104, 120, 123A, 155, 160, 161, 167, 170, 191. Below the table is a FAQ of 'typically offered' patterns. That FAQ CONTRADICTS the table for some courses: it says 'DSC 100: typically Fall & Winter', 'DSC 102/106: typically Winter & Spring', 'DSC 140A: typically Winter', 'DSC 148: typically Winter'. The FAQ links to the COGS, CSE, ECON and MATH offering pages.",
+     "format": "WordPress page with a TablePress table <table id=\"tablepress-4\" class=\"tablepress tablepress-id-4\">, server-rendered HTML in long format: one row per (course, quarter).",
+     "access": "public",
+     "robots_terms": "datascience.ucsd.edu/robots.txt blocks only GPTBot, SemrushBot and 'Sogou web spider' ('Disallow: /'). There is no rule for other agents. The footer links https://www.ucsd.edu/_about/legal/index.html ('Terms & Conditions'). The campus ToU republishing clause applies.",
+     "freshness": "The WP REST API (https://datascience.ucsd.edu/wp-json/wp/v2/pages?slug=course-offerings&_fields=id,modified,link) returned page id 19449, modified 2026-08-27T13:49:51. Caveat: TablePress tables are stored separately, so table edits may not bump the page's modified date. Covers AY 2026-27 only and has no archive of past years. The page shows template filler text in a contact widget ('PO Box 16122 Collins Street West Victoria, Australia'), so parse only the table.",
+     "parse_notes": "thead: <th class=\"column-1\">Course #</th><th class=\"column-2\">Title</th><th class=\"column-3\">Quarter</th>. Rows: <tr class=\"row-N\"><td class=\"column-1\">DSC-010</td>...<td class=\"column-3\">Fall 2026</td>. Ids are zero-padded with a hyphen and sometimes carry annotations: 'DSC-095 (1 IWC)', 'DSC-599 (.5 IWC)', 'DSC-190/291', 'Data Science Project I**' (footnote stars in the title). Normalize with a regex. The WP REST endpoint /wp-json/wp/v2/pages is publicly readable and can serve as a cheap change detector. A separate graduate page exists at /graduate/graduate-courses/course-offerings/ (modified 2026-09-11).",
+     "verified": true
+    },
+    {
+     "name": "COGS Tentative Course Offerings 2026-27 (published Google Sheet behind cogsci.ucsd.edu)",
+     "url": "https://cogsci.ucsd.edu/undergraduates/courses/index.html  ->  data: https://docs.google.com/spreadsheets/d/e/2PACX-1vR-pFK5zou3FdqmceGomf_NC47wKhhVhQxe5uwp18Kw32AyJGG3-Bfk-cJPac5YjW26rcCN-wVYWLj0/pub?gid=866922720&single=true&output=csv",
+     "what_it_gives": "COGS courses with the instructor surname per quarter for Fall 2026, Winter 2027, Spring 2027, Summer 1 and Summer 2. A non-empty cell means a planned offering. Planner: COGS 9 is FA/WI. COGS 108 (A00) is FA/WI/SP. COGS 188 is FA only. A second embedded tab holds DSGN courses (gid=1868356496).",
+     "format": "Static HTML page (UCSD CMS) with two iframes to a 'Publish to web' Google Sheet. The CSV export returned HTTP 200, text/csv, 95 lines.",
+     "access": "public",
+     "robots_terms": "cogsci.ucsd.edu/robots.txt returns the UCSD HTML 404 page, so no robots file is served and nothing is disallowed. docs.google.com allows /spreadsheet with Crawl-delay: 1. The footer links the UCSD terms of use (republishing restriction quoted above).",
+     "freshness": "HTTP Last-Modified on the cogsci page: Mon, 26 Oct 2026 19:10:13 GMT. Headings say 'COGS Course Offerings 2026-27'. The sheet itself has no visible date.",
+     "parse_notes": "CSV header: 'Course,Fall 2026,Winter 2027,Spring 2027,Summer 1,Summer 2'. Ids use a space with no padding, e.g. 'COGS 9', 'COGS 187A'. Section variants appear as separate rows: 'COGS 18 A00', 'COGS 108 B00'. Duplicate rows exist ('COGS 9' appears twice). The same published workbook also exposes internal staffing tabs ('Buy Out/Course Relief/Sabbatical' gid=14177027, 'Lecturers/Adjunct Breakdown' gid=362109336, 'Instructor Breakdown' gid=264272970, 'Data' gid=0, 'Grad Courses', 'Notes'). Fetch ONLY gid=866922720 (and 1868356496 if DSGN is needed), and do not ingest or store the staffing tabs.",
+     "verified": true
+    },
+    {
+     "name": "Physics Tentative 2026-2027 Offerings + Typical Course Frequency",
+     "url": "https://physics.ucsd.edu/students/courseofferings  (archive: /students/courseofferings/2025-26; long-term: https://physics.ucsd.edu/typical-course-frequency-and-term-long-term-course-planning)",
+     "what_it_gives": "(1) Per-course instructor per quarter for FA26, W27 and SP27, plus Types/Areas and Units. Empty is never used: the cell says 'Not offered', and 'STAFF' means offered without an assigned instructor. Planner: PHYS 2A/2B/2C are offered every quarter. 4A is W27 only. 4B is SP27 only. 4C is FA26 only. (2) The frequency page gives 'Typical Frequency' and 'Typical Term' for every course (e.g. 4A 'Annually' 'Winter'; 2BL 'Annually' 'Spring'), including 'Hibernated (do not expect any offerings)' and 'Every 2 years (Last Offered FA26)'. This is the only source in this family that projects beyond the current year.",
+     "format": "Drupal server-rendered HTML, <table id=\"datatable\"> on both pages.",
+     "access": "public",
+     "robots_terms": "physics.ucsd.edu/robots.txt is the stock Drupal file, and /students/ is not disallowed. The campus UCSD ToU applies (no footer link was seen on the page).",
+     "freshness": "No Last-Modified header and no date on the page. The title says 'Tentative 2026-2027 Offerings', and the page says 'Upcoming schedules are usually published in March or April.' A prior year is archived at /students/courseofferings/2025-26.",
+     "parse_notes": "Offerings thead: Course | Title | Types / Areas | Units | FA26 | W27 | SP27. The quarter headers are year-coded and must be parsed as (FA|W|SP)(\\d\\d). The Course cell holds only the number ('2A'), linked to catalog.ucsd.edu/courses/PHYS.html#phys2a, so add the 'PHYS ' prefix yourself. Treat 'Not offered' as false and any other non-empty text as true. Cells can be malformed (seen: 'Groisman (001), Bal (002' with an unclosed parenthesis) and use NBSP. Frequency page headers: Course | Course Title | Type(s) and/or Group(s) | Typical Frequency | Typical Term. The frequency values are free text with about 40 distinct variants (e.g. 'Every 4-5 years (Last Offered SP22)', 'Upon instructor & student request', and cross-list notes), so they need regex bucketing.",
+     "verified": true
+    },
+    {
+     "name": "ECE Tentative Course List 2026-27",
+     "url": "https://ece.ucsd.edu/ece-tentative-course-list  (archives: /course-2025-2026, /course-2024-2025, ... back to 2020-21)",
+     "what_it_gives": "Every ECE course with the instructor (uppercase surname) per quarter for FALL 26, WINTER 27, SPRING 27 and SU27 (TBD). The page says a blank box means not offered that quarter. Planner: ECE 101 is FA/WI/SP (FRANCESCHETTI / BAGHDADCHI / SIEGEL). ECE 109 is FA/WI/SP (ZEGER / ZEGER / ORLITSKY).",
+     "format": "Hand-edited HTML table in a Drupal body field: <table class=\"pad10\" ... border=\"1\">, 187 <tr>.",
+     "access": "public",
+     "robots_terms": "ece.ucsd.edu/robots.txt is the stock Drupal file, and the path is not disallowed. The footer links https://ucsd.edu/about/terms-of-use.html.",
+     "freshness": "No date on the page and no Last-Modified header. The heading reads 'ECE Tentative Course List 2026-27'. Prior years are archived on separate node URLs.",
+     "parse_notes": "FRAGILE. The header row is 'COURSE | FALL 26 | WINTER 27 | SPRING 27 | SU27 (TBD)'. The <td data-title> attributes are stale template values ('Fall 16', 'Winter 17', 'Spring 17'), so do NOT key on them and use column position instead. Each row contains a junk inline <style> block with runaway '&amp;amp;amp;...' CDATA, so strip <style> before parsing. The course cell mixes code and title ('ECE 101 Linear Systems Fundamentals'), and whitespace bugs occur ('ECE 10 8', 'ECE111'). Normalize with ^ECE\\s*(\\d[\\d ]*[A-Z]?) and remove inner spaces. Blank cells contain a space or nbsp. Positional parse tested: ['ECE 101 Linear Systems Fundamentals','FRANCESCHETTI','BAGHDADCHI','SIEGEL',''].",
+     "verified": true
+    },
+    {
+     "name": "Biological Sciences 2026-27 Course Offerings (Angular app)",
+     "url": "https://biology.ucsd.edu/education/undergrad/course/course-offerings.html",
+     "what_it_gives": "The page says it lists tentative 2026-27 offerings ('L indicates a lab course'). The static HTML contains no data, only <app-root>, so the course and quarter matrix was NOT seen.",
+     "format": "Client-rendered Angular app (/_resources/angular/course-offerings/main-RMIZZOFU.js). Reading the bundle (not executing it) shows it calls: termRangeAPI 'https://api.ucsd.edu:8243/bio/api-util/v2/config/course-offerings' (returns {term_range:{start,end}}), then '${api}/globs/courses?termCode=FA26&termCode=WI27...' with api='https://public.biology.ucsd.edu/api/prod/website-data/v1', labsAPI 'https://biology.ucsd.edu/publicinfo/dwc?action=ug_labs', and the fallback 'https://biology.ucsd.edu/_files/_data/course-offerings-backup.json'. The bundle contains no auth header or API key.",
+     "access": "public page. The JSON endpoints are undocumented internal APIs and are UNVERIFIED (not fetched).",
+     "robots_terms": "biology.ucsd.edu/robots.txt: 'Disallow: /_files/' (this covers the backup JSON), 'Disallow: /publicinfo/dwc?action=faculty_profile_s&ucsd_net_name=*'. The page path itself is allowed. public.biology.ucsd.edu/robots.txt returns an HTML page (no robots file). api.ucsd.edu:8243/robots.txt returns JSON 404. The footer links the UCSD ToU.",
+     "freshness": "HTTP Last-Modified on the page: Tue, 10 Nov 2026 18:21:04 GMT. The page text says 'Currently listing courses for academic year 2026-27.'",
+     "parse_notes": "UNVERIFIED data shape. I did not call the API endpoints: one attempt that set a browser Origin header was blocked by the session's safety policy, and the backup JSON is under robots-disallowed /_files/. Term codes in the bundle use the SIS style 'FA26', 'WI27', 'SU80'. If the owner wants BIOL data, the clean route is to ask the School of Biological Sciences for permission or a documented feed, or to render the page in a headless browser at low frequency.",
+     "verified": false
+    },
+    {
+     "name": "Chemistry & Biochemistry Undergraduate Course Offerings",
+     "url": "https://chem-web.ucsd.edu/ext/ugcourses.html?year=2026-2027  (linked from https://chemistry.ucsd.edu/undergraduate/courses)",
+     "what_it_gives": "Intended: CHEM courses with Fall, Winter and Spring columns. The fetched HTML has empty tables (<table id=\"undergrad-table\" ...>, <table id=\"grad-table\" ...>) that are filled client-side by /ext/js/course-catalog.js. The course data was NOT seen. The chemistry.ucsd.edu course page also carries an ad-hoc notice that CHEM 142 is planned for FA26 but was missing from initial TSS enrollment.",
+     "format": "JS-populated DataTables (jQuery). The headers are 'Course | Course Title | Sort | Fall | Winter | Spring'.",
+     "access": "public, but robots-disallowed (see below)",
+     "robots_terms": "chem-web.ucsd.edu/robots.txt: 'User-agent: *' ... 'Disallow: /ext/' (and /ugrad/, /_files/). The offerings page lives under /ext/, so automated fetching is disallowed. Separately, the host's TLS chain is misconfigured: the server sends the 'InCommon RSA Server CA 2' intermediate while the leaf is issued by 'InCommon ECC OV SSL CA 3' (openssl 'Verify return code: 21'). I fetched the page once, with full verification, using the intermediate obtained via the cert's AIA URL. That fetch was in the same command as the robots.txt read, before I had read the Disallow. I did not fetch the data JS.",
+     "freshness": "The year is selected by the ?year=2026-2027 query parameter. No date was seen.",
+     "parse_notes": "Do not automate this source (robots Disallow: /ext/). Instead, enter the CHEM planner courses (CHEM 6A/6B/6C, 11) by hand once a year, or ask the department.",
+     "verified": false
+    }
+   ],
+   "recommendation": "How to use these department offering pages:\n\n1. Build one small adapter per department. Each adapter outputs a normalized record {course_id, academic_year, quarters_planned:[FA,WI,SP,(S1,S2)], source_url, fetched_at, content_hash}. Run it from a weekly GitHub Actions cron (most pages change a few times a year), commit the JSON, and let Streamlit read it.\n\n2. Sources that are cheap and stable:\n   - CSE and COGS: published Google Sheets. Use the `pub?gid=...&output=csv` URL directly (verified, HTTP 200, text/csv), and re-discover the iframe src from the department page each run in case the key or gid changes.\n   - MATH: server-rendered HTML with a clean rowspan structure. A tested parser is at /private/tmp/claude-501/-Users-allen-Desktop/a50b0c32-36b9-4f3d-9a23-f8832c6a6de7/scratchpad/parse_math.py.\n   - DSC: TablePress HTML in long format. The WP REST `modified` field is a cheap change signal.\n   - PHYS: HTML with year-coded headers. Its 'Typical Frequency' page is the only source here that projects beyond one year, so use it as the fallback for later plan years.\n\n3. Sources that need care:\n   - ECE: parse by column position only, after stripping <style> blocks.\n   - BIOL: JS app with undocumented APIs. Not verified, so leave it out of automation unless the department approves.\n   - CHEM: robots Disallow: /ext/. Do not automate; enter the 4 planner courses by hand.\n\n4. Semantics the validator needs:\n   - Every source covers only AY 2026-27. MATH's ?year=2027-2028 is empty today.\n   - For plan quarters beyond the published year, mark offerings as 'projected (unknown)' rather than 'not offered'. Optionally fall back to the previous year's pattern, labelled as such.\n   - The DSC page's own FAQ contradicts its table (e.g. DSC 100 'typically Fall & Winter' vs. the table's WI27/SP27). Treat the table as authoritative and drop the FAQ prose.\n   - Empty-cell meaning differs by source: CSE, COGS, MATH and ECE use blank; PHYS uses 'Not offered'; DSC lists only offered rows. Encode this per adapter.\n\n5. Privacy and terms:\n   - Store only course and quarter booleans. Drop instructor names, which are not needed and include internal COGS staffing tabs that are published by accident.\n   - The UCSD Terms of Use forbid republishing material without explicit permission. Quarter-availability facts are low-risk, but the tutor is public on Streamlit, so cite and link each source, keep a 'tentative, check the Schedule of Classes/TSS' banner, and consider emailing the departments.\n   - Rate-limit to 1 request per second or slower and send the descriptive User-Agent.\n\n6. Cross-check against the Schedule of Classes. Several pages now point to the new 'Triton Student System (TSS)' (tss.ucsd.edu, which BIOL says launched mid-July 2026) as the official Schedule of Classes; another subagent should verify whether it has a public, non-SSO view.",
+   "open_questions": [
+    "BIOL: are https://public.biology.ucsd.edu/api/prod/website-data/v1/globs/courses?termCode=... and https://api.ucsd.edu:8243/bio/api-util/v2/config/course-offerings meant for public use? I did not fetch them; ask the School of Biological Sciences before automating, or use a headless browser on the public page.",
+    "CHEM: robots.txt disallows /ext/ where the offerings live. Should the owner ask the Chemistry department for permission or a feed, or just enter CHEM 6A/6B/6C/11 by hand each year?",
+    "UCSD Terms of Use ('No material ... may be copied, reproduced, republished ... without explicit permission'). Does the owner want to request permission from the departments, given the tutor is publicly deployed on Streamlit Cloud?",
+    "Planner courses missing from 2026-27 lists: DSC 104, 120, 123A, 155, 160, 161, 167, 170, 191; MATH 182; CSE 15L. Should 'absent' be treated as 'not offered this year' or 'unknown'? It needs to be confirmed against the Schedule of Classes/TSS.",
+    "No source publishes 2027-28 yet (MATH ?year=2027-2028 is empty; PHYS says schedules are usually published in March or April). How should the validator treat quarters beyond the published year: previous-year pattern, PHYS-style typical frequency, or unknown?",
+    "The new Triton Student System (tss.ucsd.edu/fiori#YSchedule-view), cited by COGS, BIOL and CHEM as the official Schedule of Classes, has not been checked for public (non-SSO) access. Another subagent's family should cover it.",
+    "Several departments outside this family that the major may need (ECON, linked from the DSC page: https://economics.ucsd.edu/undergraduate-program/resources/courses/index.html) were not examined."
+   ]
+  },
+  "verdict": {
+   "key": "dept_projected_offerings",
+   "checks": [
+    {
+     "url": "https://cse.ucsd.edu/undergraduate/tentative-course-offerings",
+     "claim": "Drupal page embeds only an iframe to a published Google Sheet; 'Updated: July 8th, 2026'; empty cell = not offered, 'Staff' = offered, instructor not yet hired; Summer not included",
+     "status": "confirmed",
+     "evidence": "HTTP 200, X-Generator Drupal 9, 0 <table> elements. The page has <iframe src=\".../2PACX-1vRYc7q.../pubhtml?gid=684727614&single=true&widget=true&headers=false\" title=\"CSE Tentative Undergraduate Course Offerings Google Sheet\">. Text reads 'Updated: July 8th, 2026' and 'If no instructor is listed, the course will not be offered.' Staff is described as 'it typically means a visiting lecturer will be hired'. The researcher missed two signs that the page is not kept up: the summer pointer is stale ('Summer 2026 Preview of Classes'), and the 'Schedule of Classes' link is a broken relative href=\"sis.ucsd.edu\". Footer links https://ucsd.edu/about/terms-of-use.html."
+    },
+    {
+     "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYc7qv9lyLh-F8EzlVcE2td3jObRp2B88ZIru9XQw0_G70kfDCjVRo64EWWDdEEkzyc_s1sX2JMfqb/pub?gid=684727614&single=true&output=csv",
+     "claim": "CSV returns HTTP 200 text/csv with 105 rows plus a header 'Course #,Title,Fall 2026,Winter 2027,Spring 2027'; ids like CSE-011; newline-separated instructors; R-suffix and TBD rows; CSE 11/12/100/101/103/151A/151B/158 present, CSE 15L absent; tabs Main Sheet/data/Sheet3",
+     "status": "partly",
+     "evidence": "Row count is WRONG: the sheet has 92 data rows, not 105. The first response is HTTP/2 307 (content-type application/binary) redirecting to doc-00-60-sheets.googleusercontent.com, so 200 text/csv comes only after following the redirect. Confirmed: the header ['Course #','Title','Fall 2026','Winter 2027','Spring 2027']; ids 'CSE-008A', 'CSE-011', 'CSE-151A'; 'Benjamin Ochoa\\nJoe Politz' in CSE-011 Fall; CSE-100R and CSE-158R; 'TBD' titles (CSE-108, 114, 115). The 8 planner courses are present and CSE-015L is absent. CSE-158 is Fall only and CSE-103 is FA/WI only. The pubhtml tab list matches: 'Main Sheet' gid=684727614, 'data' gid=0, 'Sheet3' gid=214089588. docs.google.com/robots.txt has 'Crawl-delay: 1', 'Allow: /spreadsheet', 'Disallow: /'. googleusercontent.com serves an HTML page at /robots.txt (no robots file)."
+    },
+    {
+     "url": "https://math.ucsd.edu/students/planned-course-offerings",
+     "claim": "Server-rendered, 3 <table class=\"table table-bordered\"> in #lower-div/#upper-div/#grad; header COURSE|COURSE NAME|LECT|FALL|WINTER|SPRING; rowspan structure; 172 courses for 2026-27; 18/20A/20B/20C/180A/183 FA/WI/SP, 181A WI/SP, 181B FA/SP, 189 FA/WI, 173A FA, 173B WI, 182 absent; 2025-26 has 175; 2027-28 empty; no Last-Modified; no ToU link",
+     "status": "confirmed",
+     "evidence": "Re-fetched and re-parsed with my own parser (6-td first rows, 4-td continuation rows). I got 172 courses and every quarter pattern matches. MATH 182 is absent in 2026-27 but was offered Winter in ?year=2025-2026, which has 175 courses. ?year=2027-2028 has 3 <tr> (headers only) and 0 courses. Headers: Cache-Control 'must-revalidate, no-cache, private' and X-Drupal-Dynamic-Cache UNCACHEABLE, with no Last-Modified. The PDFs FA26-MATH-Undergrad-Courses-10-21-26.pdf and FA26-MATH-Grad-Courses-10-07-26.pdf are linked. The page has no terms link. 'Staff, Staff' appears 15 times. The real cell markup also carries class=\"font-weight-bold\" target=\"_blank\" on the <a>, which is harmless. robots.txt is stock Drupal and does not disallow /students/."
+    },
+    {
+     "url": "https://datascience.ucsd.edu/current-students/course-offerings/",
+     "claim": "TablePress #tablepress-4 long format, 47 rows (FA26 15, WI27 16, SP27 16), listed quarter patterns, the listed planner courses absent, the FAQ contradicts the table, WP REST modified 2026-08-27T13:49:51, template filler contact text",
+     "status": "confirmed",
+     "evidence": "<table id=\"tablepress-4\" class=\"tablepress tablepress-id-4\"> with th.column-1/2/3 'Course #','Title','Quarter'. 47 rows; Counter is Winter 2027:16, Spring 2027:16, Fall 2026:15. DSC-100 is WI/SP. DSC-102, 106 and 152 are FA/SP. DSC-140A is FA/WI and 140B is WI/SP. DSC-148 is SP. 123B, 176 and 180B are WI. 180A is FA. 'DSC-095 (1 IWC)', 'DSC-599 (.5 IWC)', 'DSC-190/291' and 'Data Science Project I**' all appear. The FAQ says 'DSC 100: typically Fall & Winter', 'DSC 102/106: typically Winter & Spring', 'DSC 140A: typically Winter', 'DSC 148: typically Winter'. The REST call returned id 19449 modified 2026-08-27T13:49:51, plus id 18562 (graduate) modified 2026-09-11T16:25:50. The 'PO Box 16122 Collins Street West Victoria, Australia' filler is present. robots.txt only blocks GPTBot, SemrushBot and Sogou. Footer links https://www.ucsd.edu/_about/legal/index.html, which resolves to ucsd.edu/about/terms-of-use.html. Missed: DSC 197/198/199 (planner courses) are also not in the table. They are by-arrangement courses and should not be read as 'not offered'."
+    },
+    {
+     "url": "https://cogsci.ucsd.edu/undergraduates/courses/index.html",
+     "claim": "Static page with two iframes (gid=866922720 COGS, gid=1868356496 DSGN), Last-Modified Mon, 26 Oct 2026 19:10:13 GMT, heading 'COGS Course Offerings 2026-27'; no robots.txt (HTML 404)",
+     "status": "confirmed",
+     "evidence": "HTTP/2 200 with last-modified 'Mon, 26 Oct 2026 19:10:13 GMT'. Both iframes have exactly those gids. Page text includes 'These are tentative schedules...', 'COGS Course Offerings 2026-27' and 'DSGN Course Offerings 2026-27', and links https://tss.ucsd.edu/fiori#YSchedule-view. /robots.txt returns 404 text/html ('Page Not Found'). Footer links ucsd.edu/about/terms-of-use.html."
+    },
+    {
+     "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-pFK5zou3FdqmceGomf_NC47wKhhVhQxe5uwp18Kw32AyJGG3-Bfk-cJPac5YjW26rcCN-wVYWLj0/pub?gid=866922720&single=true&output=csv",
+     "claim": "Header 'Course,Fall 2026,Winter 2027,Spring 2027,Summer 1,Summer 2'; ids like 'COGS 9', 'COGS 108 A00'; COGS 9 FA/WI, 108 A00 FA/WI/SP, 188 FA only; 'COGS 9' appears twice; the workbook exposes internal staffing tabs",
+     "status": "partly",
+     "evidence": "Confirmed: 200 text/csv, the header, 95 data rows, COGS 9 = ['Tomoschuk','Lai','','',''] (FA/WI), COGS 108 A00 FA/WI/SP, COGS 108 B00 FA/WI, COGS 188 Fall only. WRONG: no id is duplicated and 'COGS 9' appears only once. Section rows exist only for 18, 108 and 160. The staffing-tab claim is confirmed and slightly understated. The tab names I listed (no tab content stored) are 'Buy Out/Course Relief/Sabbatical' 14177027, 'Lecturers/Adjunct Breakdown' 362109336, 'Detail1-Lecturer-<name>-Cogs 3R-3 Sp27' 990874675, 'Instructor Breakdown' 264272970, 'Data' 0, 'Cogs Courses' 866922720, 'Dsgn Courses' 1868356496, 'Grad Courses' 1081551470, 'Notes' 1604510358. One more tab names an individual lecturer."
+    },
+    {
+     "url": "https://physics.ucsd.edu/students/courseofferings",
+     "claim": "<table id=\"datatable\">, thead Course|Title|Types / Areas|Units|FA26|W27|SP27; 'Not offered' sentinel; STAFF = offered; 2A/2B/2C every quarter, 4A W27, 4B SP27, 4C FA26; malformed 'Groisman (001), Bal (002'; NBSP; 'Upcoming schedules are usually published in March or April'; archive /2025-26",
+     "status": "confirmed",
+     "evidence": "All confirmed: 142 rows, 'Not offered' appears 280 times, 'STAFF = course will be offered; instructor not yet assigned.', and the 1A row reads ['1A','Mechanics','Service','3','Groisman (001), Bal (002','Oh','Arlett']. Course cell: <td><a href=\"https://catalog.ucsd.edu/courses/PHYS.html#phys2a\". The researcher missed a parsing pitfall: the table also has a <tfoot> whose headers differ ('Type / Area(s)', 'Fall 2026', 'Winter 2027', 'Spring 2027'), so read the header from <thead> only. Also missed: the page links 'Pilot Prereqs' (/students/undergraduate/enrollment-policies#upcoming_changes_to_physics_course_prereqs), which matters to the prereq validator."
+    },
+    {
+     "url": "https://physics.ucsd.edu/typical-course-frequency-and-term-long-term-course-planning",
+     "claim": "<table id=\"datatable\"> with Course|Course Title|Type(s) and/or Group(s)|Typical Frequency|Typical Term; 4A 'Annually' 'Winter', 2BL 'Annually' 'Spring'; Hibernated; ~40 free-text frequency variants",
+     "status": "partly",
+     "evidence": "The URL returns 301 to https://physics.ucsd.edu/typical-course-frequencies-terms, so the adapter should use the new URL. The table is <table class=\"table table-bordered\" id=\"datatable\"> (class attribute first, so a regex on '<table id=' misses it). Values are confirmed: 142 rows, exactly 40 distinct 'Typical Frequency' strings including 'Hibernated (do not expect any offerings)', 'Course Hibernated (...)', 'Every 2 years (Last Offered FA26)' and cross-list notes. 2A/2B/2C are 'Quarterly'. 4A is Annually/Winter, 4B Annually/Spring, 4C Annually/Fall, 2BL Annually/Spring. Same thead/tfoot duplication as the offerings page."
+    },
+    {
+     "url": "https://ece.ucsd.edu/ece-tentative-course-list",
+     "claim": "<table class=\"pad10\" ... border=\"1\">, 187 <tr>, header COURSE|FALL 26|WINTER 27|SPRING 27|SU27 (TBD), stale data-title, junk <style> in each row, whitespace bugs 'ECE 10 8'/'ECE111', ECE 101 FRANCESCHETTI/BAGHDADCHI/SIEGEL, ECE 109 ZEGER/ZEGER/ORLITSKY, blank = not offered",
+     "status": "partly",
+     "evidence": "Confirmed: 187 <tr>, the header row, data-title values 'Fall 16'/'Winter 17'/'Spring 17' (the 5th column also says 'Spring 17'), the ECE 101 and 109 rows, 'ECE 10 8 Digital Circuits' and 'ECE111', and the page sentence 'If there is a blank box, then the course is not being offered that quarter.' WRONG: the junk <style> blocks are not in every row. There are 9 <style> blocks inside the table across about 186 rows. Missed: ids are zero-padded ('ECE 005', 'ECE 015'), so the proposed regex leaves '005'. The course cell is two <p><a> elements that both link catalog anchors (ECE.html#ece108 even where the text is 'ECE 10 8'). Using the href fragment is a cleaner key than text regex. No Last-Modified header."
+    },
+    {
+     "url": "https://biology.ucsd.edu/education/undergrad/course/course-offerings.html",
+     "claim": "Angular app (<app-root>, main-RMIZZOFU.js) calling api.ucsd.edu:8243 config, public.biology.ucsd.edu/api/prod/website-data/v1/globs/courses, publicinfo/dwc?action=ug_labs, backup JSON; robots 'Disallow: /_files/' covers the backup JSON; Last-Modified Tue, 10 Nov 2026 18:21:04 GMT",
+     "status": "partly",
+     "evidence": "Confirmed: <app-root>, the bundle (200, 203,055 bytes) containing all four URLs and `${qh.api}/globs/courses`, no auth/apikey/bearer strings found, Last-Modified 'Tue, 10 Nov 2026 18:21:04 GMT', and the text 'Currently listing courses for academic year 2026-27' and 'L indicates a lab course'. WRONG robots claim: biology.ucsd.edu/robots.txt has no 'Disallow: /_files/'. It disallows only '/_files/education/undergrad/ec/' and '/_files/communications/' (plus /biointra/, faculty_profile_s and others), so /_files/_data/course-offerings-backup.json is NOT robots-disallowed. Data shape is still UNVERIFIED: my single plain GET of the backup JSON was denied by this session's permission classifier, and I did not try to work around it. Missed: the planner's 'BIOL' courses use the subject codes BILD 1/2/3 and BIBC 100/102."
+    },
+    {
+     "url": "https://chem-web.ucsd.edu/ext/ugcourses.html?year=2026-2027",
+     "claim": "robots disallows /ext/; TLS chain misconfigured (ECC leaf, RSA intermediate sent); JS-populated DataTables with headers Course|Course Title|Sort|Fall|Winter|Spring; CHEM 142 notice on chemistry.ucsd.edu",
+     "status": "partly",
+     "evidence": "Confirmed: chem-web robots.txt (fetched with the AIA intermediate http://crt.sectigo.com/InCommonECCOVSSLCA3.crt) has 'User-agent: *', 'Disallow: /ext/', '/ugrad/', '/_files/', '/_resources/' and more. openssl shows leaf issuer 'InCommon ECC OV SSL CA 3' while the server sends 'InCommon RSA Server CA 2', 'Verify return code: 21'. https://chemistry.ucsd.edu/undergraduate/courses (stock Drupal robots) links ugcourses.html?year=2026-2027 and has the 'FA26 CHEM 142 Planned for Fall' notice. The table headers are UNVERIFIED by me: I did not fetch /ext/ because robots disallows it. The researcher's own account says it fetched a disallowed path before reading robots.txt."
+    },
+    {
+     "url": "https://ucsd.edu/about/terms-of-use.html",
+     "claim": "'No material from any official UC San Diego website may be copied, reproduced, republished ... without explicit permission' except one personal non-commercial copy",
+     "status": "confirmed",
+     "evidence": "The quote matches verbatim. The page also says 'the use of any such material on any other website or networked computer environment is prohibited', which is directly relevant to a public Streamlit app and stronger than what the researcher quoted."
+    }
+   ],
+   "missed": [
+    "ECON offerings page (linked from the DSC FAQ): https://economics.ucsd.edu/undergraduate-program/resources/courses/index.html. Server-rendered <table border=\"1\" class=\"styled\"> with 83 rows, header ['', 'Fall 2026', 'Winter 2027', 'Spring 2027'], ids like 'ECON-001: Principles of Microeconomics', section-group rows ('Lower Division'), 'STAFF*', and the text 'TENTATIVE Course offerings: 2026-27'. The number of names equals the number of classes. economics.ucsd.edu/robots.txt returns 404. Not a current planner course, but it is a DS domain-elective source.",
+    "Legacy Schedule of Classes (act.ucsd.edu/scheduleOfClasses/scheduleOfClassesStudent.htm) still answers 200, but its newest term option is SU26, so it is frozen and FA26 onward exists only in TSS. tss.ucsd.edu/robots.txt returned 503 and /fiori returned 200 (content not inspected). Public access to TSS is still UNVERIFIED.",
+    "Physics links a 'Pilot Prereqs' page (upcoming prerequisite changes) at /students/undergraduate/enrollment-policies#upcoming_changes_to_physics_course_prereqs. This matters to prereq_graph/validator, not only to offerings.",
+    "DSC 197/198/199 (planner courses) do not appear in the DSC table. They are by-arrangement courses, so the adapter must not mark them 'not offered'. The researcher's absent list silently skipped them.",
+    "MATH 182 is absent in 2026-27 but was offered Winter in 2025-26. The courses look like they alternate by year, so mapping 'absent' to 'not offered ever' is wrong and a previous-year fallback must be labelled as a guess.",
+    "Google 'Publish to web' CSV URLs answer with a 307 redirect to *.googleusercontent.com, so the client must follow redirects. A sheet the department unpublishes or re-keys fails silently (HTML instead of CSV), so validate the header row before overwriting data.",
+    "Physics offerings and frequency tables both have <thead> and <tfoot> with different header text. The frequency URL now 301-redirects to /typical-course-frequencies-terms.",
+    "ECE ids are zero-padded ('ECE 005'), and catalog anchor hrefs (#ece108) give a robust key even where the text is broken ('ECE 10 8').",
+    "The CSE page has not been maintained since July: the summer link still says 'Summer 2026' and the Schedule of Classes link is a broken relative href 'sis.ucsd.edu'. Its 'Updated' date is the only freshness signal, and the sheet itself has none.",
+    "The COGS workbook also publishes a tab named after an individual lecturer ('Detail1-Lecturer-...'), which adds to the reason never to fetch anything except gid=866922720/1868356496.",
+    "BIOL robots.txt does not block the backup JSON path. The blocker is the absence of a documented or public-use statement (and, in this session, a permission denial), not robots.",
+    "The UCSD ToU also says use 'on any other website or networked computer environment is prohibited'. That makes the permission question for a public Streamlit deployment stronger than the researcher stated."
+   ],
+   "corrected_recommendation": "Most of the overall approach holds: one adapter per department, a weekly GitHub Actions cron, normalized {course_id, academic_year, quarters, status, source_url, fetched_at, content_hash} records, and a validator that treats out-of-year quarters as 'unknown'. The corrections are below.\n\n1. Automate (verified public, robots-allowed):\n- CSE CSV. Expect 92 rows, not 105. Follow the 307 redirect and assert the header matches /Course #,Title,(Fall|Winter|Spring) \\d{4}/ before writing.\n- COGS CSV. gid=866922720 only. No duplicate-row handling is needed, but collapse 'A00'/'B00' section rows into one course.\n- MATH HTML. The 6/4-td rowspan parse reproduces 172 courses.\n- DSC TablePress. Use the WP REST 'modified' only as a hint and always hash the table.\n- PHYS offerings, plus the frequency page at its new URL /typical-course-frequencies-terms. Take headers from <thead> only.\n- ECE. Parse by column position and key on the catalog href fragment (#ece101). Strip zero-padding and the <style> blocks (9 of them, not one per row).\n- Optionally ECON (server-rendered table) if domain electives are added.\n\n2. Manual or ask first:\n- CHEM: robots 'Disallow: /ext/'. Do not automate; hand-enter CHEM 6A/6B/6C/11 yearly.\n- BIOL (BILD/BIBC): the backup JSON is not robots-blocked (correcting the researcher), but its shape is UNVERIFIED and the APIs are undocumented. Ask the School of Biological Sciences before automating, and hand-enter the 5 courses until then.\n\n3. Semantics:\n- Absent from a list means 'not listed', not 'not offered'. Special-case DSC 197/198/199 as by-arrangement. Treat MATH 182-style year alternation with a labelled previous-year guess or the PHYS-style frequency.\n- Prefer each table over the DSC FAQ prose.\n- Ingest the PHYS Pilot Prereqs notice into the prereq review queue.\n\n4. Ground truth: the legacy act.ucsd.edu Schedule of Classes stops at SU26. FA26 onward is in TSS, whose public access is UNVERIFIED and must be checked separately before it is used as the cross-check.\n\n5. Terms and privacy:\n- Store only course-quarter booleans and never instructor names.\n- Never fetch the COGS staffing tabs.\n- Rate-limit to 1 request per second or slower with the descriptive User-Agent.\n- Because the UCSD ToU explicitly prohibits use 'on any other website', email the departments (or the registrar) for permission before the public Streamlit app shows this data. Until then, show only derived availability flags with source links and a 'tentative, check TSS' banner."
+  }
+ },
+ {
+  "found": {
+   "key": "official-apis-and-open-datasets",
+   "sources": [
+    {
+     "name": "UC San Diego API Manager developer portal (WSO2 API Manager)",
+     "url": "https://api.ucsd.edu/devportal/",
+     "what_it_gives": "The campus API gateway. UCSD's own FAQ says the APIs are only for UCSD developers who have a Single Sign-On account. Anonymous browsing is turned off, so I could not see whether a course, catalog, term or schedule API exists. I found no public evidence of one.",
+     "format": "A WSO2 API Manager devportal app (React shell). Its REST API is at /api/am/devportal/v2/*. APIs are called with an OAuth2 client_credentials token: POST https://api.ucsd.edu/<API-ENDPOINT>/token, then send 'Authorization: Bearer'.",
+     "access": "SSO needed. GET /api/am/devportal/v2/apis returned 401 with \"description\":\"Unauthenticated request\". GET /api/am/devportal/v2/settings returned \"IsAnonymousModeEnabled\":false. /store/ and /api/am/store/v1/apis redirect with 302 to https://api.ucsd.edu/carbon/admin/login.jsp. I did not log in.",
+     "robots_terms": "https://api.ucsd.edu/robots.txt redirects to the admin login page and returns 403, so the host has no robots file. UCSD Confluence FAQ (page 22544505): 'The APIs are available to UCSD developers (staff, student and faculty) who have an Single Sign-on account. At this point, the APIs are not open to developers outside of UCSD.' Also: 'Depending on the API you request access to, the approval may take a couple of days or be automatic.' No rate limits are published. Per that page, limits are set per API inside the portal.",
+     "freshness": "The portal is live (200 on 2026-11-12). The API docs on Confluence were last edited between 2016 and 2018.",
+     "parse_notes": "devportal/services/settings/settings.js shows idp origin https://api.ucsd.edu and subscriptionLimit 1000. The settings JSON lists scopes apim:subscribe and apim:api_key. Process from the FAQ: log in with SSO, then My Apps, Add a new App, subscribe to an API, and generate a Consumer Key and Secret. The Confluence docs warn not to put keys in source code. If the owner gets a key later, keep it in a GitHub Actions secret or Streamlit secret.",
+     "verified": true
+    },
+    {
+     "name": "UCSD 'API and Integration Portal' Confluence space (ITS documentation)",
+     "url": "https://ucsdcollab.atlassian.net/wiki/spaces/API/overview",
+     "what_it_gives": "The only public documentation of who may use the API gateway and how. It lists no course, catalog or schedule API. The only API-specific document linked is 'VAC Messaging (.pdf)'. A 'Using Me' page gives the example pattern /studata/1.0/students/me, which returns the caller's own records only.",
+     "format": "Atlassian Confluence. The HTML pages are JS-rendered, but the REST API works anonymously: /wiki/rest/api/content/<id>?expand=body.view and /wiki/rest/api/content/search?cql=...",
+     "access": "Public read through the REST API. The DEV space overview shows 'This space is locked'.",
+     "robots_terms": "ucsdcollab.atlassian.net/robots.txt has 'User-agent: *', 'Crawl-delay: 1' and 'Allow: /wiki/'.",
+     "freshness": "Stale. The API Documentation page was last edited 2018-02-13 and the FAQ blog posts are from 2016-2017.",
+     "parse_notes": "The space key is API and it has 32 pages. Useful page IDs: 22544505 (FAQ), 22544554 (API Documentation), 22544467 (How to Add an API). The tiny-link /x/UwBYAQ decodes to page id 22544467. A CQL search for 'catalog API' or course APIs found nothing relevant.",
+     "verified": true
+    },
+    {
+     "name": "developer.ucsd.edu (ITS Developer site)",
+     "url": "https://developer.ucsd.edu/",
+     "what_it_gives": "Only web design resources (the 'Decorator 5' CMS template) and a link to the locked Confluence DEV space. It has no API catalog.",
+     "format": "Static HTML",
+     "access": "public",
+     "robots_terms": "robots.txt returns 404. The footer links to the UCSD Terms of Use: 'No material from any official UC San Diego website may be copied, reproduced, republished... without explicit permission, except... personal, non-commercial home use'. Permission requests go to ITS (crose@ucsd.edu).",
+     "freshness": "© 2026",
+     "parse_notes": "Of no use for data.",
+     "verified": true
+    },
+    {
+     "name": "UCSD Class Planner backend API (classplanner.apps.ucsd.edu)",
+     "url": "https://classplanner.apps.ucsd.edu/api/v1/planner/terms",
+     "what_it_gives": "UCSD's own TSS-era Class Planner, launched July 2026. According to a community README, it has JSON routes for terms, a per-term course search, offering options, CAPES summary and schedules. This is the closest thing to an official live Schedule of Classes JSON feed.",
+     "format": "JSON (FastAPI-style error body). Routes seen in the SheepTester/uxdy tss2/README.md include GET /api/v1/planner/terms, GET /api/v1/planner/courses?term_code=FA26&q=CSE%20011&limit=10, POST /api/v1/planner/offering-options and GET /api/v1/capes/summary.",
+     "access": "SSO needed now. On 2026-11-12, /api/v1/planner/terms and /api/v1/planner/courses?term_code=WI27&q=DSC%20080 both returned 401 with {\"detail\":\"Sign in to continue\"}. The community README described the routes as 'all unauthenticated' at some earlier point. That is no longer true. I stopped there.",
+     "robots_terms": "/robots.txt redirects (307) to /auth/login?return_to=%2Frobots.txt, so there is no robots file. The API is undocumented and has no published terms. The UCSD site Terms of Use apply.",
+     "freshness": "Live. The landing page title is 'Class Planner Guide | UC San Diego'.",
+     "parse_notes": "Term codes look like FA26, WI27, SP27, S1/S2. Course codes are zero-padded with a dash, e.g. 'CSE-011'. Do not build on this API: it is undocumented, it was recently put behind login, and it would need a student's SSO session.",
+     "verified": true
+    },
+    {
+     "name": "Triton Student System (TSS) Schedule of Classes (SAP S/4HANA SLcM + Fiori/OData)",
+     "url": "https://sis.ucsd.edu/",
+     "what_it_gives": "The official Schedule of Classes since July 21, 2026. It replaced ISIS, WebReg and the legacy act.ucsd.edu Schedule of Classes. It has section-level data for FA26 and WI27; a 11.5.26 campus notice says the 'Winter 2027 ... Schedule of Classes Are Now Available in TSS'.",
+     "format": "SAP Fiori UI over OData. Community clients mention the entity set YUCSD_CON_EVENTS with the fields TeachingMethod, EventPkgObjid and Sched.",
+     "access": "SSO needed. sis.ucsd.edu redirects to https://tss.ucsd.edu/fiori, which auto-posts a SAML request to https://tssproxy.ucsd.edu/idp/profile/SAML2/POST/SSO. I did not log in.",
+     "robots_terms": "Gated, so none. UCSD Terms of Use apply. Using a personal session cookie in CI, as some community projects do, is outside any published permission.",
+     "freshness": "Live. The ESR FAQ says SoC fixes are still in progress, e.g. 'Schedule of Classes Updates and Known Issues (August 2026)'.",
+     "parse_notes": "ESR FAQ: course search requires the zero-padded form, e.g. 'ANTH-002'. 'TSS will not have awareness of curriculum for a program, that will only be stored in uAchieve.' Course data comes into TSS from CourseLeaf. The legacy https://act.ucsd.edu/scheduleOfClasses/scheduleOfClassesStudent.htm timed out after 45 s, twice. act.ucsd.edu/robots.txt reads 'Disallow: /cwp/tools/search'.",
+     "verified": true
+    },
+    {
+     "name": "Blink 'Schedule of Classes: Publication Schedule'",
+     "url": "https://blink.ucsd.edu/instructors/courses/schedule-of-classes/publication.html",
+     "what_it_gives": "The official date each quarter's Schedule of Classes goes online. This is a reliable trigger for re-pulling offerings in a scheduled GitHub Actions job.",
+     "format": "Static HTML tables. The header row is ['Future quarter build','Fall 2026','Winter 2027','Spring 2027','Summer 2027']. The row 'E. Schedule of Classes is available online' reads '7/10/2026*', '11/5/2026*', 'TBA', 'TBA'.",
+     "access": "public",
+     "robots_terms": "blink.ucsd.edu/robots.txt has 'User-agent: *' and disallows /_files, /_draft, /_archive, /_misc, /search, *.pdf, *.xls and *.doc. This page is allowed. The UCSD Terms of Use apply.",
+     "freshness": "'Last Updated: July 1, 2026'",
+     "parse_notes": "Parse each <table>, find the <tr> whose first cell starts with 'E. Schedule of Classes is available online', and pair it with the header <th> values. Strip the '*' from dates. alchin2/tssplusplus uses exactly this approach (scrapers/helpers/check_publication.py).",
+     "verified": true
+    },
+    {
+     "name": "plans.ucsd.edu Academic Plans JSON (controller.php)",
+     "url": "https://plans.ucsd.edu/controller.php?action=LoadPlans&college=SI&year=2025&major=DS25",
+     "what_it_gives": "Official sample 4-year degree plans for each major, college and start year (2007-2026). Each course is placed by year and quarter, and the plan carries advisor comments. Useful as ground truth when evaluating the planner and for typical sequencing.",
+     "format": "JSON over unauthenticated GET. Three actions: action=LoadSearchControls returns {years, departments[{code,name}], colleges[{code,name}]}. action=LoadMajors&year=&college=&department=DSC returns [{major, major_code}]. action=LoadPlans&college=&year=&major= returns a list of plans with keys planId, courses (nested [year][quarter][course]), comments, college_code, major_code, start_year, major_title, finalized_time and plan_length. Each course has course_name, units, course_type, year_taken, quarter_taken and ge_major_overlap.",
+     "access": "public (no auth)",
+     "robots_terms": "https://plans.ucsd.edu/robots.txt returns the HTML home page with status 200, so in effect there is no robots file. The page meta says 'index,follow,noarchive'. The UCSD Terms of Use apply. The endpoint is undocumented: the page's own jQuery calls it.",
+     "freshness": "The DS25 plan for SI college, year 2025, has finalized_time '2025-05-23 16:28:55'. For year 2026, LoadMajors returned major_code 'NONE' and LoadPlans returned [], so 2026 plans are not published yet for Data Science (checked on 2026-11-12).",
+     "parse_notes": "College codes: RE, MU, TH, WA, FI, SI, SN, EI. The Data Science major code is DS25. The 2025 Sixth College plan returned 2 plans. The first quarter includes MATH 20A, COGS 9 and DSC 10.",
+     "verified": true
+    },
+    {
+     "name": "SheepTester-forks/ucsd-historical-schedule-of-classes (GitHub)",
+     "url": "https://github.com/SheepTester-forks/ucsd-historical-schedule-of-classes",
+     "what_it_gives": "Which courses were offered each quarter from Winter 1995 to Summer 2026. It was scraped from the legacy act.ucsd.edu Schedule of Classes before that was retired. This is the best open source for which quarters a course is actually offered (e.g. DSC 40B or DSC 106 by quarter). It lists courses, not sections.",
+     "format": "One TOML file per term in gen_data/ (FA25.toml, WI26.toml, SP26.toml, S126.toml and so on), plus meta.json with scrape timestamps. Structure: [DSC] name=...; [DSC.courses.40B] title=..., catalog='/courses/DSC.html#dsc40b', optional note. SP26.toml has 2,429 course entries. Section-level raw JSON is produced by SheepTester/uxdy scheduleofclasses/scrape.ts.",
+     "access": "public",
+     "robots_terms": "MIT license on the repository. The underlying data is UCSD's.",
+     "freshness": "Frozen. The last push was 2026-07-19 and there is no FA26 or later, because the source system is retired. That is fine for historical frequency, but it must be supplemented for FA26 onward.",
+     "parse_notes": "Read it with tomllib. Course keys are unpadded, e.g. '40B' and '10'. Term codes are FA, WI, SP, SU, S1, S2, S3 plus YY. Known caveat from gen/README: 'Schedule of Classes is unstable when I refetch quarters' (instructor PIDs and topics change). Download from raw.githubusercontent.com/SheepTester-forks/ucsd-historical-schedule-of-classes/main/gen_data/<TERM>.toml.",
+     "verified": true
+    },
+    {
+     "name": "alchin2/tssplusplus data/offered/<term>.csv (GitHub)",
+     "url": "https://github.com/alchin2/tssplusplus/tree/main/data/offered",
+     "what_it_gives": "A per-term list of offered courses for the TSS era (fa26.csv, wi27.csv), plus data/catalog/<DEPT>.json with courses and prerequisites scraped from catalog.ucsd.edu. wi27.csv lists DSC-010, 020, 030, 040A, 040B, 080, 090, 100, 123B, 140A, 140B, 176, 180A, 180B, 190 and others.",
+     "format": "CSV with header module_id,code,name. Example row: '11416,DSC-040A,Theor Fndtns of Data Sci I'. wi27.csv has 2,420 lines.",
+     "access": "Public on GitHub. The maintainer produces it with a personal TSS login cookie stored as the TSS_COOKIE secret.",
+     "robots_terms": "MIT license (© 2026 Alexander Chin). This is third-party data derived from an authenticated UCSD system, so UCSD has not sanctioned it and it could stop at any time.",
+     "freshness": "Commit 'data: refresh WI27 offered courses from TSS' on 2026-11-09. A daily GitHub Actions job (check-schedule-publication.yml) fires 1-7 days after the Blink publication date.",
+     "parse_notes": "Normalize codes by stripping the zero padding ('DSC-040A' becomes 'DSC 40A'). data/scraped_quarters.txt lists 'Fall 2026' and 'Winter 2027'. Per the workflow README, only fall and winter TSS Perids are coded so far.",
+     "verified": true
+    },
+    {
+     "name": "SheepTester/uxdy (TSS scraping playground)",
+     "url": "https://github.com/SheepTester/uxdy",
+     "what_it_gives": "Scrapers for TSS (tss/, tss2/) and a workflow_dispatch job scrape-tss.yml that pushes classroom and section text files to gh-pages. tss2 targets the classplanner.apps.ucsd.edu routes, which now return 401. tss/README documents that courseschedule.tritonai.ucsd.edu was unauthenticated; its root returned 404 to me.",
+     "format": "TypeScript/Deno. Its output is classrooms-*.txt on the gh-pages branch.",
+     "access": "public repo",
+     "robots_terms": "MIT license",
+     "freshness": "Last push 2026-10-17 ('404s are normal so that shouldnt block scraping').",
+     "parse_notes": "Treat it as a reference, not a dependency. The endpoints it relies on are undocumented and have already changed.",
+     "verified": true
+    },
+    {
+     "name": "Other community UCSD course and prerequisite projects",
+     "url": "https://github.com/CuteSurtr/prereq-dependency",
+     "what_it_gives": "CuteSurtr/prereq-dependency (MIT, pushed 2026-08-30) has a catalog.ucsd.edu scraper (polite, 1 req/s) and a rule-based prerequisite parser that produces DNF groups, exported as graph.json. That makes it a cross-check for prereq_graph.py. Also seen: b-jonathan/better-tss (an extension that uses the student's own session; no license) and hfjddjksaj/tritonplan (an extension that reads the TSS page in the browser; no license). Neither offers a reusable dataset.",
+     "format": "JSON graph and SQLite",
+     "access": "public",
+     "robots_terms": "MIT for prereq-dependency. No license on better-tss or tritonplan, so do not reuse their code.",
+     "freshness": "2026",
+     "parse_notes": "Its README notes the 'Prerequisites:' marker 'appears in several different <strong>/<em> nestings'. That is useful for hardening scraper.py.",
+     "verified": true
+    },
+    {
+     "name": "Curricular Analytics data dumps (academic_plans.csv, prereqs.csv)",
+     "url": "https://github.com/SheepTester-forks/curricular-analytics-exploration",
+     "what_it_gives": "Official registrar dumps of every degree plan since FA12 and a prereqs.csv by term, e.g. 2025_prereqs_thruWI26.csv. These would be ideal data.",
+     "format": "CSV",
+     "access": "SSO needed. The README links the files to a UCSD SharePoint ('Archive of Data Dumps') and says 'you will have to request access or ask for updated data'. Only isis_major_code_list.xlsx on Blink is public, and Blink robots.txt disallows *.xls and /_files.",
+     "robots_terms": "Restricted. I did not attempt access.",
+     "freshness": "The README references year 2025 with prereq-term WI26.",
+     "parse_notes": "The schema in the README is Major, College, Course, Units, Course Type, GE/Major overlap, Start Year, Year Taken, Quarter Taken, Term Taken.",
+     "verified": false
+    },
+    {
+     "name": "UCSD website Terms of Use",
+     "url": "https://ucsd.edu/about/terms-of-use.html",
+     "what_it_gives": "The legal terms covering scraping and republishing of all official UCSD web content, including the catalog, Blink and plans.",
+     "format": "HTML",
+     "access": "public",
+     "robots_terms": "'No material from any official UC San Diego website may be copied, reproduced, republished... without explicit permission' (personal non-commercial use excepted). It also says 'the use of any such material on any other website or networked computer environment is prohibited'. Permission contact: ITS, crose@ucsd.edu.",
+     "freshness": "current",
+     "parse_notes": "A public Streamlit app that republishes catalog descriptions verbatim is technically outside these terms. Prefer storing structured facts (codes, units, prerequisite edges, terms offered) plus links, or ask ITS for permission.",
+     "verified": true
+    }
+   ],
+   "recommendation": "UCSD has no official public course, catalog, term or schedule API a student can just use. The API gateway at api.ucsd.edu requires a UCSD SSO account, and each API needs its own approval, which can take days. Anonymous browsing of its API list is off, and I found no public evidence that a course or schedule API exists there. The live Schedule of Classes now sits inside TSS (SAP), which requires login. UCSD's new Class Planner JSON API (classplanner.apps.ucsd.edu) was reportedly open before but now returns 401 'Sign in to continue'. Do not build on SSO-gated or undocumented endpoints, and do not put a personal session cookie into Streamlit or CI.\n\nSuggested plan:\n1. Catalog and prerequisites: keep scraping catalog.ucsd.edu/courses/<DEPT>.html, which is public static HTML. Another source family covers this.\n2. Offering history: import the MIT-licensed historical Schedule of Classes TOMLs (WI95–SU26) once, and compute for each course which quarters it was offered over the last N years.\n3. Current quarters (FA26 onward): consume alchin2/tssplusplus data/offered/<term>.csv (MIT, refreshed on Blink publication dates). Pin the commit SHA and treat it as unofficial, best-effort data. The fallback is department projected-offerings pages.\n4. Refresh triggers: a scheduled GitHub Actions job that parses the public Blink 'Schedule of Classes: Publication Schedule' table, re-pulls new term data, opens a PR with a diff, and runs the validator tests before merge.\n5. Requirements and evaluation: use the public plans.ucsd.edu controller.php JSON (major code DS25; 2025 plans exist, 2026 not yet published) as reference sequences.\n6. Official access: if the owner wants an official API, they can log in to api.ucsd.edu with their own SSO to see whether any course or term API is listed, or email ITS. They can also ask ITS (crose@ucsd.edu) for permission to republish catalog content on the public Streamlit app.",
+   "open_questions": [
+    "Does the SSO-gated api.ucsd.edu devportal list any course, catalog, term or Schedule-of-Classes API, and would it approve a student app? Only the owner can check, by logging in with their own SSO. I could not see the list because anonymous mode is disabled.",
+    "Is there any public (no-login) view of the TSS Schedule of Classes? sis.ucsd.edu redirects to SAML SSO, and the legacy act.ucsd.edu SoC URL timed out (45 s). The ESR 'retired web services' Google Doc (docs.google.com/document/d/1fHj8FpxVfecCMlojX64OC6fLsoRJNTp4xzrLUsroZ_I) was not fetched.",
+    "Will plans.ucsd.edu publish 2026 Data Science (DS25) plans, and when? On 2026-11-12, the 2026 lookup returned major_code 'NONE' and no plans.",
+    "How long will alchin2/tssplusplus keep publishing offered/<term>.csv? It depends on one student's TSS cookie and only supports fall and winter Perids so far, so spring and summer may be missing.",
+    "Would UCSD ITS grant permission for the public Streamlit app to republish catalog-derived content? The UCSD Terms of Use prohibit republishing without explicit permission.",
+    "UC-wide open datasets (UC Information Center, ASSIST.org) were not fetched. They cover enrollment and transfer articulation, not UCSD per-quarter offerings, so they are likely irrelevant. UNVERIFIED."
+   ]
+  },
+  "verdict": {
+   "key": "official-apis-and-open-datasets",
+   "checks": [
+    {
+     "url": "https://api.ucsd.edu/devportal/",
+     "claim": "WSO2 devportal; /api/am/devportal/v2/apis returns 401 'Unauthenticated request'; settings has IsAnonymousModeEnabled:false; /store/ redirects 302 to carbon login; robots.txt redirects to login then 403; settings.js has subscriptionLimit 1000; access needs UCSD SSO",
+     "status": "confirmed",
+     "evidence": "Re-fetched 2026-11-12: devportal 200; /apis -> 401 {\"code\":401,...\"description\":\"Unauthenticated request\"}; /settings -> 200 with \"IsAnonymousModeEnabled\":false and scopes incl. apim:subscribe, apim:api_key; /store/ -> 302 to /carbon/admin/login.jsp; /robots.txt -> 302 -> login.jsp -> 403; settings.js contains subscriptionLimit : 1000 and origin \"https://api.ucsd.edu\". Whether a course/schedule API exists remains UNVERIFIED (gated)."
+    },
+    {
+     "url": "https://ucsdcollab.atlassian.net/wiki/rest/api/content/22544505?expand=body.view,version",
+     "claim": "Confluence API space: public via REST; FAQ says APIs only for UCSD SSO developers, approval may take days; 32 pages; no course/catalog/schedule API; stale (2016-2018); robots Crawl-delay 1, Allow /wiki/",
+     "status": "confirmed",
+     "evidence": "FAQ (22544505) version date 2017-10-05, created 2016-10-14; text: 'available to UCSD developers (staff, student and faculty) who have an Single Sign-on account... not open to developers outside of UCSD' and 'approval may take a couple of days or be automatic'. API Documentation (22544554) last edited 2018-02-13; only specific doc listed is 'VAC Messaging (.pdf)'. CQL space=API type=page returned 32 titles incl. 'Using Me to access your own records'. CQL for 'schedule of classes'/'course catalog' in API space: 0 results. robots.txt: 'User-agent: *', 'Crawl-delay: 1', 'Allow: /wiki/'. Extra: API Documentation links point to space APIArchive, which returns 404 'No space found' anonymously. DEV-space 'locked' claim not re-checked."
+    },
+    {
+     "url": "https://developer.ucsd.edu/",
+     "claim": "Only design resources (Decorator 5) plus a link to Confluence DEV space; robots 404; footer links UCSD Terms of Use",
+     "status": "confirmed",
+     "evidence": "200; nav text 'Design Kitchen Sink Decorator 5 Decorator Kit Archive Developer Community'; links to ucsdcollab.atlassian.net/wiki/spaces/DEV/overview and ucsd.edu/about/terms-of-use.html; /robots.txt -> 404."
+    },
+    {
+     "url": "https://classplanner.apps.ucsd.edu/api/v1/planner/terms",
+     "claim": "Class Planner JSON API now returns 401 'Sign in to continue'; community README said routes were unauthenticated; robots 307 to login; term codes FA26/WI27/SP27/S1/S2; course codes zero-padded with dash 'CSE-011'; launched July 2026",
+     "status": "partly",
+     "evidence": "Confirmed: /planner/terms and /planner/courses?term_code=WI27&q=DSC%20080 both 401 {\"detail\":\"Sign in to continue\"}; /robots.txt -> 307 to /auth/login?return_to=%2Frobots.txt; landing <title>Class Planner Guide | UC San Diego. uxdy tss2/README says 'they're all unauthenticated' and lists /planner/terms, /planner/courses, POST /planner/alternatives, /schedules/..., plus offering-options and capes/summary from JS. NOT supported by what I saw: the README queries 'q=CSE%20011' (space, not dash) and only shows term_code=FA26; S1/S2 codes and 'July 2026 launch' are UNVERIFIED."
+    },
+    {
+     "url": "https://sis.ucsd.edu/",
+     "claim": "TSS SoC is SSO-gated (sis -> tss.ucsd.edu/fiori -> SAML); legacy act.ucsd.edu SoC was replaced and timed out after 45 s twice; act robots 'Disallow: /cwp/tools/search'; ESR FAQ quotes on zero-padding and uAchieve",
+     "status": "partly",
+     "evidence": "Confirmed sis.ucsd.edu -> 302 https://tss.ucsd.edu/fiori (SAML hop not re-followed). act robots.txt is exactly 'User-agent: * / Disallow: /cwp/tools/search'. WRONG: https://act.ucsd.edu/scheduleOfClasses/scheduleOfClassesStudent.htm returned 200 in 0.19 s with <title>Student/Class Info and a public term dropdown whose newest options are SA26, SU26, S326, S226, S126, SP26, WI26, FA25... (no FA26); form posts to scheduleOfClassesStudentResult.htm (I did not submit). The TSS applications doc (Google Doc, 'Updated: Oct 30, 2026') lists 'Schedule of Classes — Retiring — Mid-December 2026', so legacy SoC is still live, not yet retired. ESR posts exist ('TSS Schedule of Classes Functionality' 7/14/2026; 'Updates and Known Issues' 8/11/2026), but the specific zero-padding/'TSS will not have awareness of curriculum' quotes and the 11.5.26 notice were not located (no FAQ URL given): UNVERIFIED. OData entity names UNVERIFIED."
+    },
+    {
+     "url": "https://blink.ucsd.edu/instructors/courses/schedule-of-classes/publication.html",
+     "claim": "Static HTML tables; header ['Future quarter build','Fall 2026','Winter 2027','Spring 2027','Summer 2027']; row E reads 7/10/2026*, 11/5/2026*, TBA, TBA; Last Updated July 1, 2026; robots allows it",
+     "status": "confirmed",
+     "evidence": "Parsed: ['Future quarter build','Fall 2026','Winter 2027','Spring 2027','Summer 2027'] / ['E. Schedule of Classes is available online','7/10/2026*','11/5/2026*','TBA','TBA']; a second table for 2025-26 also present (5/20/2025, 11/5/2025, 2/6/2026, 3/19/2026). 'Last Updated: July 1, 2026 3:17:56 PM PDT'. blink robots.txt: 'User-agent: *', Disallow /_files, /_draft, /_archive, /_misc, /search, *.pdf, *.xls, *.doc. Caveat: tssplusplus check_publication.py comments that Blink sometimes writes 'E.Schedule' with no space, so a strict 'E. Schedule' prefix match is brittle."
+    },
+    {
+     "url": "https://plans.ucsd.edu/controller.php?action=LoadPlans&college=SI&year=2025&major=DS25",
+     "claim": "Unauthenticated JSON; keys planId, courses, comments, ..., finalized_time '2025-05-23 16:28:55'; 2 plans; 2026 returns major_code NONE and [] so 2026 DS plans 'not published yet'; robots returns HTML home page; meta index,follow,noarchive",
+     "status": "partly",
+     "evidence": "Confirmed: 200 JSON list of 2 plans; keys ['planId','courses','comments','college_code','college_name','college_url','major_code','department','start_year','department_url','major_title','finalized_time','plan_length']; finalized_time 2025-05-23 16:28:55; first quarter MATH 20A, COGS 9, DSC 10 (+ CAT 1); course objects have course_name, units, course_type, year_taken, quarter_taken, ge_major_overlap. LoadSearchControls returns years 2007-2026 and the 8 colleges. robots.txt serves the HTML home page (200) with <meta name=\"robots\" content=\"index,follow,noarchive\">. MISREAD: the home page itself says 'If your major does not have a plan published for 2026-27, there were no substantial changes from last year. Use the 2025-26 plan.' and '*indicates available this year'. 2026 returns NONE for DS25 in all 8 colleges and also for every CSE major (CS25, CS26, CS27, CS29), so the 2025 plan is the current plan, not a placeholder awaiting publication."
+    },
+    {
+     "url": "https://github.com/SheepTester-forks/ucsd-historical-schedule-of-classes",
+     "claim": "MIT; TOML per term WI95-SU26; SP26.toml 2,429 courses; structure [DSC] name / [DSC.courses.40B] title, catalog; last push 2026-07-19; gen/README caveat 'Schedule of Classes is unstable when I refetch quarters'",
+     "status": "partly",
+     "evidence": "Confirmed via GitHub API: MIT, pushed 2026-07-19T02:55:26Z; 213 term TOMLs + meta.json (FA25..SU26, S126, S226, S326 present; no FA26); SP26.toml parses to 181 depts / 2,429 courses; DSC entry {'name':'Data Science'}, '10': {'title':'Principles of Data Science','catalog':'/courses/DSC.html#dsc10'}. README: 'Winter 1995 to Summer 2026'. NOT FOUND: the 'unstable when I refetch quarters' quote is not in gen/README.md, the repo README, or uxdy scheduleofclasses/README.md."
+    },
+    {
+     "url": "https://github.com/alchin2/tssplusplus/tree/main/data/offered",
+     "claim": "MIT; fa26.csv and wi27.csv with header module_id,code,name; row '11416,DSC-040A,...'; wi27 2,420 lines; commit 2026-11-09; daily job 1-7 days after Blink date using TSS_COOKIE; only fall/winter Perids",
+     "status": "confirmed",
+     "evidence": "MIT 'Copyright (c) 2026 Alexander Chin'; wi27.csv header 'module_id,code,name', line 1678 '11416,DSC-040A,Theor Fndtns of Data Sci I', 2,420 lines (fa26.csv 2,020); 37 DSC rows incl. graduate DSC 2xx and DSC-001; commit 2026-11-09T02:06:50Z 'data: refresh WI27 offered courses from TSS' ('Re-ran tss_scraper --titles-only'); scraped_quarters.txt = 'Fall 2026 / Winter 2027'; workflow cron '0 4 * * *', README 'If a quarter went online 1–7 days ago', 'tss_scraper knows the TSS Perid for fall and winter terms'; TSS_COOKIE restored to cookie.txt. Additional: README says the cookie needs a manual 2FA/MFA login refresh and the scrape 'exits on 401/403' when expired; the data is titles-only (no meeting times/sections)."
+    },
+    {
+     "url": "https://github.com/SheepTester/uxdy",
+     "claim": "MIT; tss/ and tss2/ scrapers; scrape-tss.yml; courseschedule.tritonai.ucsd.edu documented as unauthenticated, root 404; last push 2026-10-17",
+     "status": "confirmed",
+     "evidence": "MIT, pushed 2026-10-17T06:07:08Z; tree contains .github/workflows/scrape-tss.yml, tss/README.md, tss2/README.md; tss/README: 'posts it to a separate, unauthenticated website'; https://courseschedule.tritonai.ucsd.edu/ -> 404. Commit message quote not re-checked."
+    },
+    {
+     "url": "https://github.com/CuteSurtr/prereq-dependency",
+     "claim": "MIT, pushed 2026-08-30; catalog scraper 1 req/s; DNF parser; graph.json + SQLite; README note about <strong>/<em> nestings; better-tss and tritonplan have no license",
+     "status": "confirmed",
+     "evidence": "MIT, pushed 2026-08-30T04:39:02Z; README: 'httpx, 1 req/sec', 'Produces DNF groups', 'graph.json', 'SQLite', 'The Prerequisites: marker appears in several different <strong>/<em> nestings'. b-jonathan/better-tss and hfjddjksaj/tritonplan: license null via GitHub API (contents not inspected)."
+    },
+    {
+     "url": "https://github.com/SheepTester-forks/curricular-analytics-exploration",
+     "claim": "academic_plans.csv / prereqs.csv dumps behind UCSD SharePoint; 'request access or ask for updated data'; 2025_prereqs_thruWI26.csv",
+     "status": "partly",
+     "evidence": "README line 77: 'The links are probably private, so you will have to request access or ask for updated data'; links go to ucsdcloud.sharepoint.com '.../Curricular Analytics/Archive of Data Dumps'; line 88 'prereqs = files/2025_prereqs_thruWI26.csv'. Repo has no license and was last pushed 2025-12-12. The README does not call them 'official registrar dumps' in what I read; I did not attempt SharePoint access, so 'SSO needed' is inferred from the host, not tested."
+    },
+    {
+     "url": "https://ucsd.edu/about/terms-of-use.html",
+     "claim": "'No material ... may be copied, reproduced, republished... without explicit permission' except personal non-commercial; 'use ... on any other website or networked computer environment is prohibited'; contact crose@ucsd.edu",
+     "status": "confirmed",
+     "evidence": "Page text contains exactly those clauses and 'Chuck Rose Information Technology Services ... crose@ucsd.edu'."
+    }
+   ],
+   "missed": [
+    "The legacy public Schedule of Classes (https://act.ucsd.edu/scheduleOfClasses/scheduleOfClassesStudent.htm) works again. It returned 200 in 0.19 s with no login. Its term list runs through Summer 2026 (SA26/SU26/S1-S326/SP26/WI26...) and has no FA26. The TSS applications doc (updated Oct 30, 2026) says 'Schedule of Classes — Retiring — Mid-December 2026'. So until mid-December there is an official, public way to spot-check the SheepTester TOMLs against UCSD's own system. It does not help for FA26 onward.",
+    "The 'retired web services' Google Doc was fetchable (export?format=txt). It answers part of open question 2. It says 'Schedule of Classes is available directly in TSS' and lists no public replacement. It also says 'General Catalog — Staying', so catalog.ucsd.edu is the durable public source. courses.ucsd.edu is retired, WebReg retires mid-December 2026, and the uAchieve Degree Audit is live inside TSS (SSO). No public requirements API is mentioned.",
+    "plans.ucsd.edu says 'If your major does not have a plan published for 2026-27, there were no substantial changes from last year. Use the 2025-26 plan.' DS25 returns NONE for 2026 in all 8 colleges, and so do all CSE majors. So the 2025 DS25 plans are the current reference, and open question 3 is mostly answered.",
+    "ESR post (7/14/2026): 'SoC pulls enrollment requirements (prerequisites, corequisites, restrictions...) directly from the course approval in CourseLeaf.' The August 2026 known-issues post says some SoC restrictions come from historical ISIS data and pending approvals. The prerequisites TSS actually enforces can therefore differ from the catalog prose that prereq_graph.py parses. The tutor should say its source is the catalog and that enrollment enforcement may differ.",
+    "catalog.ucsd.edu/robots.txt returns 404, so there is no robots file; only the UCSD Terms of Use apply. The tutor's dsc_courses.json stores full description text that the public Streamlit app shows. That is the kind of republication the Terms restrict, so it is relevant beyond a theoretical point.",
+    "Department tentative-offering pages are the only official forward-looking (annual) offering signal, which is what the owner actually asked for. https://cse.ucsd.edu/undergraduate/tentative-course-offerings is live (200). My guessed DSC and MATH URLs returned 404, so those department pages are UNVERIFIED, not shown to be absent. The findings mention these pages only as a fallback.",
+    "tssplusplus data has more limits than the findings state. It is titles-only (no sections or times). The cookie needs a manual 2FA/MFA refresh, and the scrape exits on 401/403. Spring and summer will fail until Perids are added. Spring 2027 is still 'TBA' on Blink, so the next refresh date is unknown. The CSVs also include graduate courses, which need filtering.",
+    "Blink row text can be 'E.Schedule' with no space (noted in tssplusplus check_publication.py), so the trigger parser must normalize whitespace. Unauthenticated api.github.com calls are capped at 60/hour (I hit 37 used quickly). In CI, use raw.githubusercontent.com or GITHUB_TOKEN.",
+    "Some cited specifics could not be found or are unsupported. The 'unstable when I refetch quarters' quote is not in gen/README. The Class Planner 'CSE-011' dash format and the S1/S2 term codes do not appear in the tss2 README, which uses 'CSE 011'. The ESR FAQ zero-padding quote has no URL and I could not locate it.",
+    "The Confluence API Documentation links into space 'APIArchive', which returns 404 to anonymous users, so part of the official API docs is not publicly readable."
+   ],
+   "corrected_recommendation": "The core conclusion holds: UCSD has no official public API for courses, the catalog, terms or the Schedule of Classes. api.ucsd.edu, TSS (sis/tss.ucsd.edu) and the Class Planner API (now 401 'Sign in to continue') all need SSO. Never put a personal session cookie into Streamlit or CI. Corrected plan for the tutor:\n1. Catalog and prerequisites: keep scraping the public static https://catalog.ucsd.edu/courses/<DEPT>.html at 1 request/second or slower. The TSS impact doc lists the General Catalog as 'Staying'. Harden the parser for <strong>/<em> variants, using CuteSurtr/prereq-dependency (MIT) as a cross-check. Note in the UI that TSS enforces CourseLeaf enrollment requirements that may differ from catalog prose.\n2. Offering history: import the MIT SheepTester-forks historical TOMLs (WI95–SU26) once and compute per-course quarter frequency. Before the legacy act.ucsd.edu Schedule of Classes retires in mid-December 2026, manually spot-check a few DSC/MATH terms against it. It is public and responds today; do this as a person through the page, not as an automated form-posting scraper.\n3. FA26 onward: treat alchin2/tssplusplus data/offered/<term>.csv as an optional, unofficial signal. Pin it to a commit SHA, filter out graduate and non-major courses, expect gaps for spring and summer, and show it as 'reported offered', never as a hard validator constraint. Department tentative-offering pages are the main forward-looking source. CSE's page is live; DSC and MATH pages still need to be found.\n4. Refresh: a scheduled GitHub Actions job that parses the Blink publication table (normalize 'E.Schedule' vs 'E. Schedule', strip '*', handle 'TBA'). On a new date it re-pulls the sources above, opens a PR with a diff, and runs the validator tests. Use GITHUB_TOKEN or raw.githubusercontent.com to avoid GitHub API rate limits.\n5. Requirements and evaluation: use the public plans.ucsd.edu controller.php JSON with DS25 and year 2025. The site says majors without a 2026-27 plan had no substantial changes, so the 2025 plan is current.\n6. Compliance and official access: store structured facts (codes, units, prerequisite edges, terms offered) plus links rather than verbatim catalog descriptions on the public app, or ask ITS (crose@ucsd.edu) for permission. If the owner wants an official API, they must log in to api.ucsd.edu with their own SSO, or contact ITS. Neither I nor the original researcher could see the API list."
+  }
+ },
+ {
+  "found": {
+   "key": "policy_and_secondary_sources",
+   "sources": [
+    {
+     "name": "robots.txt survey of UCSD hosts used by the planner",
+     "url": "https://act.ucsd.edu/robots.txt ; https://blink.ucsd.edu/robots.txt ; https://students.ucsd.edu/robots.txt ; https://datascience.ucsd.edu/robots.txt ; https://ucsd.edu/robots.txt ; https://catalog.ucsd.edu/robots.txt ; https://cape.ucsd.edu/robots.txt ; https://set.ucsd.edu/robots.txt ; https://plans.ucsd.edu/robots.txt ; https://adminrecords.ucsd.edu/robots.txt",
+     "what_it_gives": "Crawl rules per host. act.ucsd.edu (Schedule of Classes host): 'User-agent: * / Disallow: /cwp/tools/search' only. blink.ucsd.edu: disallows '/_files', '/_draft', '/_archive', '/_misc', '/search', and 'Disallow: *.pdf', '*.xls', '*.doc'. students.ucsd.edu: only '/*/_organizations/', '/_misc/', '/_messages/' and GA tracking links disallowed. datascience.ucsd.edu: blocks only named bots ('User-agent: GPTBot / Disallow: /', SemrushBot, Sogou web spider); nothing for a generic or custom UA. ucsd.edu and www.ucsd.edu: 'Disallow: /catalog/' (but https://ucsd.edu/catalog/ is just a 301 to https://catalog.ucsd.edu/). catalog.ucsd.edu, cape.ucsd.edu, set.ucsd.edu, adminrecords.ucsd.edu, plans.ucsd.edu, undergrad.ucsd.edu: no robots.txt (404, or the HTML app/index page served instead of a robots file), so no published restrictions.",
+     "format": "text/plain robots.txt",
+     "access": "public",
+     "robots_terms": "See what_it_gives. Key constraints for this project: blink /_files and *.pdf are disallowed (this covers the academic-calendar .ics file and printer-friendly PDF); act.ucsd.edu /cwp/tools/search disallowed; datascience.ucsd.edu disallows GPTBot, so do NOT reuse a GPTBot-like UA, and keep the descriptive UA 'ucsd-course-planning-tutor (student project)'.",
+     "freshness": "Fetched 2026-11-12",
+     "parse_notes": "Use urllib.robotparser per host at job start; treat 404 as allow-all. Note catalog.ucsd.edu has no robots.txt; the ucsd.edu '/catalog/' disallow applies to the www path, not the catalog subdomain.",
+     "verified": true
+    },
+    {
+     "name": "UC San Diego Website Terms of Use",
+     "url": "https://ucsd.edu/about/terms-of-use.html",
+     "what_it_gives": "Legal terms covering all official UCSD sites ('this site and other UC San Diego sites, regardless of domain address'). The DSC site footer 'Terms & Conditions' links to https://www.ucsd.edu/_about/legal/index.html, and the CAPE/SET/blink footers link to this page.",
+     "format": "HTML",
+     "access": "public",
+     "robots_terms": "Relevant clause: 'No material from any official UC San Diego website may be copied, reproduced, republished ... without explicit permission', except one personal, non-commercial copy. It also says 'the use of any such material on any other website or networked computer environment is prohibited.' Permissions contact listed: ITS (crose@ucsd.edu). Last updated April 22, 2022. The terms say nothing specific about robots or scraping.",
+     "freshness": "Policy last updated 2022-04-22; fetched 2026-11-12",
+     "parse_notes": "Not a data source. Implication: storing and redisplaying verbatim catalog prose (course descriptions) in a public Streamlit app is republication under this clause. Extracting facts (course codes, units, prerequisite relations, quarters offered, dates) is lower risk because facts are generally not copyrightable, but that is a legal judgment, not something the page states. Safer practice: store structured fields plus a link back to the source, and ask ITS or the catalog office for permission if full descriptions are shown.",
+     "verified": true
+    },
+    {
+     "name": "UCSD PPM 135-9 IT Resources Acceptable Use Policy",
+     "url": "https://secure4.compliancebridge.com/ucsd/public/getdoc.php?file=135-9 (indexed from https://adminrecords.ucsd.edu/PPM/docs/135-9.html)",
+     "what_it_gives": "Campus acceptable use policy. Its scope covers students and 'any member of the community making use of UC San Diego IT resources'.",
+     "format": "HTML (compliancebridge document viewer)",
+     "access": "public",
+     "robots_terms": "compliancebridge.com/robots.txt returns 404. Appendix A 'Disallowed Activities', the relevant items: #4 'Users may not circumvent approval or access request processes for granting access to systems or University data'; #6 no action that 'consumes a disproportionate share of IT Resources' or circumvents quotas; #7 do not copy University IP or data without the legal right; #9 no 'disruptively scanning, probing' and no getting around security mechanisms; #11 no commercial use. There is no explicit web-scraping clause. Effective 10/03/2022; 'Next Review Date: 10/03/2025' has passed and no revision is listed.",
+     "freshness": "Effective 2022-10-03; fetched 2026-11-12",
+     "parse_notes": "Not a data source. Practical reading for the bot: low-rate polite fetching of public pages is consistent with it. Scripting SSO-gated systems (SET, CAPE results, DARS) with a student's own login to bulk-export data would plausibly fall under #4 and #7. That is our reading, not a ruling.",
+     "verified": true
+    },
+    {
+     "name": "Academic and Administrative Calendar (quarter dates)",
+     "url": "https://blink.ucsd.edu/instructors/resources/academic/calendars/2026.html (index: https://blink.ucsd.edu/instructors/resources/academic/calendars/ ; also 2025.html, 2027.html, 2028.html linked)",
+     "what_it_gives": "Per academic year: quarter begin/end, instruction begin/end, final exam ranges, holidays, days of instruction for Fall/Winter/Spring and Summer Sessions I/II. For example, Fall 2026 instruction begins Thursday, September 24; Winter Quarter 2027 begins Monday, January 4; Spring Quarter 2027 ends Friday, June 11.",
+     "format": "HTML table",
+     "access": "public",
+     "robots_terms": "blink robots.txt allows /instructors/. It disallows '/_files' and '*.pdf'. The page links an .ics at '../../../../_files/SCI-tab/2026-2027-academic-calendar.ics' and a printer-friendly PDF. Both are robots-disallowed, so they were not fetched. Parse the HTML page instead.",
+     "freshness": "Year pages are published ahead (2027.html and 2028.html are linked from the index). Dates are mostly stable; re-check monthly.",
+     "parse_notes": "<table class=\"styled\" width=\"90%\"> with <caption>Academic and Administrative Calendar 2026–2027</caption>. Quarter header rows look like <th colspan=\"2\" style=\"text-align: center;\">Fall 2026</th>, followed by <tr class=\"odd|even\"><td>Label</td><td>Weekday, Month D</td></tr>. The year is implicit: take it from the header. The second table holds Summer Session columns 'Summer<br/>Session I', 'Summer<br/>Session II', 'Summer<br/>Special Session'. The URL pattern is calendars/{startYear}.html.",
+     "verified": true
+    },
+    {
+     "name": "Booking and Registration (enrollment) Calendar",
+     "url": "https://blink.ucsd.edu/instructors/courses/enrollment/calendars/2026.html",
+     "what_it_gives": "Registrar enrollment dates for each quarter: when the Schedule of Classes and booking times become available, when booking begins for continuing students, when waitlists open, fee deadlines. For Winter 2027: 'Schedule of Classes and Booking times available' 11/5, booking begins 11/9, waitlists open 11/16. The DSC course-offerings page links here as the source for when the Schedule of Classes becomes available.",
+     "format": "HTML table",
+     "access": "public",
+     "robots_terms": "blink robots.txt allows /instructors/",
+     "freshness": "Page shows 'Last Updated: October 28, 2026'. Spring and Summer 2027 cells are still 'TBD'.",
+     "parse_notes": "<table class=\"styled\" style=\"width: 100%;\">. Columns: Description | Fall 2026 | Winter 2027 | Spring 2027 | Summer 2027. Cells are M/D strings or 'TBD'/'N/A', and some cells mix values ('Deadline: 11/4 Date: 11/7'). Useful as a trigger: run the Schedule of Classes scrape once the 'Schedule of Classes and Booking times available' date passes for the next quarter.",
+     "verified": true
+    },
+    {
+     "name": "CAPE (Course And Professor Evaluations), legacy",
+     "url": "https://cape.ucsd.edu/ (results: https://cape.ucsd.edu/responses/Results.aspx)",
+     "what_it_gives": "Historical evaluations up to Spring 2023. The homepage states 'CAPE's last quarter was Spring 2023' and 'SET evaluations have replaced CAPEs starting Summer 2023'.",
+     "format": "HTML (ASP.NET)",
+     "access": "SSO. Results.aspx (with or without ?courseNumber=) redirected to https://a5.ucsd.edu/tritON/profile/SAML2/Redirect/SSO (title 'Web Login Service'). Stopped there.",
+     "robots_terms": "No robots.txt (404). Gated by UCSD SSO. Not appropriate for automated access by a public project.",
+     "freshness": "Frozen since Spring 2023",
+     "parse_notes": "Not parsed (SSO). Note: app.py builds deep links to https://cape.ucsd.edu/responses/Results.aspx?courseNumber=..., which now land on SSO login and hold only pre-SU23 data.",
+     "verified": true
+    },
+    {
+     "name": "SET (Student Evaluation of Teaching) reports",
+     "url": "https://set.ucsd.edu/ ; reports: https://academicaffairs.ucsd.edu/Modules/Evals/SET/Reports/Search.aspx ; data-use policy: https://set.ucsd.edu/reports-responses/usingsetdata.html",
+     "what_it_gives": "Course and instructor evaluation results from Summer 2023 on. The set.ucsd.edu info pages are public; the reports themselves are not.",
+     "format": "Info pages HTML; reports ASP.NET behind SSO",
+     "access": "SSO. Both https://academicaffairs.ucsd.edu/Modules/Evals/ and .../SET/Reports/Search.aspx redirected to a5.ucsd.edu tritON SAML login. Stopped there.",
+     "robots_terms": "set.ucsd.edu has no robots.txt (404). academicaffairs.ucsd.edu serves its homepage HTML for /robots.txt (no real file). The usingsetdata page says SET data on the standard site is 'not intended for project or research use', that project use 'may require additional review and approval', and that students wanting SET data for an educational project should contact their instructor (instructors file a request form for Likert-scale data with instructor identity excluded). Research use requires IRB and FERPA review.",
+     "freshness": "Updated every quarter, but gated",
+     "parse_notes": "Not parsed. Scraping SET with a student's SSO session is both credential-gated and explicitly outside its intended use. Do not automate. Only link out to set.ucsd.edu.",
+     "verified": true
+    },
+    {
+     "name": "Degree audit (DARS / TritonLink)",
+     "url": "https://act.ucsd.edu/studentDarsSelfservice/audit/read.html",
+     "what_it_gives": "A personal transcript-based audit",
+     "format": "HTML behind SSO",
+     "access": "SSO. Redirected to a5.ucsd.edu tritON SAML 'Web Login Service'.",
+     "robots_terms": "act.ucsd.edu robots.txt does not disallow it, but it is gated by SSO and holds FERPA-protected personal records. Out of scope.",
+     "freshness": "n/a",
+     "parse_notes": "Out of scope. At most, let a user paste or upload their own audit text manually.",
+     "verified": true
+    },
+    {
+     "name": "DSC Major Requirements (HDSI advising page)",
+     "url": "https://datascience.ucsd.edu/current-students/major-requirements/",
+     "what_it_gives": "Department-authored BS DSC requirements. 112 units (52 lower division / 60 upper division). Lower division: COGS-009, DSC-010/020/030/040A-B/080; MATH-018 or 031AH, 020A, 020B, 020C or 031BH; one of five subject-domain sequences. Upper-division core: 'ECON-120A* or MATH-183 or MATH-181A'; 'MATH-189 or DSC-152'; DSC-100, 102, 106; 'DSC-140A or CSE-150A'; 'DSC-140B or CSE-151A'; 'DSC-148 or CSE-158(R)'. Senior project DSC-180A-B; 20 elective units; full approved-elective lists by track (Science, Social Sciences, Business Analytics/Econometrics/Statistics, ML/AI); excluded double-major combinations; time-to-degree notes (finish DSC-030 and DSC-040A before year 3, or year 2 for transfers); pre-FA20 transition options.",
+     "format": "HTML (WordPress); prose, <p> and <ul>, no tables",
+     "access": "public",
+     "robots_terms": "datascience.ucsd.edu robots.txt blocks only GPTBot, SemrushBot and Sogou for '/'. A custom UA is allowed. Content falls under the UCSD Terms of Use (no republication without permission).",
+     "freshness": "WordPress modified 2026-08-27T13:47:33 (from both the sitemap <lastmod> and the REST API)",
+     "parse_notes": "Course codes appear as hyphenated, zero-padded 'DSC-040A', 'COGS-014B', 'CSE-158(R)', 'POLI-005(D)'. Normalize to the repo's 'DSC 40A' form. Alternatives are written as 'X or Y'; cross-lists are marked '*'. Use for change detection plus a human-reviewed requirements JSON, not for fully automatic parsing. Cheap change probe: GET https://datascience.ucsd.edu/wp-json/wp/v2/pages?slug=major-requirements&_fields=id,slug,modified,link returns JSON {id:17121, modified:'2026-08-27T13:47:33', ...}.",
+     "verified": true
+    },
+    {
+     "name": "DSC Minor Requirements / Academic Advising / Petition Instructions / Course Descriptions and Prerequisites (HDSI)",
+     "url": "https://datascience.ucsd.edu/current-students/minor-requirements/ ; https://datascience.ucsd.edu/current-students/academic-advising/ ; https://datascience.ucsd.edu/current-students/petition-instructions/ ; https://datascience.ucsd.edu/current-students/course-descriptions-and-prerequisites/",
+     "what_it_gives": "Minor requirements; advising logistics (VAC at vac.ucsd.edu, drop-in hours, a pointer to plans.ucsd.edu); petition rules (for example, up to 8 elective units by petition); the department's own prerequisite listing.",
+     "format": "HTML (WordPress)",
+     "access": "public",
+     "robots_terms": "Same as the DSC site above",
+     "freshness": "REST 'modified': minor-requirements 2026-08-17T11:08:13; academic-advising 2026-10-02T13:14:27; petition-instructions 2026-10-26T09:11:53; course-descriptions-and-prerequisites 2026-08-04T11:57:09",
+     "parse_notes": "One REST call watches all of them: /wp-json/wp/v2/pages?slug=major-requirements,minor-requirements,academic-advising,petition-instructions,course-descriptions-and-prerequisites&_fields=id,slug,modified,link. Full site page list with lastmod: https://datascience.ucsd.edu/wp-sitemap-posts-page-1.xml (sitemap index at /wp-sitemap.xml). I found no dedicated 'requirement changes' or changelog page; changes appear only as edits to these pages. Note: app.py links to /current-students/course-information/ and /current-students/advising/, both of which now return 404.",
+     "verified": true
+    },
+    {
+     "name": "DSC Course Offerings (tentative annual plan)",
+     "url": "https://datascience.ucsd.edu/current-students/course-offerings/",
+     "what_it_gives": "Tentative DSC offerings by quarter for Fall 2026, Winter 2027 and Spring 2027 (for example, DSC-140A is listed in Fall 2026 and Winter 2027, DSC-148 in Spring 2027, DSC-180A in Fall 2026, DSC-180B in Winter 2027). Also an FAQ with typical patterns, and links to other departments' offering pages: COGS https://cogsci.ucsd.edu/undergraduates/courses/index.html, CSE https://cse.ucsd.edu/undergraduate/tentative-course-offerings, ECON https://economics.ucsd.edu/undergraduate-program/resources/courses/index.html, MATH https://math.ucsd.edu/students/planned-course-offerings.",
+     "format": "HTML TablePress table",
+     "access": "public",
+     "robots_terms": "Same as the DSC site above. The page itself says 'Course offerings are tentative and subject to change and/or cancellation.'",
+     "freshness": "modified 2026-08-27T13:49:51",
+     "parse_notes": "<table id=\"tablepress-4\" class=\"tablepress tablepress-id-4\">, thead <th class=\"column-1\">Course #</th><th class=\"column-2\">Title</th><th class=\"column-3\">Quarter</th>. Rows <tr class=\"row-N\"><td class=\"column-1\">DSC-010</td>...<td class=\"column-3\">Fall 2026</td>. Some course cells carry suffixes such as 'DSC-095 (1 IWC)' and 'DSC-190/291'; DSC-190 topics repeat with different titles. The FAQ text gives the fallback rule, e.g. 'DSC 100: typically Fall & Winter', but these typical patterns differ from the table for this year (DSC 100 appears in Winter and Spring 2027, and the FAQ says 140A is 'typically Winter' while the table also lists it in Fall 2026). Prefer the table and keep the FAQ as a prior. (Listed for completeness; it overlaps the offerings source family.)",
+     "verified": true
+    },
+    {
+     "name": "UCSD Academic Plans (plans.ucsd.edu)",
+     "url": "https://plans.ucsd.edu/ (JSON: https://plans.ucsd.edu/controller.php?action=LoadSearchControls | action=LoadMajors&year=&college=&department= | action=LoadPlans&college=&year=&major=)",
+     "what_it_gives": "Official sample 4-year plans per major × college × entry year, with courses placed by year and quarter and flagged as major or college GE. Useful as a gold reference and for eval cases. The DSC advising page points students here.",
+     "format": "JSON via an undocumented XHR endpoint behind a Knockout.js page (the response Content-Type is text/html, but the body is JSON)",
+     "access": "public (no login)",
+     "robots_terms": "No robots.txt (the path returns the app HTML, status 200). The page carries meta robots 'index,follow,noarchive'. The endpoint is undocumented and internal, so use it sparingly (a few calls per term) and cache the results. UCSD Terms of Use apply.",
+     "freshness": "LoadSearchControls years: [2026, 2025, 2024, ...]. For year=2026, college=RE, department=DSC the major is returned as {'major':'Data Science (DS25)','major_code':'NONE'} and has no plan yet. For 2025 it returns major_code 'DS25' with 2 plans.",
+     "parse_notes": "LoadSearchControls → keys ['years','departments','colleges']; colleges look like {'code':'RE','name':'Revelle'}; departments look like {'code':'DSC','name':'Data Science'}. LoadPlans → list of plans with keys planId, courses, comments, college_code, college_name, college_url, major_code, department, start_year, department_url, major_title, finalized_time, plan_length. courses is a nested year→quarter→list of {course_id, plan_id, course_name:'MATH 20A', units:'4.0', course_type:'DEPARTMENT'|'COLLEGE', year_taken, quarter_taken, display_order, ge_major_overlap}.",
+     "verified": true
+    },
+    {
+     "name": "UCSD General Catalog: DSC program page (official requirements)",
+     "url": "https://catalog.ucsd.edu/curric/DSC-ug.html",
+     "what_it_gives": "The official catalog statement of DSC-BS-001, DSC-BS-002 and DSC-MN-001 requirements and double-major restrictions. Carries the disclaimer 'subject to change or deletion without notice'.",
+     "format": "HTML (prose)",
+     "access": "public",
+     "robots_terms": "catalog.ucsd.edu has no robots.txt (404). UCSD Terms of Use apply to the text.",
+     "freshness": "Annual catalog; no last-modified stamp seen in the page",
+     "parse_notes": "Mostly prose with few semantic classes. Treat it as the authoritative tie-breaker against the department page. Detect changes by hashing the normalized text.",
+     "verified": true
+    }
+   ],
+   "recommendation": "How the planner should use these sources:\n\n1. Allowed and appropriate for a scheduled GitHub Action, each with low-rate GETs using the UA 'ucsd-course-planning-tutor (student project)', at most 1 request per second, and a robots.txt check at runtime:\n   - blink academic calendar HTML (calendars/{year}.html), to get quarter dates. Do not fetch the robots-disallowed .ics or PDF.\n   - blink booking/registration calendar, to schedule the Schedule of Classes refresh.\n   - The DSC WordPress pages: major and minor requirements, course offerings, petitions, advising.\n   - catalog.ucsd.edu/curric/DSC-ug.html.\n   - Sparingly, plans.ucsd.edu controller.php JSON, for sample plans and evals.\n\n2. Use the DSC site's WP REST API as a cheap change detector: /wp-json/wp/v2/pages?slug=...&_fields=slug,modified. Re-parse only when 'modified' changes. Route requirement changes to a pull request for human review rather than auto-merging, because the requirements are prose with alternatives and footnotes.\n\n3. Store extracted facts (codes, units, prerequisite edges, quarters, dates) plus source URLs and fetch timestamps. Avoid republishing verbatim catalog or department prose in the public Streamlit app: the UCSD Terms of Use prohibit copying or republishing material from official sites without explicit permission. If full descriptions are needed, email ITS (crose@ucsd.edu, the contact listed in the Terms) for permission.\n\n4. Do not automate CAPE results, SET reports or DARS:\n   - All three redirect to a5.ucsd.edu tritON SSO.\n   - SET's own page says its data is 'not intended for project or research use' without approval.\n   - PPM 135-9 Appendix A #4 and #7 cover circumventing access processes and copying University data.\n   - Keep these as outbound links only, and fix the app's CAPE deep link to point to set.ucsd.edu. If evaluation data is wanted, the route is an instructor-filed SET data request.\n\n5. Also fix the two dead links in app.py (datascience.ucsd.edu /current-students/course-information/ and /current-students/advising/ both return 404). Replace them with /current-students/major-requirements/ and /current-students/academic-advising/.",
+   "open_questions": [
+    "Does UCSD (ITS or the catalog office) consider extracting facts from catalog and department pages for a public student app acceptable without permission, or is only linking acceptable? The Terms of Use text is broad, and its 'one personal copy' exception does not cover a deployed app. Needs a direct email to the Terms' permissions contact (crose@ucsd.edu).",
+    "PPM 135-9's 'Next Review Date: 10/03/2025' has passed and the compliancebridge copy shows no revision. Unverified whether a newer version exists.",
+    "The academic calendar .ics (/_files/SCI-tab/2026-2027-academic-calendar.ics) and the printer-friendly PDF were not fetched because blink robots.txt disallows /_files and *.pdf. Their contents are UNVERIFIED.",
+    "plans.ucsd.edu controller.php is an undocumented internal endpoint. Acceptable request volume and stability are unknown, and the 2026 DSC plan is not yet published (major_code 'NONE').",
+    "There is no dedicated DSC 'requirement changes' or changelog page; changes are visible only as page-modified timestamps. Whether HDSI announces changes elsewhere (for example the 'DSC Newsletter Site' mentioned on the advising page) is not verified.",
+    "Whether the Schedule of Classes (act.ucsd.edu/scheduleOfClasses) permits automated querying beyond robots.txt (which disallows only /cwp/tools/search) is covered by another source family and was not examined here."
+   ]
+  },
+  "verdict": {
+   "key": "policy_and_secondary_sources",
+   "checks": [
+    {
+     "url": "https://act.ucsd.edu/robots.txt ; https://blink.ucsd.edu/robots.txt ; https://students.ucsd.edu/robots.txt ; https://datascience.ucsd.edu/robots.txt ; https://ucsd.edu/robots.txt ; https://www.ucsd.edu/robots.txt ; catalog/cape/set/plans/adminrecords/undergrad robots.txt",
+     "claim": "Per-host robots rules as listed; ucsd.edu /catalog/ is a 301 to catalog.ucsd.edu; catalog, cape, set, adminrecords, undergrad have no robots.txt (404) and plans serves its app HTML; suggests urllib.robotparser per host",
+     "status": "partly",
+     "evidence": "Re-fetched 2026-11-12. The rule text matches exactly. act: 'User-agent: * / Disallow: /cwp/tools/search'. blink: '/_files', '/_draft', '/_archive', '/_misc', '/search', one technology/... page, 'Disallow: *.pdf', '*.xls', '*.doc'. datascience: only GPTBot, SemrushBot and 'Sogou web spider' get 'Disallow: /'. ucsd.edu and www: 'Disallow: /*?_=*ga=' and 'Disallow: /catalog/'. HEAD https://ucsd.edu/catalog/ returned '301 location: https://catalog.ucsd.edu/'. catalog, cape, set, adminrecords and undergrad returned 404 HTML. plans.ucsd.edu/robots.txt returned 200 text/html (the 'Academic Plans' app page). The parse advice is wrong: Python's urllib.robotparser does plain prefix matching and has no wildcard support, so the blink rule 'Disallow: *.pdf' (no leading slash) and '/*?_=*ga=' would never match. PDFs and .ics files would be reported as allowed."
+    },
+    {
+     "url": "https://ucsd.edu/about/terms-of-use.html",
+     "claim": "Terms cover all UCSD sites regardless of domain; no copying, reproduction or republication without explicit permission except one personal non-commercial copy; use on any other website is prohibited; contact crose@ucsd.edu; last updated April 22, 2022; nothing on scraping",
+     "status": "confirmed",
+     "evidence": "The page text has 'other UC San Diego sites, regardless of domain address' and 'No material from any official UC San Diego website may be copied, reproduced, republished...'. It also says 'use of any such material on any other website or networked computer environment is prohibited'. Contact: 'Chuck Rose ... crose@ucsd.edu'. Footer: 'This policy was last updated on April 22, 2022'. There is no robots or scraping text. The DSC footer link https://www.ucsd.edu/_about/legal/index.html redirects to this same page. Blink, catalog, CAPE and SET footers link here directly. Not mentioned in the finding: the page also says 'policies and procedures for other websites may vary' and tells visitors to contact the department that maintains the site, so HDSI is a second permission route besides ITS."
+    },
+    {
+     "url": "https://secure4.compliancebridge.com/ucsd/public/getdoc.php?file=135-9",
+     "claim": "PPM 135-9 scope and Appendix A items #4, #6, #7, #9 and #11; effective 10/03/2022; next review 10/03/2025; compliancebridge robots.txt is 404",
+     "status": "confirmed",
+     "evidence": "Header: 'Effective: 10/03/2022 Supersedes : New Next Review Date: 10/03/2025'. REVISION HISTORY lists only '10/03/2022 Policy issued.' Scope includes 'any member of the community making use of UC San Diego IT resources'. Appendix A items #4 (circumvent approval or access request processes), #6 (disproportionate share), #7 (copy data without legal right), #9 ('disruptively scanning, probing') and #11 (commercial purposes) are all present as quoted. https://secure4.compliancebridge.com/robots.txt returned 404. https://adminrecords.ucsd.edu/PPM/docs/135-9.html redirects to the compliancebridge index, not to the document itself. Not mentioned in the finding: section 3.a lets a disallowed activity be 'approved by exception' with the Service Provider's pre-approval."
+    },
+    {
+     "url": "https://blink.ucsd.edu/instructors/resources/academic/calendars/2026.html",
+     "claim": "HTML table class='styled' with a caption, quarter header th colspan=2, odd/even rows, and a summer table; Fall 2026 instruction begins Thu Sep 24, Winter begins Mon Jan 4, Spring 2027 ends Fri Jun 11; the .ics and PDF are robots-disallowed; the index links 2027 and 2028",
+     "status": "confirmed",
+     "evidence": "Seen: '<table class=\"styled\" width=\"90%\">', '<caption>Academic and Administrative Calendar 2026&#8211;2027</caption>', and '<th colspan=\"2\" style=\"text-align: center;\">Fall 2026</th>'. Rows parse as ['Instruction begins','Thursday, September 24'], ['Winter Quarter begins','Monday, January 4'] and ['Spring Quarter ends','Friday, June 11']. The summer table has caption 'Summer Sessions 2027' and th 'Summer<br/>Session I'. The links are '../../../../_files/SCI-tab/2026-2027-academic-calendar.ics' and '../../../../_files/Registrar/calendars/2026-2027-AcadAdmin-Calendar.pdf'. The page shows 'Last Updated: October 7, 2026'. Small corrections: the index links year pages through 2033.html, not just 2027 and 2028. Some cells span the year boundary ('December 31 – January 1'), so the year cannot always be taken from the header."
+    },
+    {
+     "url": "https://blink.ucsd.edu/instructors/courses/enrollment/calendars/2026.html",
+     "claim": "Table class='styled' with columns Description | Fall 2026 | Winter 2027 | Spring 2027 | Summer 2027; Winter 2027 SoC available 11/5, booking 11/9, waitlists 11/16; Last Updated Oct 28, 2026; Spring and Summer TBD",
+     "status": "partly",
+     "evidence": "Confirmed: '<table class=\"styled\" style=\"width: 100%;\">', the header row, Winter values '11/5', '11/9' and '11/16', 'Last Updated: October 28, 2026', and TBD cells. The finding missed that superseded dates stay in the cell, wrapped in '<span style=\"text-decoration: line-through;\">'. There are 12 such spans. Plain text extraction gives Fall 'Schedule of Classes...' = '7/10 7/20', where 7/10 is struck out, and Winter 'Return to UCSD' = '10/9 11/1'. A parser must drop the struck-through values. Also, the 'Schedule of Classes' link in this row points to https://classplanner.apps.ucsd.edu/search, not act.ucsd.edu."
+    },
+    {
+     "url": "https://cape.ucsd.edu/ ; https://cape.ucsd.edu/responses/Results.aspx",
+     "claim": "Homepage says CAPE's last quarter was Spring 2023 and SET replaced it from Summer 2023; Results.aspx redirects to a5 tritON SSO",
+     "status": "confirmed",
+     "evidence": "Homepage text: 'CAPE's last quarter was Spring 2023 SET evaluations have replaced CAPEs starting Summer 2023'. Results.aspx, with and without ?courseNumber=DSC+10, ended at https://a5.ucsd.edu/tritON/profile/SAML2/Redirect/SSO?execution=e1s1 (title 'Web Login Service - Stale Request'). Stopped there. The app has a CAPE deep link at app.py:181, and app.py:56 still describes CAPE as evaluations 'for every UCSD course', which is now stale."
+    },
+    {
+     "url": "https://set.ucsd.edu/reports-responses/usingsetdata.html ; https://academicaffairs.ucsd.edu/Modules/Evals/SET/Reports/Search.aspx",
+     "claim": "SET reports are SSO-gated; the data-use page says the data is 'not intended for project or research use', the instructor request route exists, IRB/FERPA apply; set has no robots.txt; academicaffairs serves HTML for /robots.txt",
+     "status": "confirmed",
+     "evidence": "Both academicaffairs Evals URLs redirected to the a5 tritON SSO page. The usingsetdata text says the SET data 'are not intended for project or research use' and that 'additional review and approval may be required'. It says faculty may request 'Likert-scale SET data (excluding instructor identity)' and mentions 'IRB approval, which should also include FERPA review'. set.ucsd.edu/robots.txt returned 404. academicaffairs.ucsd.edu/robots.txt returned 200 text/html with title 'Academic Affairs'."
+    },
+    {
+     "url": "https://act.ucsd.edu/studentDarsSelfservice/audit/read.html",
+     "claim": "DARS is SSO-gated",
+     "status": "confirmed",
+     "evidence": "Redirected to a5.ucsd.edu tritON SAML ('Web Login Service'). Stopped there."
+    },
+    {
+     "url": "https://datascience.ucsd.edu/current-students/major-requirements/",
+     "claim": "112 units (52 LD / 60 UD); listed LD and core courses; prose with no tables; WP modified 2026-08-27T13:47:33; hyphenated zero-padded codes; '*' marks cross-lists",
+     "status": "partly",
+     "evidence": "Confirmed: 'The major consists of 112 units with 52 units from lower-division courses and 60 units from upper-division courses'. The core lists 'ECON-120A* or MATH-183 or MATH-181A', 'MATH-189 or DSC-152', 'DSC-140A or CSE-150A', 'DSC-140B or CSE-151A' and 'DSC-148 or CSE-158(R)'. There are five domain sequences, 0 <table> elements, and REST id 17121 with modified '2026-08-27T13:47:33'. The asterisk claim is wrong as a general rule. On ECON-120A the '*' is a footnote: '*Students who have completed MATH-180A should not take ECON-120A, as this will cause problems with their degree audit.' Only in the elective lists does 'Note: Courses with * are cross-listed' apply. The time-to-degree text is correct: first-years finish DSC-030 and DSC-040A before their 3rd year, transfers before their 2nd year."
+    },
+    {
+     "url": "https://datascience.ucsd.edu/wp-json/wp/v2/pages?slug=...&_fields=id,slug,modified,link",
+     "claim": "One REST call watches the minor, advising, petition and course-descriptions pages, with the modified timestamps listed; app.py course-information and advising links 404; the advising page points to vac.ucsd.edu, plans.ucsd.edu and a DSC Newsletter Site; petition allows up to 8 units",
+     "status": "partly",
+     "evidence": "Timestamps confirmed: minor 2026-08-17T11:08:13, advising 2026-10-02T13:14:27, petition 2026-10-26T09:11:53, course-descriptions 2026-08-04T11:57:09. /current-students/course-information/ and /current-students/advising/ both returned 404, and they are linked at app.py:63 and :67. The advising text mentions vac.ucsd.edu, plans.ucsd.edu and the 'DSC Newsletter Site'. The petition page says 'up to 8 units of upper-division courses related to their “domain”'. The caveat the finding missed: slugs are not unique. Adding slug=course-offerings returned two pages, id 19449 (/current-students/course-offerings/) and id 18562 (/graduate/graduate-courses/course-offerings/, modified 2026-09-11). The watcher should pin page ids with ?include=17121,17123,17087,17109,17873,19449 instead of slugs."
+    },
+    {
+     "url": "https://datascience.ucsd.edu/current-students/course-offerings/",
+     "claim": "TablePress table id tablepress-4 with columns Course # | Title | Quarter covering Fall 2026 to Spring 2027; suffixes like 'DSC-095 (1 IWC)' and 'DSC-190/291'; FAQ 'typically' patterns differ from the table for DSC 100 and 140A; links to the COGS, CSE, ECON and MATH offering pages",
+     "status": "confirmed",
+     "evidence": "Seen: '<table id=\"tablepress-4\" class=\"tablepress tablepress-id-4\">' with th column-1/2/3 'Course #', 'Title', 'Quarter', and 48 rows including the header. DSC-140A is listed in Fall 2026 and Winter 2027, DSC-148 in Spring 2027, DSC-100 in Winter and Spring 2027, DSC-180A in Fall and DSC-180B in Winter. All four department links are present exactly as quoted. The FAQ disagrees with the table more than the finding says: it gives 'DSC 102/106: typically Winter & Spring' but the table lists both in Fall 2026 and Spring 2027, and 'DSC 148: typically Winter' but the table lists Spring 2027 only. The table also includes graduate DSC-599 rows, and the DSC-180A and 180B titles carry a '**' footnote marker."
+    },
+    {
+     "url": "https://plans.ucsd.edu/controller.php?action=LoadSearchControls | LoadMajors | LoadPlans",
+     "claim": "Undocumented JSON (served as text/html) with keys years/departments/colleges; for 2026 RE DSC major_code is 'NONE'; for 2025 it is DS25 with 2 plans; LoadPlans keys as listed; nested courses",
+     "status": "confirmed",
+     "evidence": "Content-Type is 'text/html; charset=UTF-8' and the body is JSON. Keys are ['years','departments','colleges'] and years start [2026, 2025, 2024, ...]. The 2026 RE DSC call returned '[{\"major\":\"Data Science (DS25)\",\"major_code\":\"NONE\"}]'. The 2025 call returned major 'Data Science* (DS25)' with code DS25. LoadPlans RE/2025/DS25 returned 2 plans, 31931 (plan_length 4) and 31940 (plan_length 2, the transfer plan), both finalized 2025-06-10. The plan keys match the finding exactly. Small schema notes: department objects also carry a 'description' key, and courses is a list (year) of lists (quarter) of course dicts, not a keyed map."
+    },
+    {
+     "url": "https://catalog.ucsd.edu/curric/DSC-ug.html",
+     "claim": "Official DSC-BS-001, DSC-BS-002 and DSC-MN-001 requirements; disclaimer present; no robots.txt; no last-modified stamp; few semantic classes; detect changes by hashing",
+     "status": "partly",
+     "evidence": "Confirmed: the text includes 'The Data Science Major (DSC-BS-001)', 'The Business Data Science Major (DSC-BS-002)', 'DSC-MN-001' and 'subject to change or deletion without notice'. Only layout or bootstrap classes appear. The finding missed that the server sends HTTP validators: 'last-modified: Wed, 04 Nov 2026 18:31:25 GMT' and an etag. courses/DSC.html also sends 'last-modified: Wed, 04 Nov 2026 18:10:16 GMT'. Conditional GETs (If-Modified-Since or If-None-Match) are therefore a cheaper change probe than hashing. A Nov 2026 modification also means 'annual catalog' should not be read as 'changes once a year'. The page also covers the separate Business Data Science major, so a parser must scope to the DSC-BS-001 section."
+    }
+   ],
+   "missed": [
+    "Python's urllib.robotparser does not support wildcards (it only checks whether a path starts with each rule). blink's 'Disallow: *.pdf', '*.xls' and '*.doc' (no leading slash) and ucsd.edu's '/*?_=*ga=' would be evaluated as allow. Use a wildcard-aware parser such as protego, or hard-code a denylist of /_files, *.pdf and *.ics, and never fetch blink /_files.",
+    "Blink enrollment calendar: superseded dates stay in the cell inside <span style=\"text-decoration: line-through;\"> (12 occurrences). A naive parser reads '7/10 7/20' and may pick the wrong date. Drop struck-through spans before extracting dates.",
+    "The enrollment calendar's 'Schedule of Classes' link now points to https://classplanner.apps.ucsd.edu/search (page title 'Schedule of Classes · Class Planner'), not act.ucsd.edu. https://classplanner.apps.ucsd.edu/robots.txt redirects to the a5 SSO page, so that host publishes no robots file. The Schedule of Classes source family should confirm which host is current before building the scraper.",
+    "WordPress REST slug lookups are not unique: slug=course-offerings returns both the undergraduate page (id 19449) and the graduate page (id 18562). Pin page ids with ?include= instead of slug=.",
+    "The FAQ 'typically offered' pattern disagrees with the table for more courses than reported: DSC 102 and 106 (Fall and Spring in the table, 'typically Winter & Spring' in the FAQ) and DSC 148 (Spring only in the table, 'typically Winter' in the FAQ). The FAQ is a weak prior and should not be used as an override.",
+    "On the major-requirements page '*' has two meanings: a footnote on ECON-120A (avoid it if MATH-180A is completed, because of degree-audit problems) and a cross-list marker in the elective lists. The ECON-120A footnote is an exclusion rule the validator may want to encode.",
+    "catalog.ucsd.edu sends Last-Modified and ETag headers (DSC-ug.html: 04 Nov 2026 18:31:25 GMT). Use conditional GETs for change detection; content hashing is only the fallback.",
+    "Academic calendar year pages are linked through 2033.html, and some rows cross the year boundary ('December 31 – January 1'), so year inference needs to handle January dates under a Fall header.",
+    "The Terms of Use say 'policies and procedures for other websites may vary' and tell visitors to contact the department that maintains a site, so asking HDSI directly is a second permission route besides ITS (crose@ucsd.edu). PPM 135-9 section 3.a also allows a disallowed activity with the service provider's pre-approval.",
+    "app.py:56 still describes CAPE as current evaluations 'for every UCSD course'. That description is stale as well as the deep link at app.py:181.",
+    "plans.ucsd.edu: the two DS25 Revelle plans are a 4-year plan and a 2-year (transfer) plan, finalized 2025-06-10. The 2025 major label has an asterisk ('Data Science* (DS25)'). Plans for other colleges were not checked."
+   ],
+   "corrected_recommendation": "The finding is mostly accurate. Its main errors are the robots-parsing advice, the missed strikethrough dates in the enrollment calendar, and the slug collision in the REST watcher. Corrected plan:\n\n1. Polite fetching. Set the UA to 'ucsd-course-planning-tutor (student project)', wait at least 1 second between requests, and cache responses.\n   - Do not rely on urllib.robotparser, because it ignores wildcards and would allow blink's 'Disallow: *.pdf'. Use protego, or a hard-coded denylist: blink /_files and /search, any *.pdf, *.xls, *.doc or *.ics, and act /cwp/tools/search.\n   - Never touch SSO-gated hosts: CAPE Results.aspx, academicaffairs SET, act DARS, or anything that redirects to a5.ucsd.edu. If a 302 to a5.ucsd.edu ever appears, treat it as a stop signal.\n\n2. Scheduled GitHub Action sources, in order of value:\n   a. DSC course-offerings TablePress table (#tablepress-4, columns Course # | Title | Quarter). Normalize 'DSC-040A' to 'DSC 40A', strip suffixes such as '(1 IWC)', split 'DSC-190/291', drop 5xx graduate rows, and treat the result as tentative. The Schedule of Classes overrides it once published.\n   b. The blink enrollment calendar. Remove <span style=\"text-decoration: line-through;\"> values first. Use the 'Schedule of Classes and Booking times available' date to trigger the Schedule of Classes refresh. Note this row now links to classplanner.apps.ucsd.edu, so the Schedule of Classes family must confirm the current host and its terms.\n   c. The blink academic calendar HTML (calendars/{startYear}.html), handling dates that cross the year boundary.\n   d. catalog.ucsd.edu curric/DSC-ug.html and courses/{DEPT}.html, fetched with conditional GETs (If-None-Match / If-Modified-Since). Scope the parse to the DSC-BS-001 section, not DSC-BS-002.\n   e. plans.ucsd.edu controller.php JSON, a few calls per term, used only for eval or gold-plan fixtures. The 2026 DS25 plans do not exist yet (major_code 'NONE').\n\n3. Change detection on the DSC WordPress pages. Call /wp-json/wp/v2/pages?include=17121,17123,17087,17109,17873,19449&_fields=id,slug,modified,link, pinning ids rather than slugs, since 'course-offerings' also matches the graduate page 18562. Re-parse only when 'modified' changes. Open a pull request with a diff of the human-reviewed requirements JSON instead of auto-merging. Encode the footnote rules too, for example the ECON-120A / MATH-180A conflict.\n\n4. Licensing. The UCSD Terms of Use forbid copying or republishing material from official sites without permission, and its personal-copy exception does not cover a deployed app. Store structured facts with source URLs and fetch timestamps. Do not show verbatim catalog or department prose in the public Streamlit app; link out to it instead. Ask HDSI (the department that maintains the site, per the Terms) and/or ITS (crose@ucsd.edu) for permission before showing full descriptions. This is a reading of the Terms, not legal advice.\n\n5. Evaluations and audits: do not automate CAPE, SET or DARS. They are SSO-gated, SET's page says its data is 'not intended for project or research use', and PPM 135-9 Appendix A #4 and #7 apply. Keep them as outbound links only.\n\n6. App fixes:\n   - Change the CAPE homepage link and its 'every UCSD course' description at app.py:56, and the deep link at app.py:181, to point to set.ucsd.edu, noting that CAPE data stops at Spring 2023.\n   - Replace the dead links at app.py:63 (/current-students/course-information/) and app.py:67 (/current-students/advising/) with /current-students/major-requirements/ and /current-students/academic-advising/."
+  }
+ }
+]
