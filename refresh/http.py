@@ -10,8 +10,8 @@ from __future__ import annotations
 import hashlib
 import json
 import time
-from http.cookiejar import CookiePolicy
 from dataclasses import dataclass
+from http.cookiejar import CookiePolicy
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 

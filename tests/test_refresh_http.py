@@ -192,31 +192,49 @@ def test_redirect_to_robots_disallowed_url_is_blocked(clock):
     assert all(c["url"] != f"https://{HOST}/private/a" for c in t.calls)
 
 
-def test_default_session_keeps_no_cookies_and_ignores_env(monkeypatch):
+def _cookie_probe(session):
+    """Run two GETs through `session` against a server that sets a cookie; return what was sent."""
+    import http.client
+    from types import SimpleNamespace
+
     import requests
     from requests.adapters import BaseAdapter
-    from refresh.http import _default_session
 
     seen = []
 
     class Adapter(BaseAdapter):
         def send(self, request, **kw):
             seen.append(request.headers.get("Cookie"))
+            msg = http.client.HTTPMessage()
+            msg["Set-Cookie"] = "sid=secret; Path=/"
             resp = requests.Response()
             resp.status_code = 200
             resp.url = request.url
             resp._content = b"ok"
-            resp.headers["Set-Cookie"] = "sid=secret; Path=/"
-            resp.raw = __import__("io").BytesIO(b"")
+            # extract_cookies_to_jar only parses Set-Cookie when raw carries an _original_response
+            resp.raw = SimpleNamespace(_original_response=SimpleNamespace(msg=msg))
             return resp
 
         def close(self):
             pass
 
-    session = _default_session()
-    assert session.trust_env is False
     session.mount("https://", Adapter())
     session.request("GET", "https://catalog.ucsd.edu/a")
     session.request("GET", "https://catalog.ucsd.edu/b")
-    assert seen == [None, None]
+    return seen
+
+
+def test_cookie_probe_discriminates_bare_session():
+    """Sanity: the probe really does replay cookies on a plain requests.Session."""
+    import requests
+
+    assert _cookie_probe(requests.Session()) == [None, "sid=secret"]
+
+
+def test_default_session_keeps_no_cookies_and_ignores_env():
+    from refresh.http import _default_session
+
+    session = _default_session()
+    assert session.trust_env is False
+    assert _cookie_probe(session) == [None, None]
     assert len(session.cookies) == 0
