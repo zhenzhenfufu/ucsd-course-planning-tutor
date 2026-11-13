@@ -97,3 +97,13 @@ def test_own_id_is_dropped_from_prereq_groups():
     c = {x.id: x for x in parse_course_page(html, "DSC", DSC_URL)}
     assert c["DSC 77"].prereq_groups == [["DSC 10"], ["DSC 20"]]
     assert c["DSC 78"].prereq_groups == []
+
+
+def test_referenced_never_lists_abstract_tokens():
+    html = ('<p class="course-name">DSC 77. Invented Title (4)</p>'
+            '<p class="course-descriptions"><strong>Prerequisites:</strong> '
+            'A probability course and DSC 10.</p>')
+    pages = {"DSC": parse_course_page(html, "DSC", DSC_URL)}
+    snap = build_catalog_snapshot(pages, ["DSC 77"], None, "t", None)
+    assert snap["courses"]["DSC 77"]["prereq_groups"] == [["<probability>"], ["DSC 10"]]
+    assert list(snap["referenced"]) == ["DSC 10"]

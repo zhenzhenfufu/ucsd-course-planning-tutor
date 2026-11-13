@@ -134,7 +134,7 @@ def build_catalog_snapshot(pages: dict[str, list[CatalogCourse]], scope_ids: lis
     for rec in courses.values():
         for group in rec["prereq_groups"]:
             for opt in group:
-                if opt not in scope:
+                if opt not in scope and not opt.startswith("<"):
                     referenced[opt] = {"defined": opt in parsed}
     return {"source": CATALOG_BASE, "fetched_at": fetched_at, "catalog_edition": edition,
             "courses": courses, "referenced": referenced}

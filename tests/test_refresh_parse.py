@@ -132,3 +132,22 @@ def test_credit_exclusion_sentences_yield_no_groups():
               "Students may not enroll in this course if they have completed DSC 30."):
         q = parse_prereq_clause("DSC 10. " + s, "DSC")
         assert q.groups == [["DSC 10"]] and q.conditions == ["credit exclusion"], s
+
+
+def test_standing_approval_and_chemistry_become_conditions_not_groups():
+    p = parse_prereq_clause("DSC 80 or department and instructor approval required.", "DSC")
+    assert p.groups == [["DSC 80"]] and "instructor consent" in p.conditions
+    p = parse_prereq_clause("Instructor approval required.", "DSC")
+    assert p.groups == [] and p.conditions == ["instructor consent"]
+    p = parse_prereq_clause("High school chemistry.", "CHEM")
+    assert p.groups == [] and p.conditions == ["external requirement"]
+    p = parse_prereq_clause("A probability course and DSC 10.", "DSC")
+    assert ["<probability>"] in p.groups
+
+
+def test_advisory_sentence_is_not_a_prerequisite():
+    p = parse_prereq_clause(
+        "DSC 10. Completion of MATH 102 is encouraged but not required.", "DSC")
+    assert p.groups == [["DSC 10"]]
+    assert p.ambiguities == [{"kind": "advisory",
+                              "fragment": "Completion of MATH 102 is encouraged but not required"}]

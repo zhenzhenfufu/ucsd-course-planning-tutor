@@ -45,6 +45,14 @@ _EXCLUSION_RE = re.compile(
     r"credit\s+for\s+both|credit\s+(?:is\s+)?not\s+(?:allowed|given|granted|awarded)"
     r"|not\s+open\s+to\s+students|may\s+not\s+enroll", re.I)
 
+_ADVISORY_RE = re.compile(r"encouraged|recommended|not\s+required", re.I)
+# Abstract tokens that are conditions, never prerequisite groups.
+_TOKEN_CONDITIONS = {
+    "<upper-division standing>": "upper-division standing",
+    "<instructor approval>": "instructor consent",
+    "<high school chemistry>": "external requirement",
+}
+
 _CONCURRENT_RE = re.compile(r"[,;]?\s*(?:which\s+)?(?:(?:may|can|must)\s+)?(?:be\s+)?"
                             r"(?:taken\s+)?concurrent(?:ly)?\b", re.I)
 _DANGLING_RE = re.compile(r"^[\s,;]*(?:(?:and|or)\b[\s,;]*)?|[\s,;]*(?:\b(?:and|or)[\s,;]*)?$", re.I)
@@ -110,6 +118,9 @@ def parse_prereq_clause(text: str, subject: str) -> ParsedPrereq:
             if "credit exclusion" not in out.conditions:
                 out.conditions.append("credit exclusion")
             continue
+        if _ADVISORY_RE.search(sent):
+            out.ambiguities.append({"kind": "advisory", "fragment": _fragment(sent.rstrip(".; "))})
+            continue
         hits = [tok for pat, tok in CONDITION_PATTERNS if pat.search(sent)]
         out.conditions.extend(t for t in hits if t not in out.conditions)
         is_condition = bool(hits)
@@ -139,6 +150,10 @@ def parse_prereq_clause(text: str, subject: str) -> ParsedPrereq:
                     if re.search(r"\([^)]*\sand\s", opt, re.I):
                         out.ambiguities.append(
                             {"kind": "nested-and", "fragment": _fragment(opt)})
+                elif token in _TOKEN_CONDITIONS:
+                    cond = _TOKEN_CONDITIONS[token]
+                    if cond not in out.conditions:
+                        out.conditions.append(cond)
                 elif token:
                     if token not in options:
                         options.append(token)
