@@ -61,6 +61,7 @@ _SUBJECT_RE = re.compile(r"\b(" + "|".join(KNOWN_SUBJECTS) + r")(?=[\s-]*\d)", r
 _OR_BETTER_RE = re.compile(r"\s+or\s+(?:better|higher)\b", re.I)
 _ONE_OF_RE = re.compile(r"\bone\s+of\s+([^;.]*?)[.;\s]*$", re.I)
 _SCORE_RE = re.compile(r"\bscores?\s+of\s+\d+(?:\s+or\s+\d+)?", re.I)
+_WORD_AND_RE = re.compile(r"\s+and\s+", re.I)
 _SEQUENCE_RE = re.compile(r"\d+[A-Z]?(?:/[A-Z])?-[A-Z]\b")
 _COMMA_OR_RE = re.compile(r",\s*or\s+", re.I)
 _ADVISORY_RE = re.compile(r"encouraged|recommended|not\s+required", re.I)
@@ -179,11 +180,17 @@ def parse_prereq_clause(text: str, subject: str) -> ParsedPrereq:
                 token = None if ids else next(
                     (t for pat, t in ABSTRACT_PATTERNS if pat.search(opt)), None)
                 if ids:
-                    if len(ids) > 1 and _SEQUENCE_RE.search(opt):
+                    if len(_split_depth0(opt, _WORD_AND_RE)) > 1:
+                        alts.append(ids)      # "A and B" inside an OR: distribute later
+                        out.ambiguities.append(
+                            {"kind": "nested-and", "fragment": _fragment(opt)})
+                    elif len(ids) > 1 and _SEQUENCE_RE.search(opt):
                         alts.append(ids)      # "MATH 20A-B": every member is needed
                     else:
                         alts.extend([i] for i in ids)
-                    if re.search(r"\([^)]*\sand\s", opt, re.I):
+                    if re.search(r"\([^)]*\sand\s", opt, re.I) and not any(
+                            a["kind"] == "nested-and" and a["fragment"] == _fragment(opt)
+                            for a in out.ambiguities):
                         out.ambiguities.append(
                             {"kind": "nested-and", "fragment": _fragment(opt)})
                 elif token in _TOKEN_CONDITIONS:

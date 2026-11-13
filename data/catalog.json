@@ -1,6 +1,6 @@
 {
   "source": "https://catalog.ucsd.edu/courses/",
-  "fetched_at": "2026-11-13T14:47:53Z",
+  "fetched_at": "2026-11-13T14:45:24Z",
   "catalog_edition": "2026–27",
   "courses": {
     "MATH 20A": {
@@ -842,6 +842,15 @@
           "CSE 158",
           "CSE 158R",
           "DSC 148",
+          "DSC 140A"
+        ],
+        [
+          "DSC 140B",
+          "CSE 151A",
+          "COGS 188",
+          "CSE 158",
+          "CSE 158R",
+          "DSC 148",
           "DSC 140A",
           "DSC 106"
         ]
@@ -851,7 +860,12 @@
         "upper-division standing",
         "major restriction"
       ],
-      "ambiguities": [],
+      "ambiguities": [
+        {
+          "kind": "nested-and",
+          "fragment": "CSE 151A and DSC 106"
+        }
+      ],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc180a",
       "content_hash": "sha256:7e81cfdeb9adac656e0d224ee0856190495b1a966456d8e59f13f2847ecdafc9",
       "stale": false

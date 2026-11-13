@@ -45,15 +45,23 @@ def test_backward_statement_points_the_right_way(cg):
 
 
 def test_forward_statement_points_the_right_way(cg):
-    # MATH 20B -> MATH 20C is a reviewed ordering carried in add_edges.
-    import json
-
-    from prereq_graph import OVERRIDES_PATH
-    adds = json.loads(OVERRIDES_PATH.read_text(encoding="utf-8"))["add_edges"]
-    assert {"from": "MATH 20B", "to": "MATH 20C"} in [
-        {"from": e["from"], "to": e["to"]} for e in adds]
+    # MATH 20B -> MATH 20C is a reviewed ordering (add_edges) and must bind.
     assert cg.graph.has_edge("MATH 20B", "MATH 20C")
     assert not cg.graph.has_edge("MATH 20C", "MATH 20B")
+    assert ["MATH 20A"] in cg.requirements["MATH 20B"].groups
+    assert cg.missing_groups("MATH 20B", set()) == [["MATH 20A"]]
+    assert cg.missing_groups("MATH 20B", {"MATH 20A"}) == []
+    assert cg.missing_groups("MATH 20C", set()) == [["MATH 20B"]]
+
+
+def test_validator_enforces_the_add_edges_ordering(cg):
+    wrong = [{"term": "F", "courses": ["MATH 20B", "DSC 10", "CSE 11"]},
+             {"term": "W", "courses": ["MATH 20A", "DSC 20", "CSE 12"]}]
+    bad = [v for v in validate(wrong, cg) if v.code == "PREREQ_MISSING"]
+    assert any(v.course == "MATH 20B" for v in bad)
+    plan = [{"term": "F", "courses": ["MATH 20B", "DSC 10", "CSE 11"]}]
+    assert not any(v.code == "PREREQ_MISSING" and v.course == "MATH 20B"
+                   for v in validate(plan, cg, completed=["MATH 20A"]))
 
 
 def test_substitution_is_not_a_prerequisite(cg):

@@ -129,7 +129,9 @@ def build(catalog_path: Path | str = CATALOG_PATH,
     abstract = {k: list(v) for k, v in ABSTRACT_SATISFIERS.items()}
     for extra in overrides.get("add_edges", []):
         src, dst = extra["from"], extra["to"]
-        if src in valid and dst in valid and src not in reqs[dst].atoms():
+        if src in valid and dst in valid and [src] not in reqs[dst].groups:
+            # Its own group: the ordering must bind even where the catalog line also
+            # offers src as one alternative beside an exam/placement option.
             reqs[dst].groups.append([src])
     for token, sats in overrides.get("abstract_satisfiers", {}).items():
         abstract[token] = sorted(set(abstract.get(token, [])) | set(sats))

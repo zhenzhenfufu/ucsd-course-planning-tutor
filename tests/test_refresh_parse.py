@@ -210,3 +210,10 @@ def test_hyphen_sequences_are_and_and_duplicate_groups_collapse():
     assert p.groups == [["DSC 10A"], ["DSC 10B"], ["DSC 30", "DSC 40"]]
     p = parse_prereq_clause("DSC 10A-B or DSC 20A-B-C.", "DSC")
     assert len(p.groups) == 6 and ["DSC 10B", "DSC 20C"] in p.groups
+
+
+def test_and_inside_an_or_group_is_distributed():
+    p = parse_prereq_clause("DSC 1 and (DSC 2 or DSC 3 and DSC 4).", "DSC")
+    assert p.groups == [["DSC 1"], ["DSC 2", "DSC 3"], ["DSC 2", "DSC 4"]]
+    assert [a["kind"] for a in p.ambiguities] == ["nested-and"]
+    assert len(p.ambiguities[0]["fragment"].split()) <= 10
