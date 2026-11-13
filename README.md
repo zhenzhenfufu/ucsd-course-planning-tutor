@@ -12,10 +12,10 @@ schedule you are not allowed to take.
 
 A language model is good at reading "I want to specialise in machine learning"
 and picking sensible courses. It is unreliable at the other half of the job:
-holding a 68-node prerequisite graph in its head and making sure every course
+holding a 69-node prerequisite graph in its head and making sure every course
 sits strictly after everything it depends on.
 
-Measured on 20 planning tasks, asked to produce a whole multi-quarter plan in
+In an earlier measurement (before the October 2026 data rebuild below), on 20 planning tasks, asked to produce a whole multi-quarter plan in
 one shot, the model produced a **legal** plan 40% of the time. The failures are
 not exotic — it schedules DSC 100 before DSC 80, or fills a quarter to 8 units.
 
@@ -30,8 +30,8 @@ code   ->  is that ordering actually legal
 
 ## October 2026: the prerequisite data was wrong, and it was the data
 
-The course descriptions in `dsc_courses.json` were originally hand-written, and
-their `Prerequisites:` sentences did not match the university's catalog. The
+The course data used to live in a hand-written `dsc_courses.json`, and its
+`Prerequisites:` sentences did not match the university's catalog. The
 parser was reading them faithfully; the source was wrong. Six examples of what
 that cost:
 
@@ -45,7 +45,7 @@ that cost:
 | DSC 180A | DSC 102, MATH 189 | also DSC 106 and a machine-learning elective |
 
 Every sentence is now regenerated from `catalog.ucsd.edu`, for every department
-the graph touches, which took the graph from **74 edges to 142**. Three habits
+the graph touches, which took the graph from **74 edges to 143**. Three habits
 of the catalog had to be handled before the rest fell out:
 
 - the department is carried over rather than repeated — `DSC 20/R and 40A/R`
@@ -72,8 +72,9 @@ shim kept only so an existing deployment pointed at the old path keeps working.
 ## Architecture
 
 ```
-dsc_courses.json          catalog: 68 courses, prerequisites written in prose
-        |
+data/catalog.json         catalog snapshot: 69 courses, prerequisites as prose
+data/scope.json           which courses are in scope, topic keywords, course sites
+        |                 (refresh/ regenerates catalog.json from catalog.ucsd.edu)
         v
 prereq_graph.py           parse prose -> prerequisite DAG (AND of OR-groups)
         |                 + substitution rules, abstract requirements
@@ -125,17 +126,17 @@ What the parser produces:
 
 | | |
 |---|---|
-| courses | 68 |
-| prerequisite edges | 74 |
+| courses | 69 |
+| prerequisite edges | 143 |
 | substitution rules found in prose | 7 |
-| OR-groups | 3 |
-| abstract requirement atoms | 18 |
+| OR-groups (two or more alternatives) | 74 |
+| abstract requirement atoms | 5 |
 | cycles | **0** (verified DAG) |
 | depth | 9 topological layers |
-| references it could not resolve | 8, listed rather than dropped |
+| sentences it flagged as unresolved | 11, listed rather than dropped |
 
-Those 8 are reported, not silently discarded — they are things like `CHEM 4`
-and `6BH`, which the prose names but the catalog does not contain.
+Those 11 are reported, not silently discarded — they are references the prose
+makes that the parser cannot place on a course in scope.
 
 ### 2. One source of truth
 
@@ -151,7 +152,7 @@ The hand list is gone. Facts the prose genuinely omits now live in
 
 The first version pasted the whole catalog — about 31 KB of JSON — into every
 request. Now each course becomes a document (name, units, prerequisite
-expression, what it unlocks, substitutions, description) and only the relevant
+expression, what it unlocks, substitutions, topic keywords) and only the relevant
 rows are retrieved: typically **8–13% of the catalog** per question.
 
 Similarity alone is not sufficient here. Asked *"what do I need before
@@ -200,7 +201,7 @@ asked to make a decision it cannot legally make.
 
 ## Results
 
-20 planning tasks (`eval/cases.json`), Gemini embeddings, `eval/run_eval.py`:
+Earlier measurement, taken before the October 2026 rebuild (74-edge graph; not re-run on the current data): 20 planning tasks (`eval/cases.json`), Gemini embeddings, `eval/run_eval.py`:
 
 | | first plan legal | legal after repair | model calls / task |
 |---|---|---|---|
@@ -211,7 +212,7 @@ Violations the checker caught in arm A: 12 × `PREREQ_MISSING`,
 3 × `UNITS_BELOW_FULL_TIME`, 1 × `DUPLICATE_COURSE`.
 
 The checker is itself checked: 9 hand-built plans with known verdicts
-(`VALIDATOR_FIXTURES`), 9/9 correct. 27 unit tests cover the graph, the
+(`VALIDATOR_FIXTURES`), 9/9 correct. 90 unit tests cover the graph, the
 validator and retrieval, and run without network access. Both the tests and
 the validator self-test run in CI on every push and pull request
 (`.github/workflows/tests.yml`).
@@ -219,7 +220,7 @@ the validator self-test run in CI on every push and pull request
 ```bash
 python eval/run_eval.py            # full run
 python eval/run_eval.py --offline  # validator self-test only, no API key
-pytest tests/ -q                   # 27 tests
+pytest tests/ -q                   # 90 tests
 ```
 
 ### What this does not do
@@ -247,6 +248,8 @@ retrieval layer falls back to TF-IDF and the generative tabs are disabled.
 
 | Path | |
 |---|---|
+| `data/` | `catalog.json` (derived facts from the catalog) and `scope.json` (course scope, keywords) |
+| `refresh/` | fetches and parses the catalog into `data/catalog.json` |
 | `prereq_graph.py` | prose → prerequisite DAG |
 | `prereq_overrides.json` | reviewed corrections, and rejections with reasons |
 | `retrieval.py` | documents, embeddings/TF-IDF, graph expansion |
@@ -254,5 +257,5 @@ retrieval layer falls back to TF-IDF and the generative tabs are disabled.
 | `planner.py` | generate → validate → repair, both strategies |
 | `app.py` | Streamlit UI |
 | `eval/` | 20 planning tasks, harness, results |
-| `tests/` | 27 offline tests |
+| `tests/` | 90 offline tests |
 | `.github/workflows/keepalive.yml` | keeps the hosted demo from sleeping |

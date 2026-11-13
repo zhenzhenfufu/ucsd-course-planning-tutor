@@ -211,6 +211,18 @@ def test_documents_include_structure(cg):
     assert "Leads to:" in docs["DSC 80"]
 
 
+def test_documents_have_keywords_not_descriptions(cg):
+    docs = build_documents(cg)
+    assert "Topics:" in docs["DSC 100"] and "SQL" in docs["DSC 100"]
+    assert all(d.count("Prerequisites:") == 1 for d in docs.values())
+
+
+def test_tfidf_finds_sql(cg):
+    index = TfidfIndex(build_documents(cg))
+    hits = [h.course_id for h in index.search("SQL", k=3)]
+    assert "DSC 100" in hits
+
+
 def test_tfidf_finds_an_obvious_match(cg):
     index = TfidfIndex(build_documents(cg))
     hits = [h.course_id for h in index.search("machine learning", k=5)]

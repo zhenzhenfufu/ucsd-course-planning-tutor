@@ -7,7 +7,8 @@ OVERRIDES = json.loads((ROOT / "prereq_overrides.json").read_text(encoding="utf-
 
 
 def test_scope_has_every_current_course():
-    old = {c["id"] for c in json.loads((ROOT / "dsc_courses.json").read_text(encoding="utf-8"))}
+    catalog = json.loads((ROOT / "data" / "catalog.json").read_text(encoding="utf-8"))
+    old = set(catalog["courses"])
     courses = SCOPE["courses"]
     assert len(courses) == 69
     assert set(courses) == old
