@@ -49,10 +49,12 @@ jobs:
       # With no --only, refresh.run refreshes every source.
       # It exits 1 only when every selected source failed; that failure is
       # raised in the last step, after the report is uploaded.
+      # The report lives outside the checkout so nothing run afterwards in the
+      # repo root (the unit tests call refresh.run too) can overwrite it.
       - name: Refresh data
         id: refresh
         continue-on-error: true
-        run: python -m refresh.run --report refresh_report.md
+        run: python -m refresh.run --report "$RUNNER_TEMP/refresh_report.md"
 
       - name: Unit tests
         id: pytest
@@ -67,10 +69,12 @@ jobs:
       - name: Add test results to the report
         if: always()
         run: |
-          touch refresh_report.md
+          REPORT="$RUNNER_TEMP/refresh_report.md"
+          touch "$REPORT"
           # Drop the report's placeholder Tests section, then write the real one.
           python - <<'PY'
-          p = "refresh_report.md"
+          import os
+          p = os.path.join(os.environ["RUNNER_TEMP"], "refresh_report.md")
           text = open(p, encoding="utf-8").read()
           i = text.find("\n## Tests")
           open(p, "w", encoding="utf-8").write((text[:i] if i != -1 else text).rstrip() + "\n")
@@ -81,13 +85,13 @@ jobs:
             echo
             echo "- pytest (${{ steps.pytest.outcome }}): $(tail -n 1 pytest.log 2>/dev/null || echo 'did not run')"
             echo "- validator self-test (${{ steps.selftest.outcome }}): $(grep 'fixtures correct' selftest.log 2>/dev/null || echo 'did not run')"
-          } >> refresh_report.md
+          } >> "$REPORT"
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: refresh-report
-          path: refresh_report.md
+          path: ${{ runner.temp }}/refresh_report.md
 
       - name: Commit and open or update the pull request
         run: |
@@ -102,10 +106,10 @@ jobs:
           git commit -m "Data refresh $(date -u +%F)"
           git push --force origin data-refresh
           if [ -n "$(gh pr list --head data-refresh --state open --json number --jq '.[].number')" ]; then
-            gh pr edit data-refresh --body-file refresh_report.md
+            gh pr edit data-refresh --body-file "$RUNNER_TEMP/refresh_report.md"
           else
             gh pr create --base main --head data-refresh \
-              --title "Data refresh $(date -u +%F)" --body-file refresh_report.md
+              --title "Data refresh $(date -u +%F)" --body-file "$RUNNER_TEMP/refresh_report.md"
           fi
 
       - name: Fail the job if every source failed
