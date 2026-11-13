@@ -151,3 +151,62 @@ def test_advisory_sentence_is_not_a_prerequisite():
     assert p.groups == [["DSC 10"]]
     assert p.ambiguities == [{"kind": "advisory",
                               "fragment": "Completion of MATH 102 is encouraged but not required"}]
+
+
+def test_coscheduled_and_receive_credit_sentences_yield_no_groups():
+    p = parse_prereq_clause(
+        "DSC 10. May be coscheduled with CSE 258. Students may not receive credit for "
+        "DSC 77 and DSC 78 or DSC 79.", "DSC")
+    assert p.groups == [["DSC 10"]]
+    assert p.conditions == ["credit exclusion"]
+    assert p.ambiguities == []
+
+
+def test_known_subject_codes_match_case_insensitively():
+    p = parse_prereq_clause("Math 20C or MATH 31BH, or consent of instructor.", "DSC")
+    assert p.groups == [["MATH 20C", "MATH 31BH"]]
+    assert parse_prereq_clause("Zorp 20C.", "DSC").groups == []
+
+
+def test_restriction_sentences_never_yield_options():
+    p = parse_prereq_clause(
+        "DSC 10; restricted to students within the XY25, XY26, and ZZ25 majors. "
+        "Restricted to junior and senior level students. All other students will be "
+        "allowed as space permits.", "DSC")
+    assert p.groups == [["DSC 10"]]
+    assert p.conditions == ["major restriction", "enrollment restriction"]
+    assert p.ambiguities == []
+    q = parse_prereq_clause("DSC 10 and 20; restricted to XY25 majors.", "DSC")
+    assert q.groups == [["DSC 10"], ["DSC 20"]]
+
+
+def test_exam_alternatives_become_a_token_inside_the_or_group():
+    p = parse_prereq_clause(
+        "Placement Exam qualifying score, or AP Widgets score of 4 or 5, or DSC 10 "
+        "with a grade of C- or better, or DSC 20.", "DSC")
+    assert p.groups == [["<exam or placement>", "DSC 10", "DSC 20"]]
+    assert p.ambiguities == []
+    q = parse_prereq_clause("DSC 10 or equivalent.", "DSC")
+    assert q.groups == [["DSC 10", "<exam or placement>"]]
+    from refresh.prereq_parse import ABSTRACT_SATISFIERS
+    assert ABSTRACT_SATISFIERS["<exam or placement>"] == []
+
+
+def test_one_of_list_is_a_single_or_group():
+    p = parse_prereq_clause(
+        "DSC 10 or DSC 20, and DSC 30 and one of DSC 40, DSC 50, DSC 60, or DSC 70. "
+        "Students may enroll with consent of instructor.", "DSC")
+    assert p.groups == [["DSC 10", "DSC 20"], ["DSC 30"],
+                        ["DSC 40", "DSC 50", "DSC 60", "DSC 70"]]
+
+
+def test_comma_or_is_an_or_not_an_and():
+    p = parse_prereq_clause("DSC 10, or DSC 20, or DSC 30.", "DSC")
+    assert p.groups == [["DSC 10", "DSC 20", "DSC 30"]]
+
+
+def test_hyphen_sequences_are_and_and_duplicate_groups_collapse():
+    p = parse_prereq_clause("DSC 10A-B, and DSC 30 or DSC 40. DSC 30 or DSC 40.", "DSC")
+    assert p.groups == [["DSC 10A"], ["DSC 10B"], ["DSC 30", "DSC 40"]]
+    p = parse_prereq_clause("DSC 10A-B or DSC 20A-B-C.", "DSC")
+    assert len(p.groups) == 6 and ["DSC 10B", "DSC 20C"] in p.groups

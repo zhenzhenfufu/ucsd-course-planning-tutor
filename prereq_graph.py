@@ -14,7 +14,6 @@ Reviewed decisions the catalog cannot carry live in `prereq_overrides.json`.
 from __future__ import annotations
 
 import json
-import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -22,8 +21,6 @@ import networkx as nx
 
 from refresh.prereq_parse import ABSTRACT_PATTERNS, ABSTRACT_SATISFIERS  # noqa: F401
 
-# A fragment the parser could not turn into a course names a test-score route in.
-PLACEMENT_RE = re.compile(r"placement|\bAP\b")
 DATA = Path(__file__).with_name("data")
 CATALOG_PATH = DATA / "catalog.json"
 SCOPE_PATH = DATA / "scope.json"
@@ -123,13 +120,6 @@ def build(catalog_path: Path | str = CATALOG_PATH,
         }
         reqs[cid] = Requirement(cid, [list(g) for g in rec["prereq_groups"]],
                                 bool(rec.get("concurrent_ok")))
-        if any(PLACEMENT_RE.search(a["fragment"]) for a in rec.get("ambiguities") or []):
-            # A placement exam or AP score also satisfies the line, and the planner
-            # cannot see test scores. The catalog's course groups are therefore not
-            # hard gates; orderings that still bind come back through add_edges.
-            reqs[cid].groups = []
-            ambiguities.append({"course": cid, "kind": "placement-bypass",
-                                "text": "placement or AP score also satisfies"})
         for amb in rec.get("ambiguities") or []:
             ambiguities.append({"course": cid, "kind": amb["kind"],
                                 "text": amb["fragment"]})

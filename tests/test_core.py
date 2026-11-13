@@ -228,3 +228,13 @@ def test_retrieval_context_is_much_smaller_than_the_catalog(cg):
     ctx = context_for("what do I need before DSC 100", index, k=6, cg=cg)
     full = json.dumps(cg.courses, ensure_ascii=False)
     assert len(ctx) < 0.25 * len(full)
+
+
+def test_current_data_needs_no_dropped_edges(cg):
+    assert [a for a in cg.ambiguities if a["kind"] == "cycle-edge-dropped"] == []
+    assert check_acyclic(cg.graph) == []
+
+
+def test_cse_158_has_only_its_real_prerequisites(cg):
+    flat = {o for g in cg.requirements["CSE 158"].groups for o in g}
+    assert not flat & {"CSE 258", "CSE 158R", "DSC 148"}

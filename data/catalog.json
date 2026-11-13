@@ -1,6 +1,6 @@
 {
   "source": "https://catalog.ucsd.edu/courses/",
-  "fetched_at": "2026-11-13T14:42:21Z",
+  "fetched_at": "2026-11-13T14:47:53Z",
   "catalog_edition": "2026–27",
   "courses": {
     "MATH 20A": {
@@ -12,26 +12,14 @@
       "units_text": "4",
       "prereq_groups": [
         [
+          "<exam or placement>",
           "MATH 4C",
           "MATH 10A"
         ]
       ],
       "concurrent_ok": false,
       "conditions": [],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "Math Placement Exam qualifying score"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "or AP Precalculus score of 5"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "or AP Calculus AB score of 3 (or equivalent AB"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math20a",
       "content_hash": "sha256:9781dfe8c7f6b03597b609f4c150c9d4891b37498852dccc5761dbab60b63044",
       "stale": false
@@ -45,42 +33,15 @@
       "units_text": "4",
       "prereq_groups": [
         [
-          "MATH 5"
-        ],
-        [
-          "MATH 20A"
-        ],
-        [
-          "MATH 10B"
-        ],
-        [
+          "<exam or placement>",
+          "MATH 20A",
+          "MATH 10B",
           "MATH 10C"
         ]
       ],
       "concurrent_ok": false,
       "conditions": [],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "AP Calculus AB score of 4"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "or AP Calculus BC score of 3"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "better"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "better"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "better"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math20b",
       "content_hash": "sha256:f835311d7e399a63436d7649c122e77bccf1993290295417465560ffb8122e7e",
       "stale": false
@@ -94,24 +55,13 @@
       "units_text": "4",
       "prereq_groups": [
         [
-          "MATH 5"
-        ],
-        [
+          "<exam or placement>",
           "MATH 20B"
         ]
       ],
       "concurrent_ok": false,
       "conditions": [],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "AP Calculus BC score of 4"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "better"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math20c",
       "content_hash": "sha256:d4abe955423391b4acca5ee05e14c29fa1303b2f7372decc3631daf0d2e96b52",
       "stale": false
@@ -125,12 +75,9 @@
       "units_text": "4",
       "prereq_groups": [
         [
-          "MATH 4C"
-        ],
-        [
-          "MATH 10A"
-        ],
-        [
+          "<exam or placement>",
+          "MATH 4C",
+          "MATH 10A",
           "MATH 20A"
         ]
       ],
@@ -138,16 +85,7 @@
       "conditions": [
         "instructor consent"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "Math Placement Exam qualifying score"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "or AP Calculus AB score of 3 (or equivalent AB"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math18",
       "content_hash": "sha256:01c93f08791bb4ade7689570797778d89fb3ed7c16def2d808ff1da59d56c598",
       "stale": false
@@ -161,6 +99,7 @@
       "units_text": "4",
       "prereq_groups": [
         [
+          "MATH 20C",
           "MATH 31BH"
         ]
       ],
@@ -168,12 +107,7 @@
       "conditions": [
         "instructor consent"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "Math 20C"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/MATH.html#math180a",
       "content_hash": "sha256:3ff128af483dbceff80eedf720e2a986d012c8f5c6608fdca5653456fd4f9c72",
       "stale": false
@@ -267,30 +201,14 @@
           "MATH 20C"
         ],
         [
-          "BENG 134"
-        ],
-        [
-          "CSE 103"
-        ],
-        [
-          "ECE 109"
-        ],
-        [
-          "ECON 120A"
-        ],
-        [
-          "MAE 108"
-        ],
-        [
-          "MATH 180A"
-        ],
-        [
-          "MATH 183"
-        ],
-        [
-          "MATH 186"
-        ],
-        [
+          "BENG 134",
+          "CSE 103",
+          "ECE 109",
+          "ECON 120A",
+          "MAE 108",
+          "MATH 180A",
+          "MATH 183",
+          "MATH 186",
           "SE 125"
         ]
       ],
@@ -407,12 +325,7 @@
       "conditions": [
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc20",
       "content_hash": "sha256:28f5b09798404749b90da5e04ca8933586f0ddc1af70b40a3ab4bdd39e547554",
       "stale": false
@@ -433,12 +346,7 @@
       "conditions": [
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc30",
       "content_hash": "sha256:5865e1368025ac75904a7704e8d31a4a4f866d70c4e289f12e9a4eaebc310b8a",
       "stale": false
@@ -468,12 +376,7 @@
       "conditions": [
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc40a",
       "content_hash": "sha256:e7e01f874a7b9a2e5b2499c6aa6c930a88eab35edcebaba7236d65b315edfb5d",
       "stale": false
@@ -497,12 +400,7 @@
       "conditions": [
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc40b",
       "content_hash": "sha256:e4120eace4772e168edf1413a949f32967c3dff6c53d07099978be63cc50139b",
       "stale": false
@@ -526,12 +424,7 @@
       "conditions": [
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc80",
       "content_hash": "sha256:055883766c86857b1ab9816b93bf3d25c0fb2f72da7003d9738e351a045445cd",
       "stale": false
@@ -556,12 +449,7 @@
         "upper-division standing",
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc100",
       "content_hash": "sha256:99809cb9d1a3b60b062f9b29a1b14f78308fe315d0a619f0612e042faf305776",
       "stale": false
@@ -583,12 +471,7 @@
         "upper-division standing",
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc102",
       "content_hash": "sha256:6fc907d7180244c5be899267245161ffa6f73a53fafcdf0615f4e06d24883aa7",
       "stale": false
@@ -610,12 +493,7 @@
         "upper-division standing",
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc104",
       "content_hash": "sha256:c27cb4f88f5e702e7895630228aa8113f876823a2e4fe5bdc4bb4dba9c91d663",
       "stale": false
@@ -637,12 +515,7 @@
         "upper-division standing",
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc106",
       "content_hash": "sha256:b85d3f078dbb77bef70aaf1894418bce4b8ff36f4e5ed54180fd7ec17990fd42",
       "stale": false
@@ -672,12 +545,7 @@
         "upper-division standing",
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc120",
       "content_hash": "sha256:41c40c210b44a6ee9eb0b33b1950f9e943461734fb1d70727b184e454202b983",
       "stale": false
@@ -757,12 +625,7 @@
         "upper-division standing",
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc140a",
       "content_hash": "sha256:448f18a63941d7a3e45bb26e5f5f12c12f15088676627939790b7d2811a76976",
       "stale": false
@@ -791,12 +654,7 @@
       "conditions": [
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc140b",
       "content_hash": "sha256:ac784c40520af7b934ee7da76abc41073676ff4e40f917bb778ae959d6ccade7",
       "stale": false
@@ -828,22 +686,14 @@
           "ECE 109",
           "ECON 120A",
           "MAE 108"
-        ],
-        [
-          "CSE 158",
-          "CSE 158R"
         ]
       ],
       "concurrent_ok": false,
       "conditions": [
+        "credit exclusion",
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc148",
       "content_hash": "sha256:e21af45dbb62d3cf4d5ea7a4dabe0bc14dd96e5057bf1416b98df8d3f82a005a",
       "stale": false
@@ -894,12 +744,7 @@
       "conditions": [
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc160",
       "content_hash": "sha256:b0dca0715aaf9c6a7a74f6a6978dcd745d569b1145b3c23701b1ba9b0bd040bc",
       "stale": false
@@ -925,18 +770,10 @@
       "concurrent_ok": false,
       "conditions": [
         "credit exclusion",
+        "enrollment restriction",
         "upper-division standing"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "Restricted to junior"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "senior level students"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc161",
       "content_hash": "sha256:84ba88a1bc0a473db7c01dc6c5a54821d0c54c37dc07328dde7dbb88454953ff",
       "stale": false
@@ -957,12 +794,7 @@
       "conditions": [
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc167",
       "content_hash": "sha256:cf6dcfcfb3378f52f52b32de94bfa8e25332ea9db56b64b543a33ed190a813bd",
       "stale": false
@@ -983,12 +815,7 @@
       "conditions": [
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/DSC.html#dsc170",
       "content_hash": "sha256:d96bb03eee5551b28dac2dbebd15015d97e40a36722674b6bfb011a5af773e0e",
       "stale": false
@@ -1037,9 +864,6 @@
       "units_max": 4.0,
       "units_text": "4",
       "prereq_groups": [
-        [
-          "DSC 180A"
-        ],
         [
           "DSC 180A"
         ]
@@ -1205,17 +1029,10 @@
       "units_text": "4",
       "prereq_groups": [],
       "concurrent_ok": false,
-      "conditions": [],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "restricted to undergraduates"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "Graduate students will be allowed as space permits"
-        }
+      "conditions": [
+        "enrollment restriction"
       ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse11",
       "content_hash": "sha256:21412ec47e86aa519979e78cc85c01a40937b4a5c603af4f6ad52abf555ee5ed",
       "stale": false
@@ -1234,17 +1051,10 @@
         ]
       ],
       "concurrent_ok": false,
-      "conditions": [],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "restricted to undergraduates"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "Graduate students will be allowed as space permits"
-        }
+      "conditions": [
+        "enrollment restriction"
       ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse12",
       "content_hash": "sha256:0268cb6e8f9b6f972a417c297cdd533f919fca914c2890b75c31982093e8046a",
       "stale": false
@@ -1265,17 +1075,10 @@
         ]
       ],
       "concurrent_ok": false,
-      "conditions": [],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "restricted to undergraduates"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "Graduate students will be allowed as space permits"
-        }
+      "conditions": [
+        "enrollment restriction"
       ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse15l",
       "content_hash": "sha256:d9ff3cb734de400abc25eff011b718be0f2fefa8e1e51e76549b17b1c8a7ccf8",
       "stale": false
@@ -1306,18 +1109,10 @@
       ],
       "concurrent_ok": false,
       "conditions": [
+        "enrollment restriction",
         "credit exclusion"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "restricted to undergraduates"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "Graduate students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse100",
       "content_hash": "sha256:7fd4e48c4a5ab7d3507f193e71f1a5c68adc846036cb5089ccd9acf3d94aad43",
       "stale": false
@@ -1343,17 +1138,10 @@
         ]
       ],
       "concurrent_ok": false,
-      "conditions": [],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "restricted to undergraduates"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "Graduate students will be allowed as space permits"
-        }
+      "conditions": [
+        "enrollment restriction"
       ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse101",
       "content_hash": "sha256:d09ded6710459451cdd2510a794a7695b772561873e62778fca320b43416ddd3",
       "stale": false
@@ -1381,12 +1169,7 @@
       "conditions": [
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "Other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse103",
       "content_hash": "sha256:d33dedaed8c069f8209c9387797472c2f14d4265cd853d31315d8caf005ce148",
       "stale": false
@@ -1433,12 +1216,7 @@
       "conditions": [
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse151a",
       "content_hash": "sha256:fb7fe4fa48425d35baa965328f14ffd8569e62b381a67ac068e66dc80671e218",
       "stale": false
@@ -1482,12 +1260,7 @@
       "conditions": [
         "major restriction"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse151b",
       "content_hash": "sha256:f8c1a49ba56f70a6d6d0cb26cffe8718b183fd3918c9d8628d139178d4383fbc",
       "stale": false
@@ -1522,25 +1295,14 @@
           "MATH 181A",
           "MATH 183",
           "MATH 186"
-        ],
-        [
-          "CSE 258"
-        ],
-        [
-          "CSE 158R",
-          "DSC 148"
         ]
       ],
       "concurrent_ok": false,
       "conditions": [
-        "major restriction"
+        "major restriction",
+        "credit exclusion"
       ],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "All other students will be allowed as space permits"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CSE.html#cse158",
       "content_hash": "sha256:1f74f23d75f0fe37a8d7ec578478c47a171892232b2d0b01503588e7dec7f667",
       "stale": false
@@ -1555,25 +1317,12 @@
       "prereq_groups": [
         [
           "ECE 45"
-        ],
-        [
-          "EC 26"
-        ],
-        [
-          "EC 27"
-        ],
-        [
-          "EC 28"
-        ],
-        [
-          "EC 37"
-        ],
-        [
-          "CS 25"
         ]
       ],
       "concurrent_ok": false,
-      "conditions": [],
+      "conditions": [
+        "enrollment restriction"
+      ],
       "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/ECE.html#ece101",
       "content_hash": "sha256:2e30011619f49664dbe85fd3adf03b5724af8a345318f1cd67fe5dd9f3802963",
@@ -1588,7 +1337,9 @@
       "units_text": "4",
       "prereq_groups": [
         [
-          "MATH 20A",
+          "MATH 20A"
+        ],
+        [
           "MATH 20B"
         ],
         [
@@ -1657,6 +1408,12 @@
       "prereq_groups": [
         [
           "MATH 10A",
+          "MATH 20A",
+          "MATH 20B",
+          "MATH 20C",
+          "MATH 31BH"
+        ],
+        [
           "MATH 10B",
           "MATH 20A",
           "MATH 20B",
@@ -1775,7 +1532,9 @@
           "PHYS 4A"
         ],
         [
-          "MATH 20A",
+          "MATH 20A"
+        ],
+        [
           "MATH 20B"
         ]
       ],
@@ -1801,14 +1560,37 @@
       "prereq_groups": [
         [
           "PHYS 4A",
+          "PHYS 2A"
+        ],
+        [
+          "PHYS 4A",
+          "PHYS 2B"
+        ],
+        [
+          "PHYS 4A",
+          "PHYS 2C"
+        ],
+        [
           "PHYS 4B",
-          "PHYS 2A",
-          "PHYS 2B",
+          "PHYS 2A"
+        ],
+        [
+          "PHYS 4B",
+          "PHYS 2B"
+        ],
+        [
+          "PHYS 4B",
           "PHYS 2C"
         ],
         [
           "MATH 20A",
+          "MATH 31BH"
+        ],
+        [
           "MATH 20B",
+          "MATH 31BH"
+        ],
+        [
           "MATH 20C",
           "MATH 31BH"
         ],
@@ -1839,32 +1621,14 @@
       "units_text": "4",
       "prereq_groups": [
         [
-          "CHEM 4"
-        ],
-        [
+          "CHEM 4",
+          "<exam or placement>",
           "MATH 3C"
         ]
       ],
       "concurrent_ok": false,
       "conditions": [],
-      "ambiguities": [
-        {
-          "kind": "unresolved",
-          "fragment": "or AP Chemistry score of 3"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "or Math Placement Exam qualifying score"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "or AP Calculus AB score of 2"
-        },
-        {
-          "kind": "unresolved",
-          "fragment": "higher"
-        }
-      ],
+      "ambiguities": [],
       "catalog_url": "https://catalog.ucsd.edu/courses/CHEM.html#chem6a",
       "content_hash": "sha256:d79e7ab3bf4de7895e481e1e6ec50988090ee87b31c64a1edc68adf890c830eb",
       "stale": false
@@ -2054,9 +1818,6 @@
     "MATH 10A": {
       "defined": true
     },
-    "MATH 5": {
-      "defined": false
-    },
     "MATH 10B": {
       "defined": true
     },
@@ -2093,9 +1854,6 @@
     "MATH 180B": {
       "defined": true
     },
-    "CSE 158R": {
-      "defined": true
-    },
     "ECON 5": {
       "defined": false
     },
@@ -2119,6 +1877,9 @@
     },
     "DSC 152": {
       "defined": false
+    },
+    "CSE 158R": {
+      "defined": true
     },
     "CSE 8B": {
       "defined": false
@@ -2156,26 +1917,8 @@
     "BENG 100": {
       "defined": false
     },
-    "CSE 258": {
-      "defined": false
-    },
     "ECE 45": {
       "defined": true
-    },
-    "EC 26": {
-      "defined": false
-    },
-    "EC 27": {
-      "defined": false
-    },
-    "EC 28": {
-      "defined": false
-    },
-    "EC 37": {
-      "defined": false
-    },
-    "CS 25": {
-      "defined": false
     },
     "CSE 8A": {
       "defined": true
