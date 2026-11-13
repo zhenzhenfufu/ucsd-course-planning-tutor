@@ -40,8 +40,9 @@ CONDITION_PATTERNS: list[tuple[re.Pattern, str]] = [
     (re.compile(r"\d+\s+units\b|units completed", re.I), "units completed"),
 ]
 
-_CONCURRENT_RE = re.compile(r"[,;]?\s*(?:which\s+)?(?:(?:may|can)\s+)?(?:be\s+)?(?:taken\s+)?"
-                            r"concurrent(?:ly)?\b[^.;]*", re.I)
+_CONCURRENT_RE = re.compile(r"[,;]?\s*(?:which\s+)?(?:(?:may|can|must)\s+)?(?:be\s+)?"
+                            r"(?:taken\s+)?concurrent(?:ly)?\b", re.I)
+_DANGLING_RE = re.compile(r"^[\s,;]*(?:(?:and|or)\b[\s,;]*)?|[\s,;]*(?:\b(?:and|or)[\s,;]*)?$", re.I)
 _NONE_RE = re.compile(r"^(?:none|no prerequisites?)\W*$", re.I)
 _PREFIX_RE = re.compile(r"^\s*(?:required\s+)?prerequisites?\s*:\s*", re.I)
 _AND_RE = re.compile(r",\s*and\s+|,\s*|\s+and\s+", re.I)
@@ -101,13 +102,17 @@ def parse_prereq_clause(text: str, subject: str) -> ParsedPrereq:
         if not sent or _NONE_RE.match(sent.rstrip(".; ")):
             continue
         hits = [tok for pat, tok in CONDITION_PATTERNS if pat.search(sent)]
-        if hits:
-            out.conditions.extend(t for t in hits if t not in out.conditions)
-            continue
+        out.conditions.extend(t for t in hits if t not in out.conditions)
+        is_condition = bool(hits)
+        for pat, _ in CONDITION_PATTERNS:
+            sent = pat.sub(" ", sent)
         if _CONCURRENT_RE.search(sent):
             out.concurrent_ok = True
-            sent = _CONCURRENT_RE.sub("", sent)
-        sent = sent.strip(" .;,")
+            sent = _CONCURRENT_RE.sub(" ", sent)
+        # A condition sentence keeps only what still names courses.
+        if is_condition and not scan_ids(sent, subject)[0]:
+            continue
+        sent = _DANGLING_RE.sub("", sent.strip(" .;,")).strip(" .;,")
         if sent:
             requirement.append(sent)
 

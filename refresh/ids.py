@@ -6,11 +6,16 @@ import re
 
 # [SUBJECT[ -]] number [optional letter suffix, possibly after a space]
 _ID_RE = re.compile(
-    r"(?<![A-Za-z0-9])(?:([A-Z]{2,5})[\s-]*)?0*(\d{1,3})(?:\s?([A-Z]{1,2}))?(?![A-Za-z0-9])"
+    r"(?<![A-Za-z0-9])(?<!\d\.)(?:([A-Z]{2,5})[\s-]*)?0*(\d{1,3})(?:\s?([A-Z]{1,2}))?(?![A-Za-z0-9])(?!\.\d)"
 )
 # "/R" marker and "-B" style sequence continuations after an ID.
 _SLASH_RE = re.compile(r"/[A-Z](?![A-Za-z0-9])")
 _SEQ_RE = re.compile(r"-([A-Z])(?![A-Za-z0-9])")
+# A bare number only continues a course list straight after a connective, and
+# never when it reads as a grade, year, unit count or decimal.
+_GAP_RE = re.compile(r"^[\s,/&(]*(?:(?:and|or)\s*)?$", re.I)
+_NOT_COURSE_TAIL_RE = re.compile(
+    r"\s*(?:units?|credits?|grades?|gpa|years?|quarters?|or\s+better)\b", re.I)
 _NUM_RE = re.compile(r"\d+(?:\.\d+)?")
 
 
@@ -18,6 +23,7 @@ def scan_ids(text: str, subject: str | None = None) -> tuple[list[str], str | No
     """Return (ordered unique IDs, last subject seen) so callers can keep carrying it."""
     ids: list[str] = []
     pos = 0
+    prev_end = 0
     while True:
         m = _ID_RE.search(text, pos)
         if not m:
@@ -28,7 +34,8 @@ def scan_ids(text: str, subject: str | None = None) -> tuple[list[str], str | No
             suffix, end = "", m.end(2)
         if subj:
             subject = subj
-        if not subject:
+        elif not (subject and _GAP_RE.match(text[prev_end:m.start()])
+                  and not _NOT_COURSE_TAIL_RE.match(text, end)):
             pos = end
             continue
         found = [f"{subject} {num}{suffix}"]
@@ -50,7 +57,7 @@ def scan_ids(text: str, subject: str | None = None) -> tuple[list[str], str | No
         for f in found:
             if f not in ids:
                 ids.append(f)
-        pos = end
+        pos = prev_end = end
     return ids, subject
 
 

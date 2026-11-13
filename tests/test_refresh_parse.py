@@ -89,3 +89,32 @@ def test_clause_none_and_unresolved():
 def test_clause_keeps_out_of_scope_courses():
     p = parse_prereq_clause("PHYS 2A or PHYS 4A.", "DSC")
     assert p.groups == [["PHYS 2A", "PHYS 4A"]]
+
+
+def test_bare_numbers_are_not_fake_ids():
+    p = parse_prereq_clause("DSC 20 with a grade of 2.0 or better", "DSC")
+    assert p.groups == [["DSC 20"]]
+    assert expand_ids("ECE 005 and 2 units") == ["ECE 5"]
+    assert expand_ids("DSC 20 in 2026") == ["DSC 20"]
+    assert expand_ids("DSC 10 and 4 units of GPA 3.0") == ["DSC 10"]
+
+
+def test_bare_number_continuation_still_works():
+    assert expand_ids("DSC 140A, 140B, 148, and 155") == [
+        "DSC 140A", "DSC 140B", "DSC 148", "DSC 155"]
+    assert expand_ids("DSC 20/R and 40A/R") == ["DSC 20", "DSC 40A"]
+    assert expand_ids("MATH 20C or 31BH") == ["MATH 20C", "MATH 31BH"]
+
+
+def test_condition_sentence_keeps_its_courses():
+    p = parse_prereq_clause("Prerequisites: DSC 40A and DSC 80, or consent of instructor.", "DSC")
+    assert p.groups == [["DSC 40A"], ["DSC 80"]]
+    assert p.conditions == ["instructor consent"]
+    p = parse_prereq_clause("Restricted to students within the data science major.", "DSC")
+    assert p.groups == [] and p.ambiguities == []
+
+
+def test_concurrent_removes_only_its_phrase():
+    p = parse_prereq_clause("DSC 40A may be taken concurrently, and DSC 20", "DSC")
+    assert p.groups == [["DSC 40A"], ["DSC 20"]]
+    assert p.concurrent_ok
