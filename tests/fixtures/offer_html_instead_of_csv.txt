@@ -1,0 +1,2 @@
+<!DOCTYPE html><html><head><title>Sample Sheet - Sign in</title></head>
+<body><p>Sample: this document is not published.</p><table><tr><th>Course</th><th>Fall 2026</th></tr></table></body></html>
